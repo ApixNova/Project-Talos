@@ -1,21 +1,30 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+} from "react-native";
 import CalendarView from "./components/CalendarView";
 import { useState } from "react";
 import Button from "./components/Button";
 
+import { getCurrentDate } from "./components/utils";
+import MoodPicker from "./components/MoodPicker";
 
 export default function App() {
-  const [selectedDay, setSelectedDay] = useState("");
-  const [moodPicker, setMoodPicker] = useState(false)
-  
+  const [selectedDay, setSelectedDay] = useState(getCurrentDate());
+  const [moodPicker, setMoodPicker] = useState(false);
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Welcome To Project Talos</Text>
       <CalendarView props={{ selectedDay, setSelectedDay }} />
-      <Button/>
+      <Button props={{ moodPicker, setMoodPicker }} />
+      {moodPicker && <MoodPicker />}
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
