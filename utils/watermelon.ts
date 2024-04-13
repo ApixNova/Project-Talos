@@ -1,10 +1,14 @@
 import { Platform } from "react-native";
 import { Database } from "@nozbe/watermelondb";
 import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
+import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 import schema from "../model/schema";
 import Feeling from "../model/Feeling";
 
-const adapter = new LokiJSAdapter({
+let adapter;
+
+// if (Platform.OS == "web") {
+adapter = new LokiJSAdapter({
   schema,
   // migrations,
   useWebWorker: false,
@@ -31,6 +35,17 @@ const adapter = new LokiJSAdapter({
     },
   },
 });
+// } else {
+//   adapter = new SQLiteAdapter({
+//     schema,
+//     // migrations,
+//     dbName: "talos",
+//     // jsi: true,
+//     onSetUpError: (error) => {
+//       // Database failed to load -- offer the user to reload the app or log out
+//     },
+//   });
+// }
 
 export const database = new Database({
   adapter,
