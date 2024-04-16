@@ -27,17 +27,15 @@ export default function App() {
         .get("feelings")
         .query()
         .fetch()) as Feeling[];
-      // console.log(moods[0].day);
-      // console.log(moods[0].type);
+      let moodsList: any = [];
       moods.forEach((mood) => {
-        setMoods((prev) => {
-          let moodPrev = prev;
-          moodPrev.push([mood.day, mood.type]);
-          return moodPrev;
-        });
+        moodsList.push([mood.day, mood.type]);
       });
+      setMoods(moodsList);
     }
-    getMoods();
+    getMoods().then(() => {
+      console.log("moods queried");
+    });
   }, []);
 
   return (
@@ -45,7 +43,7 @@ export default function App() {
       <Text style={styles.text}>Welcome To Project Talos</Text>
       <CalendarView props={{ selectedDay, setSelectedDay, moods }} />
       <Button props={{ moodPicker, setMoodPicker }} />
-      {moodPicker && <MoodPicker props={{ selectedDay }} />}
+      {moodPicker && <MoodPicker props={{ selectedDay, setMoods, moods }} />}
       <StatusBar style="auto" />
     </SafeAreaView>
   );

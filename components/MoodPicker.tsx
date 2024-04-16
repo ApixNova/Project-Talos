@@ -11,7 +11,7 @@ export default function MoodPicker({ props }: MoodPickerProps) {
   //   database.unsafeResetDatabase();
   // });
   //
-  const { selectedDay } = props;
+  const { selectedDay, setMoods, moods } = props;
 
   async function handlePress(moodType: number) {
     //save mood for day
@@ -19,6 +19,11 @@ export default function MoodPicker({ props }: MoodPickerProps) {
       const newMood = await database.get<Feeling>("feelings").create((mood) => {
         mood.type = moodType;
         mood.day = selectedDay;
+      });
+      setMoods((prev) => {
+        let moodsList = prev;
+        moodsList.push([selectedDay, moodType]);
+        return moodsList;
       });
       console.log("I did a thing");
       console.log(newMood);

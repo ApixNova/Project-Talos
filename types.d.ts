@@ -9,5 +9,7 @@ export type calendarProps = {
 export type MoodPickerProps = {
   props: {
     selectedDay: string;
+    setMoods: React.Dispatch<React.SetStateAction<[string, number][]>>;
+    moods: [string, number][];
   };
 };

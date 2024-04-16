@@ -52,7 +52,7 @@ export default function CalendarView({ props }: calendarProps) {
   //DEBUG
   // console.log(markedDates);
   const markedDates = useMemo(() => {
-    const markedRef = {
+    const markedRef: any = {
       [selectedDay]: {
         selected: true,
         disableTouchEvent: true,
