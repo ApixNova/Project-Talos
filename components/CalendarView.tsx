@@ -3,6 +3,7 @@ import { CalendarList, DateData } from "react-native-calendars";
 import { withObservables } from "@nozbe/watermelondb/react";
 import { useEffect, useMemo, useState } from "react";
 import { calendarProps } from "../types";
+import { text } from "@nozbe/watermelondb/decorators";
 
 // const enhance = withObservables(["moods"], ({ moods }) => ({
 //   moods,
@@ -11,40 +12,21 @@ import { calendarProps } from "../types";
 export default function CalendarView({ props }: calendarProps) {
   const { selectedDay, setSelectedDay, moods } = props;
   const { height, width } = useWindowDimensions();
-  // const [markedDates, setMarkedDates] = useState({
-  //   [selectedDay]: {
-  //     selected: true,
-  //     disableTouchEvent: true,
-  //     selectedColor: "black",
-  //   },
-  // });
 
   function getColor(type: number) {
     switch (type) {
       case 0:
-        return "black";
+        return "#0f0f0f";
       case 1:
-        return "red";
+        return "#ab2b40";
       case 2:
-        return "blue";
+        return "#2f1f94";
       case 3:
-        return "green";
+        return "#3e9e5e";
       default:
-        return "blue";
+        return "#2f1f94";
     }
   }
-
-  useEffect(() => {
-    // moods.map(
-    //   (mood) =>
-    //     (markedDates[mood.day] = {
-    //       selected: true,
-    //       disableTouchEvent: true,
-    //       selectedColor: getColor(mood.type),
-    //     })
-    // );
-    // console.log(markedDates);
-  }, [moods]);
 
   function handleDayPress(day: DateData) {
     setSelectedDay(day.dateString);
@@ -56,19 +38,42 @@ export default function CalendarView({ props }: calendarProps) {
       [selectedDay]: {
         selected: true,
         disableTouchEvent: true,
-        selectedColor: "black",
+        // selectedColor: "black",
+        customStyles: {
+          container: {
+            backgroundColor: "inherit",
+            borderColor: "#26186e",
+            borderWidth: 4,
+            borderRadius: 0,
+            width: "100%",
+            height: "100%",
+          },
+          text: {
+            color: "black",
+          },
+        },
       },
     };
     console.log("moods");
     console.log(moods);
-    moods.map(
-      (mood) =>
-        (markedRef[mood[0]] = {
-          selected: true,
-          disableTouchEvent: true,
-          selectedColor: getColor(mood[1]),
-        })
-    );
+    for (const day in moods) {
+      markedRef[day] = {
+        selected: true,
+        selectedColor: getColor(moods[day]),
+        customStyles: {
+          container: {
+            borderColor: day == selectedDay ? "black" : "transparent",
+            borderWidth: 4,
+            borderRadius: 0,
+            width: "100%",
+            height: "100%",
+          },
+          text: {
+            color: "white",
+          },
+        },
+      };
+    }
     console.log("ref:");
     console.log(markedRef);
     return markedRef;
@@ -78,6 +83,7 @@ export default function CalendarView({ props }: calendarProps) {
     <View style={styles.container}>
       <CalendarList
         onDayPress={(day) => handleDayPress(day)}
+        markingType={"custom"}
         markedDates={markedDates}
         theme={{
           backgroundColor: "black",

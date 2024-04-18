@@ -14,22 +14,23 @@ import { getCurrentDate } from "./utils/functions";
 import MoodPicker from "./components/MoodPicker";
 import { database } from "./utils/watermelon";
 import Feeling from "./model/Feeling";
+import { Moods } from "./types";
 
 export default function App() {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());
   const [moodPicker, setMoodPicker] = useState(false);
-  const [moods, setMoods] = useState<[string, number][]>([]);
+  const [moods, setMoods] = useState<Moods>({});
 
   useEffect(() => {
     //on load querry moods table
     async function getMoods() {
-      const moods = (await database
+      const moodsQuery = (await database
         .get("feelings")
         .query()
         .fetch()) as Feeling[];
-      let moodsList: any = [];
-      moods.forEach((mood) => {
-        moodsList.push([mood.day, mood.type]);
+      let moodsList: Moods = {};
+      moodsQuery.forEach((mood) => {
+        moodsList[mood.day] = mood.type;
       });
       setMoods(moodsList);
     }

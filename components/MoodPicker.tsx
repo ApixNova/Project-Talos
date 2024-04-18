@@ -3,6 +3,7 @@ import { database } from "../utils/watermelon";
 import { getCurrentDate } from "../utils/functions";
 import { MoodPickerProps } from "../types";
 import Feeling from "../model/Feeling";
+import { Q } from "@nozbe/watermelondb";
 
 export default function MoodPicker({ props }: MoodPickerProps) {
   //
@@ -14,20 +15,46 @@ export default function MoodPicker({ props }: MoodPickerProps) {
   const { selectedDay, setMoods, moods } = props;
 
   async function handlePress(moodType: number) {
-    //save mood for day
-    await database.write(async () => {
-      const newMood = await database.get<Feeling>("feelings").create((mood) => {
-        mood.type = moodType;
-        mood.day = selectedDay;
+    //compare with queried mooods
+    if (moods[selectedDay]) {
+      if (moods[selectedDay] != moodType) {
+        //if it exists already and is different, modify element
+        const existingMoodId = (
+          await database
+            .get("feelings")
+            .query(Q.where("day", selectedDay))
+            .fetchIds()
+        )[0];
+        await database.write(async () => {
+          const existingMood = await database
+            .get<Feeling>("feelings")
+            .find(existingMoodId);
+          await existingMood.update(() => {
+            existingMood.type = moodType;
+          });
+          console.log("mood updated");
+        });
+      }
+    } else {
+      //otherwise create one
+      //save mood for day
+      await database.write(async () => {
+        const newMood = await database
+          .get<Feeling>("feelings")
+          .create((mood) => {
+            mood.type = moodType;
+            mood.day = selectedDay;
+          });
+        setMoods((prev) => {
+          let moodsList = prev;
+          // moodsList.push([selectedDay, moodType]);
+          moodsList[selectedDay] = moodType;
+          return moodsList;
+        });
+        console.log("mood saved");
+        console.log(newMood);
       });
-      setMoods((prev) => {
-        let moodsList = prev;
-        moodsList.push([selectedDay, moodType]);
-        return moodsList;
-      });
-      console.log("I did a thing");
-      console.log(newMood);
-    });
+    }
   }
   return (
     <View style={styles.container}>
