@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import CalendarView from "./components/CalendarView";
 import { useEffect, useState } from "react";
-import Button from "./components/Button";
+import SaveMood from "./components/SaveMood";
 
 import { getCurrentDate } from "./utils/functions";
 import MoodPicker from "./components/MoodPicker";
@@ -43,8 +43,9 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Welcome To Project Talos</Text>
       <CalendarView props={{ selectedDay, setSelectedDay, moods }} />
-      <Button props={{ moodPicker, setMoodPicker }} />
-      {moodPicker && <MoodPicker props={{ selectedDay, setMoods, moods }} />}
+      <SaveMood
+        props={{ moodPicker, setMoodPicker, moods, setMoods, selectedDay }}
+      />
       <StatusBar style="auto" />
     </SafeAreaView>
   );

@@ -4,6 +4,7 @@ import { withObservables } from "@nozbe/watermelondb/react";
 import { useEffect, useMemo, useState } from "react";
 import { calendarProps } from "../types";
 import { text } from "@nozbe/watermelondb/decorators";
+import { moodColor } from "../utils/palette";
 
 // const enhance = withObservables(["moods"], ({ moods }) => ({
 //   moods,
@@ -16,15 +17,15 @@ export default function CalendarView({ props }: calendarProps) {
   function getColor(type: number) {
     switch (type) {
       case 0:
-        return "#0f0f0f";
+        return moodColor.black;
       case 1:
-        return "#ab2b40";
+        return moodColor.red;
       case 2:
-        return "#2f1f94";
+        return moodColor.blue;
       case 3:
-        return "#3e9e5e";
+        return moodColor.green;
       default:
-        return "#2f1f94";
+        return moodColor.blue;
     }
   }
 

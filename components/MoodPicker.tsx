@@ -1,18 +1,27 @@
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  useWindowDimensions,
+  Pressable,
+} from "react-native";
 import { database } from "../utils/watermelon";
 import { getCurrentDate } from "../utils/functions";
-import { MoodPickerProps } from "../types";
+import { MoodOptionProps, MoodPickerProps } from "../types";
 import Feeling from "../model/Feeling";
 import { Q } from "@nozbe/watermelondb";
+import { moodColor } from "../utils/palette";
+import { MoodOption } from "./MoodOption";
 
 export default function MoodPicker({ props }: MoodPickerProps) {
-  //
   // console.log("resetting db");
   // database.write(async () => {
   //   database.unsafeResetDatabase();
   // });
-  //
-  const { selectedDay, setMoods, moods } = props;
+
+  const { selectedDay, setMoods, moods, setMoodPicker } = props;
+
+  const { width } = useWindowDimensions();
 
   async function handlePress(moodType: number) {
     //compare with queried mooods
@@ -58,40 +67,46 @@ export default function MoodPicker({ props }: MoodPickerProps) {
   }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Mood Picker</Text>
+      <Pressable
+        onPress={() => {
+          setMoodPicker(false);
+        }}
+      >
+        <Text style={styles.title}>x</Text>
+      </Pressable>
       <View style={styles.selection}>
-        <Text
-          onPress={() => {
-            handlePress(0);
+        <MoodOption
+          props={{
+            text: "a",
+            handlePress,
+            type: 0,
+            style: styles.black,
           }}
-          style={styles.item}
-        >
-          Black
-        </Text>
-        <Text
-          onPress={() => {
-            handlePress(1);
+        />
+        <MoodOption
+          props={{
+            text: "b",
+            handlePress,
+            type: 1,
+            style: styles.red,
           }}
-          style={styles.item}
-        >
-          Red
-        </Text>
-        <Text
-          onPress={() => {
-            handlePress(2);
+        />
+        <MoodOption
+          props={{
+            text: "c",
+            handlePress,
+            type: 2,
+            style: styles.blue,
           }}
-          style={styles.item}
-        >
-          Blue
-        </Text>
-        <Text
-          onPress={() => {
-            handlePress(3);
+        />
+        <MoodOption
+          props={{
+            text: "d",
+            handlePress,
+            type: 3,
+            style: styles.green,
           }}
-          style={styles.item}
-        >
-          Green
-        </Text>
+        />
       </View>
     </View>
   );
@@ -101,11 +116,21 @@ const styles = StyleSheet.create({
   container: {},
   title: {
     textAlign: "center",
+    color: "white",
   },
   selection: {
     flexDirection: "row",
   },
-  item: {
-    margin: 10,
+  black: {
+    backgroundColor: moodColor.black,
+  },
+  red: {
+    backgroundColor: moodColor.red,
+  },
+  blue: {
+    backgroundColor: moodColor.blue,
+  },
+  green: {
+    backgroundColor: moodColor.green,
   },
 });
