@@ -1,17 +1,11 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { database } from "../utils/watermelon";
-import { getCurrentDate } from "../utils/functions";
-import { MoodOptionProps, MoodPickerProps } from "../types";
+import { MoodPickerProps } from "../types";
 import Feeling from "../model/Feeling";
 import { Q } from "@nozbe/watermelondb";
 import { moodColor } from "../utils/palette";
 import { MoodOption } from "./MoodOption";
+import { useAppSelector } from "../state/hooks";
 
 export default function MoodPicker({ props }: MoodPickerProps) {
   // console.log("resetting db");
@@ -19,9 +13,9 @@ export default function MoodPicker({ props }: MoodPickerProps) {
   //   database.unsafeResetDatabase();
   // });
 
-  const { selectedDay, setMoods, moods, setMoodPicker } = props;
+  const { selectedDay, setMoods, setMoodPicker } = props;
 
-  const { width } = useWindowDimensions();
+  const moods = useAppSelector((state) => state.moods.value);
 
   async function handlePress(moodType: number) {
     //compare with queried mooods
@@ -54,12 +48,10 @@ export default function MoodPicker({ props }: MoodPickerProps) {
             mood.type = moodType;
             mood.day = selectedDay;
           });
-        setMoods((prev) => {
-          let moodsList = prev;
-          // moodsList.push([selectedDay, moodType]);
-          moodsList[selectedDay] = moodType;
-          return moodsList;
-        });
+
+        let moodsList = { ...moods };
+        moodsList[selectedDay] = moodType;
+        setMoods(moodsList);
         console.log("mood saved");
         console.log(newMood);
       });

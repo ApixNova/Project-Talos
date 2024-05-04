@@ -23,8 +23,10 @@
       "package": "com.apixnova.talos"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
-    "plugins": ["expo-build-properties"]
+    "plugins": ["expo-build-properties", "expo-router"],
+    "scheme": "talos-scheme"
   }
 }

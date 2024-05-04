@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SaveMoodProps } from "../types";
 import MoodPicker from "./MoodPicker";
 export default function SaveMood({ props }: SaveMoodProps) {
-  const { moodPicker, setMoodPicker, moods, setMoods, selectedDay } = props;
+  const { moodPicker, setMoodPicker, setMoods, selectedDay } = props;
   function onPress() {
     setMoodPicker((prev) => !prev);
   }
@@ -13,7 +13,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
           <Text style={styles.buttonText}>Button</Text>
         </Pressable>
       ) : (
-        <MoodPicker props={{ selectedDay, setMoods, moods, setMoodPicker }} />
+        <MoodPicker props={{ selectedDay, setMoods, setMoodPicker }} />
       )}
     </View>
   );

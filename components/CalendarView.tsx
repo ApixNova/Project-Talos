@@ -1,18 +1,15 @@
 import { View, StyleSheet, useWindowDimensions } from "react-native";
 import { CalendarList, DateData } from "react-native-calendars";
-import { withObservables } from "@nozbe/watermelondb/react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { calendarProps } from "../types";
-import { text } from "@nozbe/watermelondb/decorators";
 import { moodColor } from "../utils/palette";
-
-// const enhance = withObservables(["moods"], ({ moods }) => ({
-//   moods,
-// }));
+import { useAppSelector } from "../state/hooks";
+import { MarkedDates } from "react-native-calendars/src/types";
 
 export default function CalendarView({ props }: calendarProps) {
-  const { selectedDay, setSelectedDay, moods } = props;
-  const { height, width } = useWindowDimensions();
+  const { selectedDay, setSelectedDay } = props;
+  const moods = useAppSelector((state) => state.moods.value);
+  const { width } = useWindowDimensions();
 
   function getColor(type: number) {
     switch (type) {
@@ -32,10 +29,8 @@ export default function CalendarView({ props }: calendarProps) {
   function handleDayPress(day: DateData) {
     setSelectedDay(day.dateString);
   }
-  //DEBUG
-  // console.log(markedDates);
   const markedDates = useMemo(() => {
-    const markedRef: any = {
+    const markedRef: MarkedDates = {
       [selectedDay]: {
         selected: true,
         disableTouchEvent: true,
@@ -79,7 +74,6 @@ export default function CalendarView({ props }: calendarProps) {
     console.log(markedRef);
     return markedRef;
   }, [selectedDay, moods]);
-  //DEBUG END
   return (
     <View style={styles.container}>
       <CalendarList

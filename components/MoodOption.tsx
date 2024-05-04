@@ -5,7 +5,6 @@ import {
   useWindowDimensions,
   Pressable,
 } from "react-native";
-import { moodColor } from "../utils/palette";
 import { MoodOptionProps } from "../types";
 
 export function MoodOption({ props }: MoodOptionProps) {
