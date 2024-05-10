@@ -1,15 +1,20 @@
-import { View, StyleSheet, useWindowDimensions } from "react-native";
-import { CalendarList, DateData } from "react-native-calendars";
+import { View, StyleSheet, useWindowDimensions, Text } from "react-native";
+import { CalendarList, Calendar, DateData } from "react-native-calendars";
 import { useMemo } from "react";
 import { calendarProps } from "../types";
 import { moodColor } from "../utils/palette";
 import { useAppSelector } from "../state/hooks";
 import { MarkedDates } from "react-native-calendars/src/types";
+import Day from "react-native-calendars/src/calendar/day";
 
 export default function CalendarView({ props }: calendarProps) {
   const { selectedDay, setSelectedDay } = props;
   const moods = useAppSelector((state) => state.moods.value);
   const { width } = useWindowDimensions();
+
+  function sizeWithLimits() {
+    return width * 0.9 < 1060 ? width * 0.9 : 1060;
+  }
 
   function getColor(type: number) {
     switch (type) {
@@ -43,6 +48,7 @@ export default function CalendarView({ props }: calendarProps) {
             borderRadius: 0,
             width: "100%",
             height: "100%",
+            // padding: 0,
           },
           text: {
             color: "black",
@@ -80,6 +86,22 @@ export default function CalendarView({ props }: calendarProps) {
         onDayPress={(day) => handleDayPress(day)}
         markingType={"custom"}
         markedDates={markedDates}
+        // dayComponent={({ date, state, marking }) => {
+        //   console.log(marking);
+        //   return (
+        //     <View>
+        //       <Text
+        //         style={{
+        //           textAlign: "center",
+        //           fontSize: 20,
+        //           color: state === "disabled" ? "gray" : "black",
+        //         }}
+        //       >
+        //         {date.day}
+        //       </Text>
+        //     </View>
+        //   );
+        // }}
         theme={{
           backgroundColor: "black",
           calendarBackground: "#a0c0eb",
@@ -91,12 +113,12 @@ export default function CalendarView({ props }: calendarProps) {
           textDayHeaderFontSize: 15,
           textMonthFontSize: 20,
         }}
-        horizontal={true}
+        // horizontal={true}
         pagingEnabled={true}
         firstDay={1}
-        style={[styles.calendar, { width: width * 0.9 }]}
-        calendarWidth={width * 0.9}
-        hideArrows={false}
+        style={[styles.calendar, { width: sizeWithLimits() }]}
+        calendarWidth={sizeWithLimits()}
+        // hideArrows={false}
         hideExtraDays={false}
         // showSixWeeks={true}
         disableMonthChange={false}

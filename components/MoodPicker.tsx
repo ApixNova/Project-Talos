@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import { database } from "../utils/watermelon";
 import { MoodPickerProps } from "../types";
 import Feeling from "../model/Feeling";
@@ -64,8 +65,14 @@ export default function MoodPicker({ props }: MoodPickerProps) {
           setMoodPicker(false);
         }}
       >
-        <Text style={styles.title}>x</Text>
+        <FontAwesome
+          style={styles.close}
+          name="close"
+          size={24}
+          color="white"
+        />
       </Pressable>
+      <Text style={styles.title}>How was your day?</Text>
       <View style={styles.selection}>
         <MoodOption
           props={{
@@ -85,7 +92,7 @@ export default function MoodPicker({ props }: MoodPickerProps) {
         />
         <MoodOption
           props={{
-            text: "c",
+            text: "good",
             handlePress,
             type: 2,
             style: styles.blue,
@@ -93,7 +100,7 @@ export default function MoodPicker({ props }: MoodPickerProps) {
         />
         <MoodOption
           props={{
-            text: "d",
+            text: "great",
             handlePress,
             type: 3,
             style: styles.green,
@@ -109,6 +116,11 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     color: "white",
+    padding: 5,
+    fontSize: 20,
+  },
+  close: {
+    // textAlign: "center",
   },
   selection: {
     flexDirection: "row",
