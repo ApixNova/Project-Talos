@@ -1,13 +1,28 @@
 import { useLocalSearchParams } from "expo-router";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { Note } from "../../../components/Note";
 
 export default function Page() {
   const { id } = useLocalSearchParams();
 
   return (
-    <View>
-      <Text>Note id: {id}</Text>
-      <Text>Editable note here</Text>
+    <View style={styles.container}>
+      <Text style={{ color: "white" }}>Note id: {id}</Text>
+      <View style={styles.noteContainer}>
+        <Note />
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    height: "100%",
+    backgroundColor: "black",
+    alignItems: "center",
+  },
+  noteContainer: {
+    height: "100%",
+    width: "100%",
+  },
+});

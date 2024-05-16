@@ -15,8 +15,8 @@ export default function Tablayout() {
         },
         headerStyle: {
           backgroundColor: moodColor.black,
-          borderBottomWidth: 0,
         },
+        headerShadowVisible: false,
         headerTintColor: "#fff",
         headerTitleAlign: "center",
       }}
@@ -34,6 +34,7 @@ export default function Tablayout() {
         name="Diary"
         options={{
           title: "Diary",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesome5 size={30} name="book" color={color} />
           ),

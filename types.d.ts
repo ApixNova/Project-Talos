@@ -43,3 +43,12 @@ export type SaveMoodProps = {
     selectedDay: string;
   };
 };
+
+export type Note = {
+  id: string;
+  date: string;
+  mood: number;
+  title: string;
+  content: string;
+  createdAt: number;
+};
