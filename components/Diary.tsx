@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 60,
     height: 60,
-    // display: "flex",
     position: "absolute",
     bottom: 10,
     backgroundColor: "pink",

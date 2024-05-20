@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   noteContainer: {
-    height: "100%",
+    height: "95%",
     width: "100%",
   },
 });

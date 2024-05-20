@@ -10,5 +10,16 @@ export default appSchema({
         { name: "day", type: "string" },
       ],
     }),
+    tableSchema({
+      name: "notes",
+      columns: [
+        { name: "id", type: "string" },
+        { name: "date", type: "string" },
+        { name: "mood", type: "number" },
+        { name: "title", type: "string" },
+        { name: "content", type: "string" },
+        { name: "created_at", type: "number" },
+      ],
+    }),
   ],
 });
