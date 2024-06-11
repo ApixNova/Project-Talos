@@ -2,11 +2,15 @@ import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { getCurrentDate } from "../utils/functions";
 import { FlashList } from "@shopify/flash-list";
-import { Note } from "./Note";
+import { NoteComponent } from "./NoteComponent";
 import { Stack, useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { NotePreview } from "./NotePreview";
 import { moodColor } from "../utils/palette";
+import { database } from "../utils/watermelon";
+import Note from "../model/Note";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { editNote } from "../state/noteSlice";
 
 const noteExample = [
   {
@@ -28,11 +32,26 @@ const noteExample = [
 ];
 
 export function Diary() {
+  const notes = useAppSelector((state) => state.notes.value);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    //on load query notes table
+    async function getNotes() {
+      const notesQuery = (await database
+        .get("notes")
+        .query()
+        .fetch()) as Note[];
+      dispatch(editNote(notesQuery));
+    }
+  }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.mainTitle}>Take a note!</Text>
       <View style={styles.noteContainer}>
-        <Note />
+        <NoteComponent
+          props={{ day: getCurrentDate(), editing: false, id: "" }}
+        />
       </View>
       <View style={styles.noteList}>
         <FlashList

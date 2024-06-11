@@ -3,6 +3,7 @@ import { database } from "./watermelon";
 import { supabase } from "./supabase";
 
 export async function mySync() {
+  // console.log("Sync called");
   await synchronize({
     database,
     pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {

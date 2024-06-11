@@ -9,4 +9,5 @@ export default class Note extends Model {
   @text("title") title!: string;
   @text("content") content!: string;
   @field("created_at") createdAt!: number;
+  @field("updated_at") updatedAt!: number;
 }

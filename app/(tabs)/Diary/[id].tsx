@@ -1,15 +1,16 @@
 import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
-import { Note } from "../../../components/Note";
+import { NoteComponent } from "../../../components/NoteComponent";
+import { getCurrentDate } from "../../../utils/functions";
 
 export default function Page() {
-  const { id } = useLocalSearchParams();
+  const id = useLocalSearchParams().id as string;
 
   return (
     <View style={styles.container}>
       <Text style={{ color: "white" }}>Note id: {id}</Text>
       <View style={styles.noteContainer}>
-        <Note />
+        <NoteComponent props={{ editing: true, id, day: "" }} />
       </View>
     </View>
   );

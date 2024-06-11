@@ -1,7 +1,33 @@
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
 import { moodColor } from "../utils/palette";
+import { getCurrentDate } from "../utils/functions";
+import { Moods, NoteProps } from "../types";
+import { database } from "../utils/watermelon";
+import { Q } from "@nozbe/watermelondb";
+import MoodPicker from "./MoodPicker";
+import { useState } from "react";
 
-export function Note() {
+export function NoteComponent({ props }: NoteProps) {
+  const { day, editing, id } = props;
+  const [moodPicker, setMoodPicker] = useState(true);
+  const [moodType, setMoodType] = useState("");
+  function handleMoodPress(moodType: number) {
+    setMoodType(JSON.stringify(moodType));
+  }
+  async function saveNote() {
+    //Save note to DB
+    //if editing then edit db
+    if (editing) {
+      const existingNoteId = (
+        await database.get("notes").query(Q.where("day", day)).fetchIds()
+      )[0];
+      await database.write(async () => {
+        const existingNote = await database.get("notes").find(existingNoteId);
+        await existingNote.update(() => {});
+      });
+    } else {
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={styles.newNoteTitle}>
@@ -10,6 +36,9 @@ export function Note() {
           placeholder="Title(optional)"
         />
         <Pressable style={styles.newNoteTitleMood}></Pressable>
+        <Pressable onPress={saveNote}>
+          <Text style={{ color: "white" }}>[Save]</Text>
+        </Pressable>
       </View>
       <View style={styles.newNoteMain}>
         <TextInput
@@ -19,6 +48,8 @@ export function Note() {
           style={styles.newNoteInput}
           multiline
         />
+        <MoodPicker handlePress={handleMoodPress} />
+        <Text style={{ color: "white" }}>Mood: {moodType}</Text>
       </View>
     </View>
   );

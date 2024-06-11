@@ -1,8 +1,8 @@
 // Typing for moodReducer
-export interface MoodAction {
-  type: string;
-  mood: number;
-}
+// export interface MoodAction {
+//   type: string;
+//   mood: number;
+// }
 
 export type calendarProps = {
   props: {
@@ -12,11 +12,7 @@ export type calendarProps = {
 };
 
 export type MoodPickerProps = {
-  props: {
-    selectedDay: string;
-    setMoods: (list: Moods) => void;
-    setMoodPicker: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+  handlePress: (moodType: number) => void;
 };
 
 export type Moods = {
@@ -26,7 +22,7 @@ export type Moods = {
 export type MoodOptionProps = {
   props: {
     text: string;
-    handlePress(moodType: number): Promise<void>;
+    handlePress(moodType: number): Promise<void> | void;
     type: number;
     style: {
       backgroundColor: string;
@@ -51,4 +47,12 @@ export type Note = {
   title: string;
   content: string;
   createdAt: number;
+};
+
+export type NoteProps = {
+  props: {
+    day: string;
+    editing: boolean;
+    id: string;
+  };
 };

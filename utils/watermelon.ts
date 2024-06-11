@@ -4,13 +4,14 @@ import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 import schema from "../model/schema";
 import Feeling from "../model/Feeling";
+import migrations from "../model/migrations";
 
 let adapter;
 
 // if (Platform.OS == "web") {
 adapter = new LokiJSAdapter({
   schema,
-  // migrations,
+  migrations,
   useWebWorker: false,
   useIncrementalIndexedDB: true,
   onQuotaExceededError(error) {

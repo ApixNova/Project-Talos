@@ -56,8 +56,8 @@ export default function CalendarView({ props }: calendarProps) {
         },
       },
     };
-    console.log("moods");
-    console.log(moods);
+    // console.log("moods");
+    // console.log(moods);
     for (const day in moods) {
       markedRef[day] = {
         selected: true,
@@ -76,8 +76,8 @@ export default function CalendarView({ props }: calendarProps) {
         },
       };
     }
-    console.log("ref:");
-    console.log(markedRef);
+    // console.log("ref:");
+    // console.log(markedRef);
     return markedRef;
   }, [selectedDay, moods]);
   return (

@@ -1,14 +1,15 @@
-import { Text, SafeAreaView, StyleSheet } from "react-native";
+import { Text, SafeAreaView, StyleSheet, Pressable } from "react-native";
 import { useEffect, useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { database } from "../../utils/watermelon";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { editMood } from "../../state/slice";
+import { editMood } from "../../state/moodSlice";
 import { getCurrentDate } from "../../utils/functions";
 import { Moods } from "../../types";
 import Feeling from "../../model/Feeling";
 import CalendarView from "../../components/CalendarView";
 import SaveMood from "../../components/SaveMood";
+import { mySync } from "../../utils/sync";
 
 export default function Tab() {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());
@@ -41,6 +42,18 @@ export default function Tab() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Welcome To Project Talos</Text>
+      <Pressable
+        onPress={() => {
+          mySync();
+        }}
+        style={{
+          backgroundColor: "pink",
+          padding: 5,
+          borderRadius: 10,
+        }}
+      >
+        <Text>Don't press me</Text>
+      </Pressable>
       <CalendarView props={{ selectedDay, setSelectedDay }} />
       <SaveMood
         props={{

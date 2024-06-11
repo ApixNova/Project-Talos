@@ -3,7 +3,7 @@ import { Moods } from "../types";
 
 const initialState: Moods = {};
 
-export const appSlice = createSlice({
+export const moodSlice = createSlice({
   name: "moodSlice",
   initialState: { value: initialState },
   reducers: {
@@ -13,6 +13,6 @@ export const appSlice = createSlice({
   },
 });
 
-const { actions, reducer } = appSlice;
+const { actions, reducer } = moodSlice;
 export const { editMood } = actions;
 export default reducer;
