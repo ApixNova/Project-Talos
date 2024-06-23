@@ -42,11 +42,11 @@ export type SaveMoodProps = {
 
 export type Note = {
   id: string;
-  date: string;
-  mood: number;
+  day: string;
   title: string;
   content: string;
   createdAt: number;
+  updatedAt: number;
 };
 
 export type NoteProps = {

@@ -14,7 +14,7 @@ export function NotePreview({ data }: { data: Note }) {
           fontSize: 17,
         }}
       >
-        {data.date + " | " + data.title + " | " + data.mood}
+        {data.day + " | " + data.title + " | [Mood]"}
       </Text>
     </Pressable>
   );

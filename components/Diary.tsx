@@ -1,12 +1,10 @@
 import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { getCurrentDate } from "../utils/functions";
+import { getCurrentDate, serializeNote } from "../utils/functions";
 import { FlashList } from "@shopify/flash-list";
 import { NoteComponent } from "./NoteComponent";
-import { Stack, useNavigation } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NotePreview } from "./NotePreview";
-import { moodColor } from "../utils/palette";
 import { database } from "../utils/watermelon";
 import Note from "../model/Note";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -32,8 +30,9 @@ const noteExample = [
 ];
 
 export function Diary() {
-  const notes = useAppSelector((state) => state.notes.value);
+  const notes = useAppSelector((state) => state.notes as Note[]);
   const dispatch = useAppDispatch();
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     //on load query notes table
@@ -42,26 +41,44 @@ export function Diary() {
         .get("notes")
         .query()
         .fetch()) as Note[];
-      dispatch(editNote(notesQuery));
+      console.log(notesQuery);
+      //serialize notes for redux
+      const serializedNotes = notesQuery.map((note) => serializeNote(note));
+      dispatch(editNote(serializedNotes));
     }
+    getNotes();
   }, []);
+  useEffect(() => {
+    console.log("(debug) Notes: ");
+    console.log(notes);
+    if (notes.length > 0) {
+      //check if we there is a note for today
+      const noteForToday = notes.find((note) => note.day == getCurrentDate());
+      if (noteForToday) {
+        console.log("we are editing!");
+        setEditing(true);
+      }
+    }
+  }, [notes]);
   return (
     <View style={styles.container}>
       <Text style={styles.mainTitle}>Take a note!</Text>
       <View style={styles.noteContainer}>
         <NoteComponent
-          props={{ day: getCurrentDate(), editing: false, id: "" }}
+          props={{ day: getCurrentDate(), editing: editing, id: "" }}
         />
       </View>
       <View style={styles.noteList}>
-        <FlashList
-          data={noteExample}
-          renderItem={({ item }) => {
-            // return <Note data={item} />;
-            return <NotePreview data={item} />;
-          }}
-          estimatedItemSize={200}
-        />
+        {notes.length > 0 && (
+          <FlashList
+            data={notes}
+            renderItem={({ item }) => {
+              // return <Note data={item} />;
+              return <NotePreview data={item} />;
+            }}
+            estimatedItemSize={200}
+          />
+        )}
       </View>
       <Pressable style={styles.newEntry}>
         <FontAwesome style={styles.plus} name="plus" size={30} color="black" />

@@ -3,6 +3,7 @@ import { MoodOption } from "./MoodOption";
 import { moodColor } from "../utils/palette";
 import { useEffect } from "react";
 import { MoodPickerProps } from "../types";
+import { database } from "../utils/watermelon";
 
 export default function MoodPicker({ handlePress }: MoodPickerProps) {
   useEffect(() => {

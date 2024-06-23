@@ -1,11 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SaveMoodProps } from "../types";
-import { database } from "../utils/watermelon";
 import { FontAwesome } from "@expo/vector-icons";
-import Feeling from "../model/Feeling";
 import { useAppSelector } from "../state/hooks";
-import { Q } from "@nozbe/watermelondb";
 import MoodPicker from "./MoodPicker";
+import { updateMood } from "../utils/updateMood";
+
 export default function SaveMood({ props }: SaveMoodProps) {
   const { moodPicker, setMoodPicker, setMoods, selectedDay } = props;
   const moods = useAppSelector((state) => state.moods.value);
@@ -14,28 +13,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
     setMoodPicker((prev) => !prev);
   }
   async function handlePress(moodType: number) {
-    //compare with queried moods
-    const existsInDatabase = await database
-      .get<Feeling>("feelings")
-      .query(Q.where("day", selectedDay));
-    if (existsInDatabase.length > 0) {
-      if (existsInDatabase[0].type != moodType) {
-        //if it exists already and is different, modify element
-        await database.write(async () => {
-          await existsInDatabase[0].update(() => {
-            existsInDatabase[0].type = moodType;
-          });
-        });
-      }
-    } else {
-      //otherwise create one
-      await database.write(async () => {
-        await database.get<Feeling>("feelings").create((mood) => {
-          mood.type = moodType;
-          mood.day = selectedDay;
-        });
-      });
-    }
+    await updateMood(moodType, selectedDay);
     //update state
     let moodsList = { ...moods };
     moodsList[selectedDay] = moodType;

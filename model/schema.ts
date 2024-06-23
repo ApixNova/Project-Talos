@@ -13,8 +13,7 @@ export default appSchema({
     tableSchema({
       name: "notes",
       columns: [
-        { name: "date", type: "string" },
-        { name: "mood", type: "number" },
+        { name: "day", type: "string" },
         { name: "title", type: "string" },
         { name: "content", type: "string" },
         { name: "created_at", type: "number" },
