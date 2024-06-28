@@ -8,7 +8,7 @@ import { getCurrentDate } from "../../utils/functions";
 import { Moods } from "../../types";
 import Feeling from "../../model/Feeling";
 import CalendarView from "../../components/CalendarView";
-import SaveMood from "../../components/SaveMood";
+import SaveMood from "../../components/Moods/SaveMood";
 import { mySync } from "../../utils/sync";
 
 export default function Tab() {

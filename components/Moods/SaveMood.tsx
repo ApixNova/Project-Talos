@@ -1,9 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { SaveMoodProps } from "../types";
+import { SaveMoodProps } from "../../types";
 import { FontAwesome } from "@expo/vector-icons";
-import { useAppSelector } from "../state/hooks";
+import { useAppSelector } from "../../state/hooks";
 import MoodPicker from "./MoodPicker";
-import { updateMood } from "../utils/updateMood";
+import { updateMood } from "../../utils/updateMood";
 
 export default function SaveMood({ props }: SaveMoodProps) {
   const { moodPicker, setMoodPicker, setMoods, selectedDay } = props;

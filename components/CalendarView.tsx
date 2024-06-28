@@ -87,19 +87,16 @@ export default function CalendarView({ props }: calendarProps) {
         markingType={"custom"}
         markedDates={markedDates}
         // dayComponent={({ date, state, marking }) => {
-        //   console.log(marking);
+        //   // console.log(marking);
+        //   const isSelected = selectedDay === date?.dateString;
         //   return (
-        //     <View>
-        //       <Text
-        //         style={{
-        //           textAlign: "center",
-        //           fontSize: 20,
-        //           color: state === "disabled" ? "gray" : "black",
-        //         }}
-        //       >
-        //         {date.day}
-        //       </Text>
-        //     </View>
+        //     <DayComponent
+        //       date={date}
+        //       state={state}
+        //       onPress={handleDayPress}
+        //       isSelected={isSelected}
+        //       marking={marking}
+        //     />
         //   );
         // }}
         theme={{
@@ -112,6 +109,23 @@ export default function CalendarView({ props }: calendarProps) {
           textDayFontSize: 20,
           textDayHeaderFontSize: 15,
           textMonthFontSize: 20,
+          // @ts-ignore: types / theme handling bug
+          "stylesheet.day.basic": {
+            base: {
+              width: "100%",
+              height: "100%",
+              // justifyContent: "center",
+              alignItems: "center",
+              borderWidth: 4,
+              borderColor: "transparent",
+            },
+          },
+          "stylesheet.calendar.main": {
+            container: {
+              paddingLeft: 5,
+              paddingRight: 5,
+            },
+          },
         }}
         // horizontal={true}
         pagingEnabled={true}

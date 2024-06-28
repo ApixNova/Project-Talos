@@ -3,7 +3,7 @@ import { returnColor } from "../utils/functions";
 import { Moods, NoteProps } from "../types";
 import { database } from "../utils/watermelon";
 import { Q } from "@nozbe/watermelondb";
-import MoodPicker from "./MoodPicker";
+import MoodPicker from "./Moods/MoodPicker";
 import { useEffect, useState } from "react";
 import Note from "../model/Note";
 import { updateMood } from "../utils/updateMood";
