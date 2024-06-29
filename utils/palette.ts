@@ -4,3 +4,9 @@ export const moodColor = {
   blue: "#2f1f94",
   green: "#3e9e5e",
 };
+
+export const palette = {
+  background: 'black',
+  primary: '#4650d8'
+
+}

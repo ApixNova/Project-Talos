@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 
 export default function Screen() {
@@ -9,7 +9,7 @@ export default function Screen() {
     return null;
   }
   return (
-    <View>
+    <View style={styles.container}>
       <Text
         style={{
           fontFamily: "Inter_900Black",
@@ -21,3 +21,10 @@ export default function Screen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "black",
+    height: "100%",
+  },
+});

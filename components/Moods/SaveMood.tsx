@@ -23,7 +23,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
     <View style={styles.container}>
       {!moodPicker ? (
         <Pressable onPress={onPress}>
-          <Text style={styles.buttonText}>Button</Text>
+          <Text style={styles.buttonText}>Save Mood</Text>
         </Pressable>
       ) : (
         <>

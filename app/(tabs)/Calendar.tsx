@@ -9,7 +9,6 @@ import { Moods } from "../../types";
 import Feeling from "../../model/Feeling";
 import CalendarView from "../../components/CalendarView";
 import SaveMood from "../../components/Moods/SaveMood";
-import { mySync } from "../../utils/sync";
 
 export default function Tab() {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());
@@ -41,19 +40,6 @@ export default function Tab() {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Welcome To Project Talos</Text>
-      <Pressable
-        onPress={() => {
-          mySync();
-        }}
-        style={{
-          backgroundColor: "pink",
-          padding: 5,
-          borderRadius: 10,
-        }}
-      >
-        <Text>Don't press me</Text>
-      </Pressable>
       <CalendarView props={{ selectedDay, setSelectedDay }} />
       <SaveMood
         props={{
