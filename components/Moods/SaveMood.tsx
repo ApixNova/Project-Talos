@@ -4,6 +4,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useAppSelector } from "../../state/hooks";
 import MoodPicker from "./MoodPicker";
 import { updateMood } from "../../utils/updateMood";
+import { palette } from "../../utils/palette";
 
 export default function SaveMood({ props }: SaveMoodProps) {
   const { moodPicker, setMoodPicker, setMoods, selectedDay } = props;
@@ -39,7 +40,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
               color="white"
             />
           </Pressable>
-          <Text style={styles.title}>How was your day?</Text>
+          <Text style={styles.title}>How was your day ?</Text>
 
           <MoodPicker handlePress={handlePress} />
         </>
@@ -51,22 +52,26 @@ export default function SaveMood({ props }: SaveMoodProps) {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
-    borderColor: "white",
+    borderColor: palette.text,
     borderWidth: 2,
-    backgroundColor: "black",
+    backgroundColor: palette.accent,
     padding: 15,
   },
   buttonText: {
-    color: "white",
-    fontFamily: "Georgia",
+    color: palette.background,
+    fontFamily: "Inter_500Medium",
+    fontSize: 16,
   },
   title: {
     textAlign: "center",
-    color: "white",
+    color: palette.background,
+
+    fontFamily: "Inter_500Medium",
     padding: 5,
     fontSize: 20,
   },
   close: {
     // textAlign: "center",
+    color: palette.background,
   },
 });

@@ -7,47 +7,13 @@ import { useEffect, useState } from "react";
 import { NotePreview } from "./NotePreview";
 import { database } from "../utils/watermelon";
 import Note from "../model/Note";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { editNote } from "../state/noteSlice";
-
-const noteExample = [
-  {
-    id: "1",
-    date: getCurrentDate(),
-    mood: 3,
-    title: "Title 1",
-    content: "text here",
-    createdAt: Date.now(),
-  },
-  {
-    id: "2",
-    date: getCurrentDate(),
-    mood: 4,
-    title: "Title 2",
-    content: "text here",
-    createdAt: Date.now(),
-  },
-];
+import { useAppSelector } from "../state/hooks";
+import { palette } from "../utils/palette";
 
 export function Diary() {
   const notes = useAppSelector((state) => state.notes as Note[]);
-  const dispatch = useAppDispatch();
   const [editing, setEditing] = useState(false);
 
-  useEffect(() => {
-    //on load query notes table
-    async function getNotes() {
-      const notesQuery = (await database
-        .get("notes")
-        .query()
-        .fetch()) as Note[];
-      console.log(notesQuery);
-      //serialize notes for redux
-      const serializedNotes = notesQuery.map((note) => serializeNote(note));
-      dispatch(editNote(serializedNotes));
-    }
-    getNotes();
-  }, []);
   useEffect(() => {
     console.log("(debug) Notes: ");
     console.log(notes);
@@ -89,11 +55,9 @@ export function Diary() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
-    // justifyContent: "center",
+    backgroundColor: palette.background,
     alignItems: "center",
     flex: 1,
-    // width: "100%",
   },
   mainTitle: {
     color: "white",
@@ -116,7 +80,7 @@ const styles = StyleSheet.create({
     height: 60,
     position: "absolute",
     bottom: 10,
-    backgroundColor: "pink",
+    backgroundColor: palette.rose,
   },
   plus: {
     margin: "auto",

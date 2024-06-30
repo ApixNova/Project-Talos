@@ -6,7 +6,11 @@ export const moodColor = {
 };
 
 export const palette = {
-  background: 'black',
-  primary: '#4650d8'
-
-}
+  background: "#0c0414",
+  text: "#eae9fc",
+  primary: "#4650d8",
+  secondary: "#dc254a",
+  accent: "#8f97ea",
+  rose: "#de5974",
+  gray: "#757272",
+};

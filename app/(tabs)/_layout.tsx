@@ -17,6 +17,7 @@ export default function Tablayout() {
           backgroundColor: moodColor.black,
         },
         headerShadowVisible: false,
+        // headerShown: false,
         headerTintColor: "#fff",
         headerTitleAlign: "center",
       }}
@@ -25,6 +26,7 @@ export default function Tablayout() {
         name="Calendar"
         options={{
           title: "Calendar",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons size={30} name="calendar" color={color} />
           ),

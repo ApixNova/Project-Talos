@@ -5,10 +5,12 @@ import {
   useWindowDimensions,
   Pressable,
 } from "react-native";
-import { MoodOptionProps } from "../types";
+import { MoodOptionProps } from "../../types";
+import { palette } from "../../utils/palette";
 
 export function MoodOption({ props }: MoodOptionProps) {
   const { text, handlePress, style, type } = props;
+
   const { width } = useWindowDimensions();
 
   const squareSize = (width * 0.5) / 4;
@@ -43,12 +45,13 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   color: {
-    borderWidth: 2,
-    borderColor: "white",
+    borderWidth: 3,
+    borderColor: palette.background,
   },
   moodTitle: {
     margin: 10,
     textAlign: "center",
-    color: "white",
+    fontFamily: "Inter_400Regular",
+    color: palette.background,
   },
 });

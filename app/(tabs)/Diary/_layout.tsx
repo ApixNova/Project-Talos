@@ -7,13 +7,7 @@ export default function DiaryLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Diary",
           headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: moodColor.black,
-          },
-          headerTintColor: "#fff",
-          headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
@@ -21,6 +15,15 @@ export default function DiaryLayout() {
         options={{
           title: "Edit Note",
           // headerShown: false,
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: moodColor.black,
+          },
+          headerTintColor: "#fff",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "Inter_400Regular",
+          },
         }}
       />
     </Stack>

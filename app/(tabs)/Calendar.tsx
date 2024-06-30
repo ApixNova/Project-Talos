@@ -9,6 +9,7 @@ import { Moods } from "../../types";
 import Feeling from "../../model/Feeling";
 import CalendarView from "../../components/CalendarView";
 import SaveMood from "../../components/Moods/SaveMood";
+import { palette } from "../../utils/palette";
 
 export default function Tab() {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());
@@ -20,24 +21,6 @@ export default function Tab() {
     dispatch(editMood(list));
   }
 
-  useEffect(() => {
-    console.log("calendar loaded");
-    //on load querry moods table
-    async function getMoods() {
-      const moodsQuery = (await database
-        .get("feelings")
-        .query()
-        .fetch()) as Feeling[];
-      let moodsList: Moods = {};
-      moodsQuery.forEach((mood) => {
-        moodsList[mood.day] = mood.type;
-      });
-      setMoods(moodsList);
-    }
-    getMoods().then(() => {
-      console.log("moods queried");
-    });
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <CalendarView props={{ selectedDay, setSelectedDay }} />
@@ -56,7 +39,7 @@ export default function Tab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#2e2c3d",
+    backgroundColor: palette.background,
     alignItems: "center",
     justifyContent: "space-evenly",
   },

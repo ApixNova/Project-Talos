@@ -9,6 +9,7 @@ import Note from "../model/Note";
 import { updateMood } from "../utils/updateMood";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editMood } from "../state/moodSlice";
+import { palette } from "../utils/palette";
 
 export function NoteComponent({ props }: NoteProps) {
   const { day, editing, id } = props;
@@ -127,7 +128,8 @@ export function NoteComponent({ props }: NoteProps) {
       <View style={styles.newNoteTitle}>
         <TextInput
           style={styles.newNoteTitleInput}
-          placeholder="Title(optional)"
+          placeholder="Title (optional)"
+          placeholderTextColor={palette.gray}
           value={title}
           onChangeText={setTitle}
         />
@@ -155,6 +157,7 @@ export function NoteComponent({ props }: NoteProps) {
           value={text}
           onChangeText={setText}
           placeholder="take a note about your day..."
+          placeholderTextColor={palette.gray}
           style={styles.newNoteInput}
           multiline
         />
@@ -171,12 +174,11 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 10,
     borderColor: "pink",
+    backgroundColor: palette.accent,
   },
   newNoteTitle: {
-    backgroundColor: "#050424",
+    backgroundColor: palette.accent,
     height: "10%",
-    // borderWidth: 2,
-    // borderColor: "white",
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -187,8 +189,9 @@ const styles = StyleSheet.create({
   newNoteTitleInput: {
     fontSize: 20,
     width: "80%",
-    color: "white",
+    color: palette.text,
     paddingHorizontal: 5,
+    fontFamily: "Inter_300Light",
   },
   newNoteTitleMood: {
     width: 30,
@@ -212,11 +215,13 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 10,
     height: "90%",
+    backgroundColor: palette.background,
   },
   newNoteInput: {
     color: "white",
     height: "100%",
     fontSize: 20,
     paddingHorizontal: 5,
+    fontFamily: "Inter_400Regular",
   },
 });

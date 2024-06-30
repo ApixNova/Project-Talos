@@ -2,10 +2,11 @@ import { View, StyleSheet, useWindowDimensions, Text } from "react-native";
 import { CalendarList, Calendar, DateData } from "react-native-calendars";
 import { useMemo } from "react";
 import { calendarProps } from "../types";
-import { moodColor } from "../utils/palette";
+import { moodColor, palette } from "../utils/palette";
 import { useAppSelector } from "../state/hooks";
 import { MarkedDates } from "react-native-calendars/src/types";
 import Day from "react-native-calendars/src/calendar/day";
+import { getCurrentDate } from "../utils/functions";
 
 export default function CalendarView({ props }: calendarProps) {
   const { selectedDay, setSelectedDay } = props;
@@ -43,7 +44,7 @@ export default function CalendarView({ props }: calendarProps) {
         customStyles: {
           container: {
             backgroundColor: "inherit",
-            borderColor: "#26186e",
+            borderColor: palette.background,
             borderWidth: 4,
             borderRadius: 0,
             width: "100%",
@@ -51,7 +52,8 @@ export default function CalendarView({ props }: calendarProps) {
             // padding: 0,
           },
           text: {
-            color: "black",
+            color: "pink",
+            fontFamily: "Inter_400Regular",
           },
         },
       },
@@ -64,14 +66,14 @@ export default function CalendarView({ props }: calendarProps) {
         selectedColor: getColor(moods[day]),
         customStyles: {
           container: {
-            borderColor: day == selectedDay ? "black" : "transparent",
+            borderColor: day == selectedDay ? "#adcadb" : "transparent",
             borderWidth: 4,
             borderRadius: 0,
             width: "100%",
             height: "100%",
           },
           text: {
-            color: "white",
+            color: day == getCurrentDate() ? "#f57a7a" : palette.text,
           },
         },
       };
@@ -86,29 +88,21 @@ export default function CalendarView({ props }: calendarProps) {
         onDayPress={(day) => handleDayPress(day)}
         markingType={"custom"}
         markedDates={markedDates}
-        // dayComponent={({ date, state, marking }) => {
-        //   // console.log(marking);
-        //   const isSelected = selectedDay === date?.dateString;
-        //   return (
-        //     <DayComponent
-        //       date={date}
-        //       state={state}
-        //       onPress={handleDayPress}
-        //       isSelected={isSelected}
-        //       marking={marking}
-        //     />
-        //   );
-        // }}
         theme={{
           backgroundColor: "black",
-          calendarBackground: "#a0c0eb",
-          textSectionTitleColor: "black",
-          textDayFontFamily: "Georgia",
-          textMonthFontFamily: "Georgia",
-          textDayHeaderFontFamily: "Georgia",
-          textDayFontSize: 20,
-          textDayHeaderFontSize: 15,
+          calendarBackground: "#7d7bb3",
+          textSectionTitleColor: palette.background,
+          textMonthFontFamily: "Inter_400Regular",
+          monthTextColor: palette.text,
           textMonthFontSize: 20,
+          textDayHeaderFontFamily: "Inter_400Regular",
+          textDayHeaderFontSize: 15,
+          textDayFontFamily: "Inter_300Light",
+          textDayFontSize: 20,
+          textDayStyle: {
+            color: palette.text,
+          },
+          textDisabledColor: palette.accent,
           // @ts-ignore: types / theme handling bug
           "stylesheet.day.basic": {
             base: {
@@ -122,8 +116,8 @@ export default function CalendarView({ props }: calendarProps) {
           },
           "stylesheet.calendar.main": {
             container: {
-              paddingLeft: 5,
-              paddingRight: 5,
+              // paddingLeft: 5,
+              // paddingRight: 5,
             },
           },
         }}
@@ -144,13 +138,13 @@ export default function CalendarView({ props }: calendarProps) {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 5,
+    borderWidth: 2,
+    borderColor: palette.text,
     // borderRadius: 20,
     // padding: 10,
     // backgroundColor: "#a0c0eb",
     // justifyContent: "center",
     height: 370,
-    fontFamily: "Georgia",
   },
   calendar: {
     // borderRadius: 20,

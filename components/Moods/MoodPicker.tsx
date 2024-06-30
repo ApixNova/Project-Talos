@@ -17,7 +17,7 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
       <View style={styles.selection}>
         <MoodOption
           props={{
-            text: "a",
+            text: "abyss",
             handlePress,
             type: 0,
             style: styles.black,
@@ -25,7 +25,7 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
         />
         <MoodOption
           props={{
-            text: "b",
+            text: "bad",
             handlePress,
             type: 1,
             style: styles.red,
