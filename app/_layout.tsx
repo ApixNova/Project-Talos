@@ -9,16 +9,18 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import {
   useFonts,
-  Inter_900Black,
-  Inter_400Regular,
   Inter_300Light,
+  Inter_500Medium,
+  Inter_400Regular,
+  Inter_900Black,
 } from "@expo-google-fonts/inter";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
-    Inter_900Black,
-    Inter_400Regular,
     Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_900Black,
   });
   return (
     <Provider store={store}>
@@ -57,12 +59,25 @@ export default function App() {
                   Calendar & Diary
                 </Text>
               ),
-              title: "[Logo]",
+              title: "Talos",
+              headerTitleStyle: {
+                fontFamily: "Inter_900Black",
+                fontSize: 30,
+                color: palette.background,
+              },
+              // headerTitle: (props) => (
+              //   <FontAwesome5 size={30} name="book" color={"white"} />
+              // ),
             }}
           />
           <Drawer.Screen
             name="Settings"
             options={{
+              headerTitleStyle: {
+                fontFamily: "Inter_900Black",
+                fontSize: 30,
+                color: palette.background,
+              },
               drawerIcon: (color) => (
                 <Ionicons
                   name="settings-sharp"
@@ -85,6 +100,11 @@ export default function App() {
           <Drawer.Screen
             name="Sync"
             options={{
+              headerTitleStyle: {
+                fontFamily: "Inter_900Black",
+                fontSize: 30,
+                color: palette.background,
+              },
               drawerIcon: (color) => (
                 <FontAwesome5
                   name="sync-alt"
@@ -102,7 +122,6 @@ export default function App() {
                   Sync
                 </Text>
               ),
-              title: "Gris",
             }}
           />
         </Drawer>

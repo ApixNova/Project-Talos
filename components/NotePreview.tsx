@@ -1,20 +1,47 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  useWindowDimensions,
+} from "react-native";
 import { Moods, Note } from "../types";
 import { Link, router } from "expo-router";
 import { palette } from "../utils/palette";
-import { returnColor } from "../utils/functions";
+import { getWeekDay, returnColor } from "../utils/functions";
 import { useAppSelector } from "../state/hooks";
 
 export function NotePreview({ data }: { data: Note }) {
   const moods = useAppSelector((state) => state.moods.value as Moods);
+  const { width } = useWindowDimensions();
   function handlePress() {
     router.navigate("/Diary/" + data.id);
   }
 
   return (
-    <Pressable style={styles.container} onPress={handlePress}>
-      <Text style={styles.title}>{data.title}</Text>
-      <Text style={styles.date}>{data.day}</Text>
+    <Pressable
+      style={[
+        styles.container,
+        {
+          width: width < 1200 ? "100%" : "75%",
+          maxWidth: 1350,
+        },
+      ]}
+      onPress={handlePress}
+    >
+      {data.title ? (
+        <>
+          <Text style={styles.title}>{data.title}</Text>
+          <Text style={styles.date}>{data.day}</Text>
+        </>
+      ) : (
+        <>
+          <Text style={styles.dayOfWeek}>
+            {getWeekDay(new Date(data.day).getDay())}
+          </Text>
+          <Text style={styles.date}>{data.day}</Text>
+        </>
+      )}
       <View
         style={[
           styles.mood,
@@ -32,7 +59,7 @@ const styles = StyleSheet.create({
     padding: 3,
     borderColor: "pink",
     marginVertical: 1,
-    width: "98%",
+    // width: "75%",
     margin: "auto",
     flexDirection: "row",
     alignItems: "center",
@@ -49,13 +76,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 5,
   },
+  dayOfWeek: {
+    color: palette.text,
+    fontFamily: "Inter_300Light",
+    fontSize: 20,
+    marginLeft: 5,
+  },
   mood: {
-    width: 20,
-    height: 20,
-    // backgroundColor: "red",
-    borderWidth: 2,
-    borderColor: "white",
-    borderRadius: 10,
+    width: 26,
+    height: 26,
+    shadowColor: palette.text,
+    shadowRadius: 3,
+    borderRadius: 13,
     marginLeft: "auto",
   },
 });

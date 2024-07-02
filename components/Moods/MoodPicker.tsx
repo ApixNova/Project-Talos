@@ -6,12 +6,6 @@ import { MoodPickerProps } from "../../types";
 import { database } from "../../utils/watermelon";
 
 export default function MoodPicker({ handlePress }: MoodPickerProps) {
-  useEffect(() => {
-    // console.log("resetting db");
-    // database.write(async () => {
-    //   database.unsafeResetDatabase();
-    // });
-  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.selection}>

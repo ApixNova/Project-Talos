@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  useWindowDimensions,
+} from "react-native";
 import { returnColor } from "../utils/functions";
 import { Moods, NoteProps } from "../types";
 import { database } from "../utils/watermelon";
@@ -22,16 +29,15 @@ export function NoteComponent({ props }: NoteProps) {
 
   const dispatch = useAppDispatch();
   const [existingNote, setExistingNote] = useState<Note[]>([]);
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
-    console.log("useEffect triggered");
     // on load check if we're editing the note to update it
     if (editing) {
       async function handleEdit() {
         //if editing
         if (id !== "") {
           //check if id is provided
-          console.log("id is provided");
           const noteInDB = [await database.get<Note>("notes").find(id)];
           setExistingNote(noteInDB);
         } else {
@@ -39,28 +45,23 @@ export function NoteComponent({ props }: NoteProps) {
           const noteInDB = await database
             .get<Note>("notes")
             .query(Q.where("day", day));
-          console.log("setExistingNote called");
           setExistingNote(noteInDB);
         }
       }
       handleEdit();
     }
   }, [editing]);
+
   useEffect(() => {
-    console.log("existingNote updated");
-    console.log(existingNote);
     if (existingNote.length > 0) {
       setTitle(existingNote[0].title);
       setText(existingNote[0].content);
     }
   }, [existingNote]);
 
-  function setMoods(list: Moods) {
-    dispatch(editMood(list));
-  }
-
   function handleMoodPress(moodType: number) {
     setMoodType(JSON.stringify(moodType));
+    setMoodPicker(false);
   }
   async function saveNote() {
     if (text == "") {
@@ -120,11 +121,19 @@ export function NoteComponent({ props }: NoteProps) {
       //update state
       let moodsList = { ...moods };
       moodsList[day] = parseInt(moodType);
-      setMoods(moodsList);
+      dispatch(editMood(moodsList));
     }
   }
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          width: width < 1200 ? "100%" : "80%",
+          maxWidth: 1500,
+        },
+      ]}
+    >
       <View style={styles.newNoteTitle}>
         <TextInput
           style={styles.newNoteTitleInput}
@@ -144,12 +153,11 @@ export function NoteComponent({ props }: NoteProps) {
           {moodPicker && (
             <View style={styles.newNoteMoodPicker}>
               <MoodPicker handlePress={handleMoodPress} />
-              <Text style={{ color: "white" }}>Mood: {moodType}</Text>
             </View>
           )}
         </View>
         <Pressable onPress={saveNote}>
-          <Text style={{ color: "white" }}>[Save]</Text>
+          <Text style={styles.newNoteSave}>[Save]</Text>
         </Pressable>
       </View>
       <View style={styles.newNoteMain}>
@@ -169,7 +177,7 @@ export function NoteComponent({ props }: NoteProps) {
 const styles = StyleSheet.create({
   container: {
     // padding: 3,
-    width: "100%",
+    marginHorizontal: "auto",
     height: "100%",
     borderWidth: 3,
     borderRadius: 10,
@@ -202,13 +210,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   newNoteMoodPicker: {
-    borderWidth: 2,
+    borderWidth: 3,
+    padding: 2,
     borderColor: "pink",
-    backgroundColor: "black",
+    backgroundColor: palette.accent,
     position: "absolute",
     // width: 200,
     right: 0,
     top: 30,
+  },
+  newNoteSave: {
+    fontFamily: "Inter_400Regular",
   },
   newNoteMain: {
     borderWidth: 2,
@@ -216,6 +228,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: "90%",
     backgroundColor: palette.background,
+    padding: 2,
   },
   newNoteInput: {
     color: "white",

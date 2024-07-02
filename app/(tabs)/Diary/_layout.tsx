@@ -7,7 +7,7 @@ export default function DiaryLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerShadowVisible: false,
+          headerShown: false,
         }}
       />
       <Stack.Screen
