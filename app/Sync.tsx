@@ -1,10 +1,10 @@
-import { Pressable, View, Text } from "react-native";
+import { Pressable, View, Text, StyleSheet } from "react-native";
 import Auth from "../components/Auth";
 import { mySync } from "../utils/sync";
 
 export default function Screen() {
   return (
-    <View>
+    <View style={styles.container}>
       <Auth />
       <Pressable
         onPress={() => {
@@ -21,3 +21,10 @@ export default function Screen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "grey",
+    height: "100%",
+  },
+});

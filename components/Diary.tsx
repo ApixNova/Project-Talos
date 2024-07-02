@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { getCurrentDate, serializeNote } from "../utils/functions";
+import { fullDate, getCurrentDate, serializeNote } from "../utils/functions";
 import { FlashList } from "@shopify/flash-list";
 import { NoteComponent } from "./NoteComponent";
 import { useEffect, useState } from "react";
@@ -15,8 +15,8 @@ export function Diary() {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    console.log("(debug) Notes: ");
-    console.log(notes);
+    // console.log("(debug) Notes: ");
+    // console.log(notes);
     if (notes.length > 0) {
       //check if we there is a note for today
       const noteForToday = notes.find((note) => note.day == getCurrentDate());
@@ -28,7 +28,7 @@ export function Diary() {
   }, [notes]);
   return (
     <View style={styles.container}>
-      <Text style={styles.mainTitle}>Take a note!</Text>
+      <Text style={styles.mainTitle}>{fullDate()}</Text>
       <View style={styles.noteContainer}>
         <NoteComponent
           props={{ day: getCurrentDate(), editing: editing, id: "" }}
@@ -39,7 +39,6 @@ export function Diary() {
           <FlashList
             data={notes}
             renderItem={({ item }) => {
-              // return <Note data={item} />;
               return <NotePreview data={item} />;
             }}
             estimatedItemSize={200}
