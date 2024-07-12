@@ -5,7 +5,6 @@ import { FlashList } from "@shopify/flash-list";
 import { NoteComponent } from "./NoteComponent";
 import { useEffect, useState } from "react";
 import { NotePreview } from "./NotePreview";
-import { database } from "../utils/watermelon";
 import Note from "../model/Note";
 import { useAppSelector } from "../state/hooks";
 import { palette } from "../utils/palette";
@@ -37,11 +36,12 @@ export function Diary() {
       <View style={styles.noteList}>
         {notes.length > 0 && (
           <FlashList
-            data={notes}
+            data={notes.slice().reverse()}
             renderItem={({ item }) => {
               return <NotePreview data={item} />;
             }}
             estimatedItemSize={200}
+            indicatorStyle="black"
           />
         )}
       </View>
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   noteList: {
     marginVertical: 10,
     width: "100%",
+    // height: "100%",
   },
   newEntry: {
     borderColor: "white",

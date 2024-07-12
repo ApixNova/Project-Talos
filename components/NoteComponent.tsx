@@ -17,6 +17,7 @@ import { updateMood } from "../utils/updateMood";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editMood } from "../state/moodSlice";
 import { palette } from "../utils/palette";
+import Feeling from "../model/Feeling";
 
 export function NoteComponent({ props }: NoteProps) {
   const { day, editing, id } = props;
@@ -33,6 +34,7 @@ export function NoteComponent({ props }: NoteProps) {
 
   useEffect(() => {
     // on load check if we're editing the note to update it
+    let noteCopy;
     if (editing) {
       async function handleEdit() {
         //if editing
@@ -40,12 +42,21 @@ export function NoteComponent({ props }: NoteProps) {
           //check if id is provided
           const noteInDB = [await database.get<Note>("notes").find(id)];
           setExistingNote(noteInDB);
+          noteCopy = noteInDB;
         } else {
           //else get the day's note
           const noteInDB = await database
             .get<Note>("notes")
             .query(Q.where("day", day));
           setExistingNote(noteInDB);
+          noteCopy = noteInDB;
+        }
+        //get the day's mood if existing
+        const moodInDB = await database
+          .get<Feeling>("feelings")
+          .query(Q.where("day", noteCopy[0].day));
+        if (moodInDB.length > 0) {
+          setMoodType(JSON.stringify(moodInDB[0].type));
         }
       }
       handleEdit();
@@ -195,11 +206,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   newNoteTitleInput: {
-    fontSize: 20,
+    fontSize: 21,
     width: "80%",
     color: palette.text,
     paddingHorizontal: 5,
-    fontFamily: "Inter_300Light",
+    fontFamily: "Inter_400Regular",
   },
   newNoteTitleMood: {
     width: 30,

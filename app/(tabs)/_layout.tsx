@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { moodColor } from "../../utils/palette";
+import { moodColor, palette } from "../../utils/palette";
 
 export default function Tablayout() {
   return (
@@ -11,7 +11,12 @@ export default function Tablayout() {
         tabBarActiveTintColor: "white",
         tabBarStyle: {
           backgroundColor: moodColor.black,
-          borderTopWidth: 0,
+          borderTopWidth: 2,
+          borderTopColor: palette.rose,
+          height: 50,
+        },
+        tabBarLabelStyle: {
+          fontFamily: "Inter_400regular",
         },
         headerStyle: {
           backgroundColor: moodColor.black,

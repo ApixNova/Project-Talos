@@ -2,7 +2,7 @@ import { SyncDatabaseChangeSet, synchronize } from "@nozbe/watermelondb/sync";
 import { database } from "./watermelon";
 import { supabase } from "./supabase";
 
-export async function mySync() {
+export async function syncDatabase() {
   // console.log("Sync called");
   await synchronize({
     database,
@@ -26,7 +26,7 @@ export async function mySync() {
         throw new Error("🍉".concat(error.message));
       }
     },
-    // sendCreatedAsUpdated: true,
+    sendCreatedAsUpdated: true,
     migrationsEnabledAtVersion: 1,
   });
 }

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Pressable,
   useWindowDimensions,
+  Platform,
 } from "react-native";
 import { Moods, Note } from "../types";
 import { Link, router } from "expo-router";
@@ -23,7 +24,7 @@ export function NotePreview({ data }: { data: Note }) {
       style={[
         styles.container,
         {
-          width: width < 1200 ? "100%" : "75%",
+          width: width < 1200 ? "94%" : "75%",
           maxWidth: 1350,
         },
       ]}
@@ -85,9 +86,26 @@ const styles = StyleSheet.create({
   mood: {
     width: 26,
     height: 26,
-    shadowColor: palette.text,
-    shadowRadius: 3,
     borderRadius: 13,
     marginLeft: "auto",
+    // shadow
+    ...Platform.select({
+      ios: {
+        shadowColor: palette.text,
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+      },
+      android: {
+        shadowColor: palette.text,
+        elevation: 5,
+      },
+      web: {
+        boxShadow: palette.text + " 0px 0px 4px",
+      },
+    }),
   },
 });
