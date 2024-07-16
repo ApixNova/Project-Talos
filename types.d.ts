@@ -56,3 +56,9 @@ export type NoteProps = {
     id: string;
   };
 };
+
+export type NewNoteCalendarProp = {
+  props: {
+    setNewNoteMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+};

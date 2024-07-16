@@ -60,18 +60,16 @@ export function getMonth(month: number) {
   }
 }
 
-export function fullDate() {
-  if (getCurrentDate()) {
-    return (
-      getWeekDay(new Date(getCurrentDate()).getDay()) +
-      " " +
-      new Date(getCurrentDate()).getDate() +
-      " " +
-      getMonth(new Date(getCurrentDate()).getMonth()) +
-      " " +
-      new Date(getCurrentDate()).getFullYear()
-    );
-  }
+export function fullDate(date: string) {
+  return (
+    getWeekDay(new Date(date).getDay()) +
+    " " +
+    new Date(date).getDate() +
+    " " +
+    getMonth(new Date(date).getMonth()) +
+    " " +
+    new Date(date).getFullYear()
+  );
 }
 
 export function returnColor(type: string) {

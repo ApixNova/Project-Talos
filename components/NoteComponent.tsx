@@ -6,8 +6,8 @@ import {
   Pressable,
   useWindowDimensions,
 } from "react-native";
-import { returnColor } from "../utils/functions";
-import { Moods, NoteProps } from "../types";
+import { fullDate, getCurrentDate, returnColor } from "../utils/functions";
+import { NoteProps } from "../types";
 import { database } from "../utils/watermelon";
 import { Q } from "@nozbe/watermelondb";
 import MoodPicker from "./Moods/MoodPicker";
@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editMood } from "../state/moodSlice";
 import { palette } from "../utils/palette";
 import Feeling from "../model/Feeling";
+import { useNavigation } from "expo-router";
 
 export function NoteComponent({ props }: NoteProps) {
   const { day, editing, id } = props;
@@ -31,6 +32,16 @@ export function NoteComponent({ props }: NoteProps) {
   const dispatch = useAppDispatch();
   const [existingNote, setExistingNote] = useState<Note[]>([]);
   const { width } = useWindowDimensions();
+  const navigation = useNavigation();
+  const [updatedDay, setUpdatedDay] = useState(
+    day !== "" ? day : getCurrentDate()
+  );
+
+  useEffect(() => {
+    navigation.setOptions({ title: fullDate(updatedDay) });
+  }, [updatedDay]);
+
+  console.log(id);
 
   useEffect(() => {
     // on load check if we're editing the note to update it
@@ -42,14 +53,16 @@ export function NoteComponent({ props }: NoteProps) {
           //check if id is provided
           const noteInDB = [await database.get<Note>("notes").find(id)];
           setExistingNote(noteInDB);
-          noteCopy = noteInDB;
+          noteCopy = [...noteInDB];
+          setUpdatedDay(noteCopy[0].day);
         } else {
           //else get the day's note
           const noteInDB = await database
             .get<Note>("notes")
             .query(Q.where("day", day));
           setExistingNote(noteInDB);
-          noteCopy = noteInDB;
+          noteCopy = [...noteInDB];
+          setUpdatedDay(noteCopy[0].day);
         }
         //get the day's mood if existing
         const moodInDB = await database
@@ -60,6 +73,18 @@ export function NoteComponent({ props }: NoteProps) {
         }
       }
       handleEdit();
+    } else {
+      if (day !== "") {
+        async function getDayMood() {
+          const moodInDB = await database
+            .get<Feeling>("feelings")
+            .query(Q.where("day", day));
+          if (moodInDB.length > 0) {
+            setMoodType(JSON.stringify(moodInDB[0].type));
+          }
+        }
+        getDayMood();
+      }
     }
   }, [editing]);
 
@@ -88,7 +113,6 @@ export function NoteComponent({ props }: NoteProps) {
             await currentNote.update(() => {
               //!! For now all the fields will be updated. Later I'll need to only update changes !!
               currentNote.title = title;
-              // currentNote.mood = parseInt(moodType);
               currentNote.content = text;
             });
           })
@@ -198,12 +222,14 @@ const styles = StyleSheet.create({
   newNoteTitle: {
     backgroundColor: palette.accent,
     height: "10%",
+    maxHeight: 50,
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 5,
     zIndex: 1,
+    flex: 1,
   },
   newNoteTitleInput: {
     fontSize: 21,
@@ -226,7 +252,6 @@ const styles = StyleSheet.create({
     borderColor: "pink",
     backgroundColor: palette.accent,
     position: "absolute",
-    // width: 200,
     right: 0,
     top: 30,
   },
@@ -237,9 +262,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
     borderRadius: 10,
-    height: "90%",
     backgroundColor: palette.background,
     padding: 2,
+    flex: 9,
   },
   newNoteInput: {
     color: "white",

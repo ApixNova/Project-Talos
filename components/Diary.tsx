@@ -8,14 +8,34 @@ import { NotePreview } from "./NotePreview";
 import Note from "../model/Note";
 import { useAppSelector } from "../state/hooks";
 import { palette } from "../utils/palette";
+import NewNoteCalendar from "./NewNoteCalendar";
+import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 
 export function Diary() {
   const notes = useAppSelector((state) => state.notes as Note[]);
   const [editing, setEditing] = useState(false);
+  const [newNoteMenu, setNewNoteMenu] = useState(false);
+  const rotateZ = useSharedValue("0deg");
+
+  function onPressNewNote() {
+    setNewNoteMenu(true);
+  }
 
   useEffect(() => {
-    // console.log("(debug) Notes: ");
-    // console.log(notes);
+    if (newNoteMenu) {
+      rotateZ.value = withSpring("45deg");
+    } else {
+      rotateZ.value = withSpring("0deg");
+    }
+  }, [newNoteMenu]);
+
+  function sortedNotes() {
+    return notes.slice().sort((a, b) => {
+      return new Date(b.day).getTime() - new Date(a.day).getTime();
+    });
+  }
+
+  useEffect(() => {
     if (notes.length > 0) {
       //check if we there is a note for today
       const noteForToday = notes.find((note) => note.day == getCurrentDate());
@@ -25,9 +45,10 @@ export function Diary() {
       }
     }
   }, [notes]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.mainTitle}>{fullDate()}</Text>
+      <Text style={styles.mainTitle}>{fullDate(getCurrentDate())}</Text>
       <View style={styles.noteContainer}>
         <NoteComponent
           props={{ day: getCurrentDate(), editing: editing, id: "" }}
@@ -36,7 +57,7 @@ export function Diary() {
       <View style={styles.noteList}>
         {notes.length > 0 && (
           <FlashList
-            data={notes.slice().reverse()}
+            data={sortedNotes()}
             renderItem={({ item }) => {
               return <NotePreview data={item} />;
             }}
@@ -45,9 +66,24 @@ export function Diary() {
           />
         )}
       </View>
-      <Pressable style={styles.newEntry}>
-        <FontAwesome style={styles.plus} name="plus" size={30} color="black" />
+      <Pressable style={styles.newEntry} onPress={onPressNewNote}>
+        <Animated.View
+          style={{
+            transform: [{ rotateZ }],
+            // backgroundColor: "white",
+            margin: "auto",
+          }}
+        >
+          <FontAwesome
+            style={styles.plus}
+            name="plus"
+            size={30}
+            color="black"
+          />
+        </Animated.View>
       </Pressable>
+
+      {newNoteMenu && <NewNoteCalendar props={{ setNewNoteMenu }} />}
     </View>
   );
 }
