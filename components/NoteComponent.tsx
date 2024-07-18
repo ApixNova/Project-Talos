@@ -41,8 +41,6 @@ export function NoteComponent({ props }: NoteProps) {
     navigation.setOptions({ title: fullDate(updatedDay) });
   }, [updatedDay]);
 
-  console.log(id);
-
   useEffect(() => {
     // on load check if we're editing the note to update it
     let noteCopy;

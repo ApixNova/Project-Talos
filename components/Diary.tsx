@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { fullDate, getCurrentDate, serializeNote } from "../utils/functions";
 import { FlashList } from "@shopify/flash-list";
@@ -35,8 +35,12 @@ export function Diary() {
     });
   }
 
+  function havingNotes() {
+    return notes.length > 0;
+  }
+
   useEffect(() => {
-    if (notes.length > 0) {
+    if (havingNotes()) {
       //check if we there is a note for today
       const noteForToday = notes.find((note) => note.day == getCurrentDate());
       if (noteForToday) {
@@ -49,13 +53,18 @@ export function Diary() {
   return (
     <View style={styles.container}>
       <Text style={styles.mainTitle}>{fullDate(getCurrentDate())}</Text>
-      <View style={styles.noteContainer}>
+      <View
+        style={[
+          styles.noteContainer,
+          { height: havingNotes() ? "50%" : "80%" },
+        ]}
+      >
         <NoteComponent
           props={{ day: getCurrentDate(), editing: editing, id: "" }}
         />
       </View>
       <View style={styles.noteList}>
-        {notes.length > 0 && (
+        {havingNotes() && (
           <FlashList
             data={sortedNotes()}
             renderItem={({ item }) => {
@@ -63,6 +72,7 @@ export function Diary() {
             }}
             estimatedItemSize={200}
             indicatorStyle="black"
+            ListFooterComponent={<View style={styles.listFooter}></View>}
           />
         )}
       </View>
@@ -101,12 +111,14 @@ const styles = StyleSheet.create({
   },
   noteContainer: {
     width: "98%",
-    height: "50%",
   },
   noteList: {
     marginVertical: 10,
     width: "100%",
-    // height: "100%",
+    height: "40%",
+  },
+  listFooter: {
+    height: 60,
   },
   newEntry: {
     borderColor: "white",

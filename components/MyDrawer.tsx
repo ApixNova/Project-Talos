@@ -1,12 +1,10 @@
 import {
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem,
   DrawerContentComponentProps,
 } from "@react-navigation/drawer";
 import { StyleSheet, View } from "react-native";
 import { palette } from "../utils/palette";
-import drawer from "expo-router/drawer";
 import { useEffect } from "react";
 import { database } from "../utils/watermelon";
 import Note from "../model/Note";
@@ -26,7 +24,7 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
         .get("notes")
         .query()
         .fetch()) as Note[];
-      console.log(notesQuery);
+      // console.log(notesQuery);
       //serialize notes for redux
       const serializedNotes = notesQuery.map((note) => serializeNote(note));
       dispatch(editNote(serializedNotes));
