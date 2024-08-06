@@ -12,5 +12,6 @@ export const palette = {
   secondary: "#dc254a",
   accent: "#8f97ea",
   rose: "#de5974",
+  black: "black",
   gray: "#757272",
 };

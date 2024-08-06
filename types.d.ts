@@ -62,3 +62,7 @@ export type NewNoteCalendarProp = {
     setNewNoteMenu: React.Dispatch<React.SetStateAction<boolean>>;
   };
 };
+
+export type NavigationType = {
+  navigate: (path: "index") => void;
+};

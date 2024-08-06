@@ -1,7 +1,8 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { NoteComponent } from "../../../components/NoteComponent";
 import { getCurrentDate } from "../../../utils/functions";
+import { palette } from "../../../utils/palette";
 
 export default function Page() {
   const id = useLocalSearchParams().id as string;
@@ -22,7 +23,7 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
-    backgroundColor: "black",
+    backgroundColor: palette.black,
     alignItems: "center",
   },
   noteContainer: {

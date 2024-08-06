@@ -1,5 +1,6 @@
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { moodColor, palette } from "../../utils/palette";
@@ -42,9 +43,12 @@ export default function Tablayout() {
         options={{
           title: "Diary",
           headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 size={30} name="book" color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <FontAwesome6 name="book-open" size={30} color={color} />
+            ) : (
+              <FontAwesome5 name={"book"} size={30} color={color} />
+            ),
         }}
       />
     </Tabs>

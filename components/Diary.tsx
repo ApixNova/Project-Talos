@@ -70,7 +70,7 @@ export function Diary() {
             renderItem={({ item }) => {
               return <NotePreview data={item} />;
             }}
-            estimatedItemSize={200}
+            estimatedItemSize={38}
             indicatorStyle="black"
             ListFooterComponent={<View style={styles.listFooter}></View>}
           />

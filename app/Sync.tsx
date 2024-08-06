@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
 import { syncDatabase } from "../utils/sync";
+import UserPage from "../components/UserPage";
 
 export default function Screen() {
   const [session, setSession] = useState<Session | null>(null);
@@ -25,44 +26,22 @@ export default function Screen() {
     });
   }, []);
 
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-  }
-
   return (
     <View style={styles.container}>
-      {session && session.user ? (
-        <View style={styles.logged}>
-          <Text style={styles.text}>User Connected!</Text>
-          <Text style={styles.text}>{session.user.email}</Text>
-          <Pressable style={styles.button} onPress={signOut}>
-            <Text style={styles.text}>Log out</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              syncDatabase();
-            }}
-            style={{
-              backgroundColor: "pink",
-              padding: 5,
-              borderRadius: 10,
-            }}
-          >
-            <Text>Sync</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View
-          style={[
-            styles.auth,
-            {
-              marginTop: height / 5,
-            },
-          ]}
-        >
-          <Auth />
-        </View>
-      )}
+      <View
+        style={{
+          marginTop: height / 5,
+          width: "100%",
+        }}
+      >
+        {session && session.user ? (
+          <UserPage />
+        ) : (
+          <View style={styles.auth}>
+            <Auth />
+          </View>
+        )}
+      </View>
     </View>
   );
 }
@@ -71,22 +50,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: palette.background,
     height: "100%",
-    // justifyContent: "space-around",
     alignItems: "center",
   },
-  text: {
-    color: "white",
-    fontFamily: "Inter_400Regular",
-  },
-  logged: {
-    width: "50%",
-    height: "50%",
-  },
   auth: {
-    // marginTop: "10%",
     height: "50%",
     width: "100%",
-    // backgroundColor: "pink",
   },
-  button: { backgroundColor: palette.rose, padding: 2 },
 });

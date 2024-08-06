@@ -1,7 +1,12 @@
-import { Stack } from "expo-router";
-import { moodColor } from "../../../utils/palette";
+import { Stack, useNavigation } from "expo-router";
+import { palette } from "../../../utils/palette";
+import { Platform, Text, Pressable, StyleSheet } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { NavigationType } from "../../../types";
 
 export default function DiaryLayout() {
+  const navigation = useNavigation<NavigationType>();
+
   return (
     <Stack>
       <Stack.Screen
@@ -17,8 +22,21 @@ export default function DiaryLayout() {
           // headerShown: false,
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: moodColor.black,
+            backgroundColor: palette.black,
           },
+          // headerBackVisible: false,
+          headerLeft: () => (
+            <Pressable
+              style={styles.headerButton}
+              onPress={() => {
+                navigation.navigate("index");
+              }}
+            >
+              <Ionicons name="chevron-back-outline" size={27} color="white" />
+              {Platform.OS == "web" && <Text style={styles.text}>Back</Text>}
+            </Pressable>
+          ),
+          // headerBackImageSource: image,
           headerTintColor: "#fff",
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -29,3 +47,14 @@ export default function DiaryLayout() {
     </Stack>
   );
 }
+
+const styles = StyleSheet.create({
+  headerButton: {
+    marginLeft: 13,
+    flexDirection: "row",
+  },
+  text: {
+    color: "white",
+    fontSize: 20,
+  },
+});

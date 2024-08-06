@@ -14,6 +14,8 @@ export default function Screen() {
       <Pressable style={styles.button} onPress={resetDatabase}>
         <Text style={styles.text}>Reset DB</Text>
       </Pressable>
+      <Text style={styles.text}>Change Theme</Text>
+      <Text style={styles.text}>First Day Of The Week</Text>
     </View>
   );
 }
