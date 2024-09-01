@@ -1,7 +1,6 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { NoteComponent } from "../../../components/NoteComponent";
-import { getCurrentDate } from "../../../utils/functions";
+import { useLocalSearchParams } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { NoteComponent } from "../../../components/Diary/NoteComponent";
 import { palette } from "../../../utils/palette";
 
 export default function Page() {

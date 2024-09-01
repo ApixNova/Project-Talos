@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { fullDate, getCurrentDate, serializeNote } from "../utils/functions";
+import { fullDate, getCurrentDate, serializeNote } from "../../utils/functions";
 import { FlashList } from "@shopify/flash-list";
 import { NoteComponent } from "./NoteComponent";
 import { useEffect, useState } from "react";
 import { NotePreview } from "./NotePreview";
-import Note from "../model/Note";
-import { useAppSelector } from "../state/hooks";
-import { palette } from "../utils/palette";
+import Note from "../../model/Note";
+import { useAppSelector } from "../../state/hooks";
+import { palette } from "../../utils/palette";
 import NewNoteCalendar from "./NewNoteCalendar";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 
@@ -80,7 +80,6 @@ export function Diary() {
         <Animated.View
           style={{
             transform: [{ rotateZ }],
-            // backgroundColor: "white",
             margin: "auto",
           }}
         >

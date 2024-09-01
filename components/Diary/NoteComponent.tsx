@@ -6,18 +6,18 @@ import {
   Pressable,
   useWindowDimensions,
 } from "react-native";
-import { fullDate, getCurrentDate, returnColor } from "../utils/functions";
-import { NoteProps } from "../types";
-import { database } from "../utils/watermelon";
+import { fullDate, getCurrentDate, returnColor } from "../../utils/functions";
+import { NoteProps } from "../../types";
+import { database } from "../../utils/watermelon";
 import { Q } from "@nozbe/watermelondb";
-import MoodPicker from "./Moods/MoodPicker";
+import MoodPicker from "../Moods/MoodPicker";
 import { useEffect, useState } from "react";
-import Note from "../model/Note";
-import { updateMood } from "../utils/updateMood";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { editMood } from "../state/moodSlice";
-import { palette } from "../utils/palette";
-import Feeling from "../model/Feeling";
+import Note from "../../model/Note";
+import { updateMood } from "../../utils/updateMood";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { editMood } from "../../state/moodSlice";
+import { palette } from "../../utils/palette";
+import Feeling from "../../model/Feeling";
 import { useNavigation } from "expo-router";
 
 export function NoteComponent({ props }: NoteProps) {

@@ -1,16 +1,16 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { palette } from "../utils/palette";
+import { palette } from "../../utils/palette";
 import { CalendarList, DateData } from "react-native-calendars";
 import { useState } from "react";
-import { getCurrentDate } from "../utils/functions";
-import { useAppSelector } from "../state/hooks";
-import Note from "../model/Note";
+import { getCurrentDate } from "../../utils/functions";
+import { useAppSelector } from "../../state/hooks";
+import Note from "../../model/Note";
 import { Direction, MarkedDates } from "react-native-calendars/src/types";
-import { NewNoteCalendarProp } from "../types";
+import { NewNoteCalendarProp } from "../../types";
 import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import Arrow from "./Arrow";
+import Arrow from "../Arrow";
 
 export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());

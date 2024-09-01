@@ -6,15 +6,19 @@ import {
   useWindowDimensions,
   Platform,
 } from "react-native";
-import { Moods, Note } from "../types";
+import { Moods, Note } from "../../types";
 import { Link, router } from "expo-router";
-import { palette } from "../utils/palette";
-import { getWeekDay, returnColor } from "../utils/functions";
-import { useAppSelector } from "../state/hooks";
+import { palette } from "../../utils/palette";
+import { getWeekDay, returnColor } from "../../utils/functions";
+import { useAppSelector } from "../../state/hooks";
+import { useEffect } from "react";
 
 export function NotePreview({ data }: { data: Note }) {
   const moods = useAppSelector((state) => state.moods.value as Moods);
   const { width } = useWindowDimensions();
+
+  // useEffect(() => {}, [width]);
+
   function handlePress() {
     router.navigate("/Diary/" + data.id);
   }
@@ -25,7 +29,6 @@ export function NotePreview({ data }: { data: Note }) {
         styles.container,
         {
           width: width < 1200 ? "94%" : "75%",
-          maxWidth: 1350,
         },
       ]}
       onPress={handlePress}
@@ -60,10 +63,10 @@ const styles = StyleSheet.create({
     padding: 3,
     borderColor: "pink",
     marginVertical: 1,
-    // width: "75%",
     margin: "auto",
     flexDirection: "row",
     alignItems: "center",
+    maxWidth: 1350,
   },
   date: {
     color: palette.gray,

@@ -1,5 +1,8 @@
+import { Q } from "@nozbe/watermelondb";
+import Setting from "../model/Setting";
 import { Note } from "../types";
 import { moodColor } from "./palette";
+import { database } from "./watermelon";
 
 //returns current date in YYYY-MM-DD format taking into account the timezone
 export function getCurrentDate() {
@@ -96,4 +99,37 @@ export function serializeNote(note: Note) {
     created_at: note.createdAt,
     updated_at: note.updatedAt,
   };
+}
+
+export function serializeSetting(setting: Setting) {
+  return {
+    id: setting.id,
+    type: setting.type,
+    value: setting.value,
+  };
+}
+
+export async function setupSettings() {
+  const themeQuery = await database
+    .get("settings")
+    .query(Q.where("type", "theme"));
+  if (themeQuery.length == 0) {
+    await database.write(async () => {
+      await database.get<Setting>("settings").create((setting) => {
+        setting.type = "theme";
+        setting.value = "Dark";
+      });
+    });
+  }
+  const firstDayQuery = await database
+    .get("settings")
+    .query(Q.where("type", "firstDay"));
+  if (firstDayQuery.length == 0) {
+    await database.write(async () => {
+      await database.get<Setting>("settings").create((setting) => {
+        setting.type = "firstDay";
+        setting.value = "Monday";
+      });
+    });
+  }
 }

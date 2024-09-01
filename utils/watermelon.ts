@@ -2,10 +2,11 @@ import { Platform } from "react-native";
 import { Database } from "@nozbe/watermelondb";
 import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
+import migrations from "../model/migrations";
 import schema from "../model/schema";
 import Feeling from "../model/Feeling";
-import migrations from "../model/migrations";
 import Note from "../model/Note";
+import Setting from "../model/Setting";
 
 let adapter;
 
@@ -51,5 +52,5 @@ adapter = new LokiJSAdapter({
 
 export const database = new Database({
   adapter,
-  modelClasses: [Feeling, Note],
+  modelClasses: [Feeling, Note, Setting],
 });
