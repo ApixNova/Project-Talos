@@ -40,13 +40,13 @@ export type SaveMoodProps = {
   };
 };
 
-export type Note = {
+export type SerializedNote = {
   id: string;
   day: string;
   title: string;
   content: string;
-  createdAt: number;
-  updatedAt: number;
+  created_at: number;
+  updated_at: number;
 };
 
 export type NoteProps = {
@@ -55,6 +55,12 @@ export type NoteProps = {
     editing: boolean;
     id: string;
   };
+};
+
+export type SettingProp = {
+  id: string;
+  type: string;
+  value: string;
 };
 
 export type NewNoteCalendarProp = {

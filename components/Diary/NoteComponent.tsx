@@ -6,8 +6,13 @@ import {
   Pressable,
   useWindowDimensions,
 } from "react-native";
-import { fullDate, getCurrentDate, returnColor } from "../../utils/functions";
-import { NoteProps } from "../../types";
+import {
+  fullDate,
+  getCurrentDate,
+  returnColor,
+  serializeNote,
+} from "../../utils/functions";
+import { NoteProps, SerializedNote } from "../../types";
 import { database } from "../../utils/watermelon";
 import { Q } from "@nozbe/watermelondb";
 import MoodPicker from "../Moods/MoodPicker";
@@ -19,12 +24,14 @@ import { editMood } from "../../state/moodSlice";
 import { palette } from "../../utils/palette";
 import Feeling from "../../model/Feeling";
 import { useNavigation } from "expo-router";
+import { editNote } from "../../state/noteSlice";
 
 export function NoteComponent({ props }: NoteProps) {
   const { day, editing, id } = props;
   const [moodPicker, setMoodPicker] = useState(false);
   const [moodType, setMoodType] = useState("");
   const moods = useAppSelector((state) => state.moods.value);
+  const notes = useAppSelector((state) => state.notes as SerializedNote[]);
   //note fields
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -57,7 +64,7 @@ export function NoteComponent({ props }: NoteProps) {
           //else get the day's note
           const noteInDB = await database
             .get<Note>("notes")
-            .query(Q.where("day", day));
+            .query(Q.where("day", updatedDay));
           setExistingNote(noteInDB);
           noteCopy = [...noteInDB];
           setUpdatedDay(noteCopy[0].day);
@@ -76,7 +83,7 @@ export function NoteComponent({ props }: NoteProps) {
         async function getDayMood() {
           const moodInDB = await database
             .get<Feeling>("feelings")
-            .query(Q.where("day", day));
+            .query(Q.where("day", updatedDay));
           if (moodInDB.length > 0) {
             setMoodType(JSON.stringify(moodInDB[0].type));
           }
@@ -106,25 +113,46 @@ export function NoteComponent({ props }: NoteProps) {
         //if editing
         //edit db
         const currentNote = existingNote[0];
-        await database
-          .write(async () => {
-            await currentNote.update(() => {
-              //!! For now all the fields will be updated. Later I'll need to only update changes !!
-              currentNote.title = title;
-              currentNote.content = text;
+        if (currentNote.title !== title) {
+          updateNoteField("title", title);
+          updateRedux("title", title);
+        }
+        if (currentNote.content !== text) {
+          updateNoteField("content", text);
+          // updateRedux("content", text);
+        }
+        async function updateNoteField(
+          field: "title" | "content",
+          value: string
+        ) {
+          await database
+            .write(async () => {
+              await currentNote.update(() => {
+                currentNote[field] = value;
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .then(() => {
+              console.log("Note updated");
             });
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .then(() => {
-            console.log("Note updated");
+        }
+        //update redux
+        function updateRedux(field: "title" | "content", value: string) {
+          let notesCopy = [...notes];
+          // find note and update it
+          const index = notesCopy.findIndex((element) => {
+            return element.id == currentNote.id;
           });
+          notesCopy[index] = { ...notesCopy[index], [field]: value };
+          dispatch(editNote(notesCopy));
+        }
       } else {
         //if there is already a note throw error
         const existingNote = await database
           .get<Note>("notes")
-          .query(Q.where("day", day));
+          .query(Q.where("day", updatedDay));
         if (existingNote.length > 0) {
           console.log(
             "Cannot create note, there is aleady a note for this day"
@@ -134,7 +162,7 @@ export function NoteComponent({ props }: NoteProps) {
           await database
             .write(async () => {
               await database.get<Note>("notes").create((note) => {
-                note.day = day;
+                note.day = updatedDay;
                 note.title = title;
                 note.content = text;
               });
@@ -145,15 +173,33 @@ export function NoteComponent({ props }: NoteProps) {
             .then(() => {
               console.log("Note created");
             });
+          // update redux
+          async function updateNotes() {
+            let notesCopy = [...notes];
+            const notesQuery = await database.get("notes").query().fetchIds();
+            async function addNoteToRedux(id: string) {
+              const noteToAdd = await database.get<Note>("notes").find(id);
+              if (noteToAdd) {
+                notesCopy.push(serializeNote(noteToAdd));
+              }
+            }
+            for (const id of notesQuery) {
+              if (!notesCopy.find((element) => element.id == id)) {
+                await addNoteToRedux(id);
+              }
+            }
+            dispatch(editNote(notesCopy));
+          }
+          updateNotes();
         }
       }
     }
     //update mood
     if (moodType !== "") {
-      await updateMood(parseInt(moodType), day);
+      await updateMood(parseInt(moodType), updatedDay);
       //update state
       let moodsList = { ...moods };
-      moodsList[day] = parseInt(moodType);
+      moodsList[updatedDay] = parseInt(moodType);
       dispatch(editMood(moodsList));
     }
   }

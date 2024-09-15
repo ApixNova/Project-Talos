@@ -5,31 +5,24 @@ import { calendarProps } from "../types";
 import { moodColor, palette } from "../utils/palette";
 import { useAppSelector } from "../state/hooks";
 import { MarkedDates } from "react-native-calendars/src/types";
-import Day from "react-native-calendars/src/calendar/day";
-import { getCurrentDate } from "../utils/functions";
+import { getCurrentDate, returnColor } from "../utils/functions";
+import Setting from "../model/Setting";
 
 export default function CalendarView({ props }: calendarProps) {
   const { selectedDay, setSelectedDay } = props;
   const moods = useAppSelector((state) => state.moods.value);
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   const { width } = useWindowDimensions();
 
   function sizeWithLimits() {
     return width * 0.9 < 1060 ? width * 0.9 : 1060;
   }
 
-  function getColor(type: number) {
-    switch (type) {
-      case 0:
-        return moodColor.black;
-      case 1:
-        return moodColor.red;
-      case 2:
-        return moodColor.blue;
-      case 3:
-        return moodColor.green;
-      default:
-        return moodColor.blue;
-    }
+  function returnDayNum() {
+    return settings.find((element) => element.type == "firstDay")?.value ==
+      "Sunday"
+      ? 0
+      : 1;
   }
 
   function handleDayPress(day: DateData) {
@@ -58,12 +51,10 @@ export default function CalendarView({ props }: calendarProps) {
         },
       },
     };
-    // console.log("moods");
-    // console.log(moods);
     for (const day in moods) {
       markedRef[day] = {
         selected: true,
-        selectedColor: getColor(moods[day]),
+        selectedColor: returnColor(JSON.stringify(moods[day])),
         customStyles: {
           container: {
             borderColor: day == selectedDay ? "#adcadb" : "transparent",
@@ -78,8 +69,6 @@ export default function CalendarView({ props }: calendarProps) {
         },
       };
     }
-    // console.log("ref:");
-    // console.log(markedRef);
     return markedRef;
   }, [selectedDay, moods]);
   return (
@@ -123,7 +112,7 @@ export default function CalendarView({ props }: calendarProps) {
         }}
         // horizontal={true}
         pagingEnabled={true}
-        firstDay={1}
+        firstDay={returnDayNum()}
         style={[styles.calendar, { width: sizeWithLimits() }]}
         calendarWidth={sizeWithLimits()}
         // hideArrows={false}

@@ -76,35 +76,38 @@ export default function Screen() {
     });
   }
   return (
-    <View style={styles.container}>
-      <Pressable style={styles.button} onPress={resetDatabase}>
-        <Text style={styles.text}>Reset DB</Text>
-      </Pressable>
-      <View style={styles.settingRow}>
-        <Text style={styles.text}>Theme: </Text>
-        <Picker
-          title={getTheme()}
-          options={["Dark", "Light", "Auto"]}
-          state={getTheme()}
-          setState={(value) => updateSettings("theme", value)}
-        />
-        <Text>{getTheme()}</Text>
-      </View>
-      <View style={styles.settingRow}>
-        <Text style={styles.text}>First Day Of The Week: </Text>
-        <Picker
-          title={getFirstDay()}
-          options={["Monday", "Sunday"]}
-          state={getFirstDay()}
-          setState={(value) => updateSettings("firstDay", value)}
-        />
+    <View style={styles.background}>
+      <View style={styles.container}>
+        <View style={styles.settingRow}>
+          <Text style={styles.text}>Theme</Text>
+          <Picker
+            title={getTheme()}
+            options={["Dark", "Light", "Auto"]}
+            state={getTheme()}
+            setState={(value) => updateSettings("theme", value)}
+          />
+        </View>
+        <View style={styles.separation}></View>
+        <View style={styles.settingRow}>
+          <Text style={styles.text}>First Day Of The Week</Text>
+          <Picker
+            title={getFirstDay()}
+            options={["Monday", "Sunday"]}
+            state={getFirstDay()}
+            setState={(value) => updateSettings("firstDay", value)}
+          />
+        </View>
+        <View style={styles.separation}></View>
+        <Pressable style={styles.button} onPress={resetDatabase}>
+          <Text style={styles.buttonText}>Reset DB</Text>
+        </Pressable>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     backgroundColor: palette.background,
     height: "100%",
     alignItems: "center",
@@ -113,20 +116,44 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: palette.text,
   },
-  title: {
-    color: "white",
-    fontFamily: "Inter_900Black",
-    fontSize: 30,
+  container: {
+    maxWidth: 600,
+    backgroundColor: palette.accent,
+    width: "90%",
+    margin: "auto",
+    padding: 5,
+    borderRadius: 7,
+  },
+  // title: {
+  //   color: "white",
+  //   fontFamily: "Inter_900Black",
+  //   fontSize: 30,
+  //   marginHorizontal: "auto",
+  // },
+  separation: {
+    width: "90%",
+    height: 1,
+    backgroundColor: palette.primary,
     marginHorizontal: "auto",
+    marginVertical: 5,
   },
   button: {
-    backgroundColor: "white",
+    backgroundColor: palette.secondary,
+    padding: 2,
+    borderRadius: 7,
+    marginHorizontal: "auto",
+    marginVertical: 7,
+  },
+  buttonText: {
+    color: palette.text,
+    fontSize: 20,
+    fontFamily: "Inter_400Regular",
   },
   settingRow: {
-    flexDirection: "row",
+    gap: 5,
   },
   text: {
-    color: palette.secondary,
+    color: palette.text,
     fontSize: 20,
     fontFamily: "Inter_400Regular",
   },

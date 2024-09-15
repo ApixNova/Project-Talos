@@ -30,7 +30,6 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
         .get("notes")
         .query()
         .fetch()) as Note[];
-      // console.log(notesQuery);
       //serialize notes for redux
       const serializedNotes = notesQuery.map((note) => serializeNote(note));
       dispatch(editNote(serializedNotes));

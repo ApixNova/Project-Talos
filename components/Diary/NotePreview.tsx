@@ -6,14 +6,14 @@ import {
   useWindowDimensions,
   Platform,
 } from "react-native";
-import { Moods, Note } from "../../types";
-import { Link, router } from "expo-router";
+import { Moods, SerializedNote } from "../../types";
+import { router } from "expo-router";
 import { palette } from "../../utils/palette";
 import { getWeekDay, returnColor } from "../../utils/functions";
 import { useAppSelector } from "../../state/hooks";
 import { useEffect } from "react";
 
-export function NotePreview({ data }: { data: Note }) {
+export function NotePreview({ data }: { data: SerializedNote }) {
   const moods = useAppSelector((state) => state.moods.value as Moods);
   const { width } = useWindowDimensions();
 
@@ -35,7 +35,9 @@ export function NotePreview({ data }: { data: Note }) {
     >
       {data.title ? (
         <>
-          <Text style={styles.title}>{data.title}</Text>
+          <Text style={styles.title} numberOfLines={2}>
+            {data.title}
+          </Text>
           <Text style={styles.date}>{data.day}</Text>
         </>
       ) : (
@@ -72,7 +74,10 @@ const styles = StyleSheet.create({
     color: palette.gray,
     fontSize: 17,
     fontFamily: "Inter_400Regular",
-    marginLeft: 13,
+    // marginLeft: 13,
+    marginLeft: "auto",
+    marginRight: 13,
+    flexShrink: 0,
   },
   title: {
     fontFamily: "Inter_400Regular",
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    marginLeft: "auto",
+    marginRight: 0,
     // shadow
     ...Platform.select({
       ios: {

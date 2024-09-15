@@ -59,7 +59,7 @@ export default function Picker({
                     <Text
                       selectable={false}
                       style={[
-                        styles.text,
+                        styles.textList,
                         option == state ? styles.selected : undefined,
                       ]}
                     >
@@ -102,14 +102,19 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   text: {
-    color: palette.accent,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_600SemiBold",
     fontSize: 20,
   },
-  option: {
+  textList: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 20,
     color: "white",
-    margin: "auto",
-    width: "100%",
+  },
+  option: {
+    // color: "white",
+    // margin: "auto",
+    padding: 5,
+    // width: "100%",
   },
   selected: {
     color: palette.text,

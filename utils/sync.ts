@@ -3,7 +3,7 @@ import { database } from "./watermelon";
 import { supabase } from "./supabase";
 
 export async function syncDatabase() {
-  // console.log("Sync called");
+  console.log("Sync called");
   await synchronize({
     database,
     pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
@@ -22,11 +22,12 @@ export async function syncDatabase() {
     pushChanges: async ({ changes, lastPulledAt }) => {
       const { error } = await supabase.rpc("push", { changes });
 
+      // console.log("changes debug: " + JSON.stringify(changes));
       if (error) {
         throw new Error("🍉".concat(error.message));
       }
     },
     sendCreatedAsUpdated: true,
-    migrationsEnabledAtVersion: 1,
+    migrationsEnabledAtVersion: 2,
   });
 }

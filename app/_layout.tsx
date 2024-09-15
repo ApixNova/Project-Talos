@@ -12,6 +12,7 @@ import {
   Inter_300Light,
   Inter_500Medium,
   Inter_400Regular,
+  Inter_600SemiBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
 
@@ -20,6 +21,7 @@ export default function App() {
     Inter_300Light,
     Inter_400Regular,
     Inter_500Medium,
+    Inter_600SemiBold,
     Inter_900Black,
   });
   return (

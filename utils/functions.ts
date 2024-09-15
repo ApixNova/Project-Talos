@@ -1,8 +1,9 @@
 import { Q } from "@nozbe/watermelondb";
 import Setting from "../model/Setting";
-import { Note } from "../types";
+import Note from "../model/Note";
 import { moodColor } from "./palette";
 import { database } from "./watermelon";
+import { SerializedNote } from "../types";
 
 //returns current date in YYYY-MM-DD format taking into account the timezone
 export function getCurrentDate() {
@@ -90,7 +91,7 @@ export function returnColor(type: string) {
   }
 }
 
-export function serializeNote(note: Note) {
+export function serializeNote(note: Note): SerializedNote {
   return {
     id: note.id,
     day: note.day,

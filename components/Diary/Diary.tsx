@@ -5,14 +5,14 @@ import { FlashList } from "@shopify/flash-list";
 import { NoteComponent } from "./NoteComponent";
 import { useEffect, useState } from "react";
 import { NotePreview } from "./NotePreview";
-import Note from "../../model/Note";
+import { SerializedNote } from "../../types";
 import { useAppSelector } from "../../state/hooks";
 import { palette } from "../../utils/palette";
 import NewNoteCalendar from "./NewNoteCalendar";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 
 export function Diary() {
-  const notes = useAppSelector((state) => state.notes as Note[]);
+  const notes = useAppSelector((state) => state.notes as SerializedNote[]);
   const [editing, setEditing] = useState(false);
   const [newNoteMenu, setNewNoteMenu] = useState(false);
   const rotateZ = useSharedValue("0deg");
