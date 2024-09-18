@@ -12,10 +12,12 @@ import { Session } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
 import { syncDatabase } from "../utils/sync";
 import UserPage from "../components/UserPage";
+import AlertComponent from "../components/Alert";
 
 export default function Screen() {
   const [session, setSession] = useState<Session | null>(null);
   const { height } = useWindowDimensions();
+  const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -28,6 +30,14 @@ export default function Screen() {
 
   return (
     <View style={styles.container}>
+      <AlertComponent
+        message="Alert"
+        setShowAlert={setShowAlert}
+        visible={showAlert}
+        giveChoice
+        handleConfirm={() => console.log("Confimed")}
+        handleExit={() => console.log("Denied")}
+      />
       <View
         style={{
           marginTop: height / 5,
