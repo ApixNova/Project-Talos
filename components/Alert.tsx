@@ -26,7 +26,13 @@ export default function AlertComponent({
         <Modal animationType="fade" transparent={true}>
           <View style={styles.background}>
             <View style={styles.container}>
-              <Pressable onPress={close} style={styles.closeContainer}>
+              <Pressable
+                onPress={() => {
+                  if (handleExit) handleExit();
+                  close();
+                }}
+                style={styles.closeContainer}
+              >
                 <FontAwesome
                   style={styles.close}
                   name="close"

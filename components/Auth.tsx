@@ -12,12 +12,48 @@ import { palette } from "../utils/palette";
 import { database } from "../utils/watermelon";
 import { Session } from "@supabase/supabase-js";
 import { syncDatabase } from "../utils/sync";
+import { useAppDispatch } from "../state/hooks";
+import Note from "../model/Note";
+import { serializeNote } from "../utils/functions";
+import { editNote } from "../state/noteSlice";
+import Feeling from "../model/Feeling";
+import { Moods } from "../types";
+import { editMood } from "../state/moodSlice";
+import AlertComponent from "./Alert";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const dispatch = useAppDispatch();
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState("");
+
+  async function reloadRedux() {
+    //reload moods
+    const moodsQuery = (await database
+      .get("feelings")
+      .query()
+      .fetch()) as Feeling[];
+    if (moodsQuery.length > 0) {
+      let moodsList: Moods = {};
+      moodsQuery.forEach((mood) => {
+        moodsList[mood.day] = mood.type;
+      });
+      dispatch(editMood(moodsList));
+    } else {
+      dispatch(editMood({}));
+    }
+    //reload notes
+    const notesQuery = (await database.get("notes").query().fetch()) as Note[];
+    if (notesQuery.length > 0) {
+      const serializedNotes = notesQuery.map((note) => serializeNote(note));
+      dispatch(editNote(serializedNotes));
+    } else {
+      dispatch(editNote([]));
+    }
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -25,6 +61,10 @@ export default function Auth() {
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (_event == "SIGNED_IN" && session) {
+        //successfull login
+        handleDataOnSignIn();
+      }
     });
   }, []);
 
@@ -36,13 +76,13 @@ export default function Auth() {
 
     const moods = await database.get("feelings").query().fetchCount();
 
-    await signInWithEmail();
-    // if there is not data
+    // if there is no local data
     if (notes == 0 && moods == 0) {
       // load user data with a sync call
       syncDatabase();
+      reloadRedux();
       setLoading(false);
-      // if there is data
+      // if there is local data
     } else if (session && session.user) {
       try {
         const {
@@ -73,25 +113,24 @@ export default function Auth() {
         // if the user doesn't have data on Supabase
         if (!notesData && !moodsData) {
           // call sync and sync local changes to Supabase
-          syncDatabase();
+          await syncDatabase();
           setLoading(false);
           // if there is data on Supabase
         } else {
           const { error } = await supabase.auth.signOut();
-          // Ask the user to export local data and import it after being logged
           setLoading(false);
-          console.log("export local data and import it after being logged");
+          setMessage(
+            "for now it's not possible to merge local data with the server one, sorry"
+          );
+          setShowAlert(true);
         }
       } catch (error) {
         if (error instanceof Error) {
           console.log(error.message);
-          //Alert.alert(error.message)
+          setMessage(error.message);
+          setShowAlert(true);
         }
       }
-    } else {
-      setLoading(false);
-      //login failed
-      console.log("login failed");
     }
   }
 
@@ -118,16 +157,25 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert("Please check your inbox for email verification!");
+    if (error) {
+      // Alert.alert(error.message);
+      setMessage(error.message);
+      setShowAlert(true);
+    }
+    // Alert.alert("Please check your inbox for email verification!");
+    setMessage("Please check your inbox for email verification!");
+    setShowAlert(true);
     setLoading(false);
-
     setPassword("");
   }
 
   return (
     <View style={styles.container}>
+      <AlertComponent
+        message={message}
+        setShowAlert={setShowAlert}
+        visible={showAlert}
+      />
       <Text style={styles.title}>Sign in</Text>
       <View style={styles.inputContainer}>
         <View>
@@ -151,7 +199,7 @@ export default function Auth() {
             value={password}
             placeholderTextColor={"gray"}
             onKeyPress={(key) => {
-              if (key.nativeEvent.key == "Enter") handleDataOnSignIn();
+              if (key.nativeEvent.key == "Enter") signInWithEmail();
             }}
           />
         </View>
@@ -159,7 +207,7 @@ export default function Auth() {
           {!loading && (
             <Pressable
               style={[styles.button, styles.signIn]}
-              onPress={handleDataOnSignIn}
+              onPress={signInWithEmail}
             >
               <Text style={styles.buttonText}>Sign In</Text>
             </Pressable>

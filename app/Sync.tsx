@@ -10,14 +10,13 @@ import { palette } from "../utils/palette";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
-import { syncDatabase } from "../utils/sync";
 import UserPage from "../components/UserPage";
 import AlertComponent from "../components/Alert";
 
 export default function Screen() {
   const [session, setSession] = useState<Session | null>(null);
   const { height } = useWindowDimensions();
-  const [showAlert, setShowAlert] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
