@@ -35,18 +35,18 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
       dispatch(editNote(serializedNotes));
     }
     getNotes();
-    async function getMoods() {
-      const moodsQuery = (await database
-        .get("feelings")
-        .query()
-        .fetch()) as Feeling[];
-      let moodsList: Moods = {};
-      moodsQuery.forEach((mood) => {
-        moodsList[mood.day] = mood.type;
-      });
-      dispatch(editMood(moodsList));
-    }
-    getMoods();
+    // async function getMoods() {
+    //   const moodsQuery = (await database
+    //     .get("feelings")
+    //     .query()
+    //     .fetch()) as Feeling[];
+    //   let moodsList: Moods = {};
+    //   moodsQuery.forEach((mood) => {
+    //     moodsList[mood.day] = mood.type;
+    //   });
+    //   dispatch(editMood(moodsList));
+    // }
+    // getMoods();
     async function getSettings() {
       const settingsQuery = (await database
         .get("settings")
