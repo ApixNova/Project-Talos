@@ -4,6 +4,8 @@
 //   mood: number;
 // }
 
+import { DateData } from "react-native-calendars";
+
 export type calendarProps = {
   props: {
     selectedDay: string;
@@ -78,4 +80,36 @@ export type PickerProps = {
   options: string[];
   state: string;
   setState: (value: string) => void;
+};
+
+export type OnMonthChangeProps = {
+  date: DateData;
+  moods: Moods;
+  dispatch: ThunkDispatch<
+    {
+      moods: {
+        value: Moods;
+      };
+      notes: never[];
+      settings: never[];
+    },
+    undefined,
+    UnknownAction
+  > &
+    Dispatch<UnknownAction>;
+};
+
+export type ReloadNotesProps = {
+  dispatch: ThunkDispatch<
+    {
+      moods: {
+        value: Moods;
+      };
+      notes: never[];
+      settings: never[];
+    },
+    undefined,
+    UnknownAction
+  > &
+    Dispatch<UnknownAction>;
 };

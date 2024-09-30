@@ -6,15 +6,20 @@ import { NoteComponent } from "./NoteComponent";
 import { useEffect, useState } from "react";
 import { NotePreview } from "./NotePreview";
 import { SerializedNote } from "../../types";
-import { useAppSelector } from "../../state/hooks";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { palette } from "../../utils/palette";
 import NewNoteCalendar from "./NewNoteCalendar";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
+import { database } from "../../utils/watermelon";
+import { Q } from "@nozbe/watermelondb";
+import Note from "../../model/Note";
+import { editNote } from "../../state/noteSlice";
 
 export function Diary() {
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
   const [editing, setEditing] = useState(false);
   const [newNoteMenu, setNewNoteMenu] = useState(false);
+  const dispatch = useAppDispatch();
   const rotateZ = useSharedValue("0deg");
 
   function onPressNewNote() {
@@ -41,7 +46,7 @@ export function Diary() {
 
   useEffect(() => {
     if (havingNotes()) {
-      //check if we there is a note for today
+      //check if there is a note for today
       const noteForToday = notes.find((note) => note.day == getCurrentDate());
       if (noteForToday) {
         console.log("we are editing!");
@@ -49,6 +54,27 @@ export function Diary() {
       }
     }
   }, [notes]);
+
+  function scrollEndReached() {
+    const notesSorted = sortedNotes();
+    const currentNote = notesSorted[notesSorted.length - 1];
+    getMoreNotes(currentNote.day);
+  }
+
+  async function getMoreNotes(date: string) {
+    const notesQuery = (await database
+      .get("notes")
+      .query(
+        Q.sortBy("day", Q.desc),
+        Q.skip(notes.length),
+        Q.take(10)
+      )) as Note[];
+    let notesCopy = [...notes];
+    notesQuery.forEach((note) => {
+      notesCopy.push(serializeNote(note));
+    });
+    dispatch(editNote(notesCopy));
+  }
 
   return (
     <View style={styles.container}>
@@ -66,6 +92,8 @@ export function Diary() {
       <View style={styles.noteList}>
         {havingNotes() && (
           <FlashList
+            onEndReached={scrollEndReached}
+            onEndReachedThreshold={0.5}
             data={sortedNotes()}
             renderItem={({ item }) => {
               return <NotePreview data={item} />;

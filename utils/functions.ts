@@ -4,6 +4,7 @@ import Note from "../model/Note";
 import { moodColor } from "./palette";
 import { database } from "./watermelon";
 import { SerializedNote } from "../types";
+import { DateData } from "react-native-calendars";
 
 //returns current date in YYYY-MM-DD format taking into account the timezone
 export function getCurrentDate() {
@@ -11,6 +12,19 @@ export function getCurrentDate() {
   const offset = currentDate.getTimezoneOffset();
   const shiftedDate = new Date(currentDate.getTime() - offset * 60 * 1000);
   return shiftedDate.toISOString().split("T")[0];
+}
+
+export function toDateData(date: Date = new Date()): DateData {
+  const offset = date.getTimezoneOffset();
+  return {
+    dateString: new Date(date.getTime() - offset * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
+    day: date.getDate(),
+    month: date.getMonth() + 1,
+    year: date.getFullYear(),
+    timestamp: date.getTime(),
+  };
 }
 
 export function getWeekDay(day: number) {

@@ -23,12 +23,20 @@ import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { editMood } from "../../state/moodSlice";
 import { palette } from "../../utils/palette";
 import Feeling from "../../model/Feeling";
-import { useNavigation } from "expo-router";
+import { router, useNavigation, useSegments } from "expo-router";
 import { editNote } from "../../state/noteSlice";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import AlertComponent from "../Alert";
+import Button from "../Button";
+import reloadNotes from "../../utils/reload-notes";
 
 export function NoteComponent({ props }: NoteProps) {
   const { day, editing, id } = props;
   const [moodPicker, setMoodPicker] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertGiveChoice, setAlertGiveChoice] = useState(true);
+  const [message, setMessage] = useState("");
   const [moodType, setMoodType] = useState("");
   const moods = useAppSelector((state) => state.moods.value);
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
@@ -203,6 +211,41 @@ export function NoteComponent({ props }: NoteProps) {
       dispatch(editMood(moodsList));
     }
   }
+
+  function deletePressed() {
+    if (editing) {
+      setMessage("Are you sure you want to delete this note?");
+      setAlertGiveChoice(true);
+      setShowOptions(false);
+      setShowAlert(true);
+    } else {
+      setAlertGiveChoice(false);
+      setMessage("There is nothing to delete");
+      setShowAlert(true);
+    }
+  }
+  async function deleteNote() {
+    if (editing) {
+      try {
+        await database.write(async () => {
+          const noteInDB = await database
+            .get<Note>("notes")
+            .query(Q.where("day", updatedDay));
+          noteInDB[0].markAsDeleted();
+          setTitle("");
+          setText("");
+        });
+      } catch (e) {
+        setAlertGiveChoice(false);
+        setMessage("Error");
+        setShowAlert(true);
+      }
+    }
+    //reload redux
+    reloadNotes({ dispatch });
+    //reroute to /Diary/
+    router.navigate("/Diary/");
+  }
   return (
     <View
       style={[
@@ -213,6 +256,14 @@ export function NoteComponent({ props }: NoteProps) {
         },
       ]}
     >
+      <AlertComponent
+        message={message}
+        setShowAlert={setShowAlert}
+        visible={showAlert}
+        giveChoice={alertGiveChoice}
+        handleConfirm={deleteNote}
+        handleExit={() => {}}
+      />
       <View style={styles.newNoteTitle}>
         <TextInput
           style={styles.newNoteTitleInput}
@@ -221,6 +272,9 @@ export function NoteComponent({ props }: NoteProps) {
           value={title}
           onChangeText={setTitle}
         />
+        <Pressable onPress={saveNote} style={styles.save}>
+          <Text style={styles.newNoteSave}>Save</Text>
+        </Pressable>
         <View>
           <Pressable
             onPress={() => setMoodPicker((prev) => !prev)}
@@ -235,9 +289,25 @@ export function NoteComponent({ props }: NoteProps) {
             </View>
           )}
         </View>
-        <Pressable onPress={saveNote}>
-          <Text style={styles.newNoteSave}>[Save]</Text>
-        </Pressable>
+        <View>
+          <Pressable
+            onPress={() => {
+              setShowOptions((prev) => !prev);
+            }}
+            style={styles.optionsIcon}
+          >
+            <SimpleLineIcons name="options" size={24} color="black" />
+          </Pressable>
+          {showOptions && (
+            <View style={styles.newNoteOptions}>
+              <Button
+                text="Delete Note"
+                onPress={deletePressed}
+                color="black"
+              />
+            </View>
+          )}
+        </View>
       </View>
       <View style={styles.newNoteMain}>
         <TextInput
@@ -299,8 +369,24 @@ const styles = StyleSheet.create({
     right: 0,
     top: 30,
   },
+  save: {
+    paddingRight: 5,
+  },
+  optionsIcon: {
+    paddingLeft: 4,
+  },
+  newNoteOptions: {
+    borderWidth: 3,
+    padding: 2,
+    borderColor: "pink",
+    backgroundColor: palette.accent,
+    position: "absolute",
+    right: 0,
+    top: 35,
+  },
   newNoteSave: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_500Medium",
+    fontSize: 16,
   },
   newNoteMain: {
     borderWidth: 2,

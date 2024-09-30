@@ -13,7 +13,7 @@ export default function AlertComponent({
   message: string;
   visible?: boolean;
   setShowAlert: React.Dispatch<React.SetStateAction<boolean>>;
-  giveChoice?: true;
+  giveChoice?: boolean;
   handleConfirm?: () => void;
   handleExit?: () => void;
 }) {

@@ -1,11 +1,18 @@
 import { Stack, useNavigation } from "expo-router";
 import { palette } from "../../../utils/palette";
-import { Platform, Text, Pressable, StyleSheet } from "react-native";
+import {
+  Platform,
+  Text,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationType } from "../../../types";
 
 export default function DiaryLayout() {
   const navigation = useNavigation<NavigationType>();
+  const { width } = useWindowDimensions();
 
   return (
     <Stack>
@@ -33,7 +40,9 @@ export default function DiaryLayout() {
               }}
             >
               <Ionicons name="chevron-back-outline" size={27} color="white" />
-              {Platform.OS == "web" && <Text style={styles.text}>Back</Text>}
+              {Platform.OS == "web" && width > 465 && (
+                <Text style={styles.text}>Back</Text>
+              )}
             </Pressable>
           ),
           // headerBackImageSource: image,

@@ -10,8 +10,8 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   useFonts,
   Inter_300Light,
-  Inter_500Medium,
   Inter_400Regular,
+  Inter_500Medium,
   Inter_600SemiBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";

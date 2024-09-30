@@ -1,58 +1,32 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Pressable,
-  TextInput,
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { Alert, TextInput, View, Text, StyleSheet } from "react-native";
 import { supabase } from "../utils/supabase";
 import { palette } from "../utils/palette";
 import { database } from "../utils/watermelon";
 import { Session } from "@supabase/supabase-js";
 import { syncDatabase } from "../utils/sync";
-import { useAppDispatch } from "../state/hooks";
-import Note from "../model/Note";
-import { serializeNote } from "../utils/functions";
-import { editNote } from "../state/noteSlice";
-import Feeling from "../model/Feeling";
-import { Moods } from "../types";
-import { editMood } from "../state/moodSlice";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { toDateData } from "../utils/functions";
 import AlertComponent from "./Alert";
+import Button from "./Button";
+import { onMonthChange } from "../utils/month-functions";
+import reloadNotes from "../utils/reload-notes";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const dispatch = useAppDispatch();
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
+  const moods = useAppSelector((state) => state.moods.value);
+  const dispatch = useAppDispatch();
 
   async function reloadRedux() {
     //reload moods
-    const moodsQuery = (await database
-      .get("feelings")
-      .query()
-      .fetch()) as Feeling[];
-    if (moodsQuery.length > 0) {
-      let moodsList: Moods = {};
-      moodsQuery.forEach((mood) => {
-        moodsList[mood.day] = mood.type;
-      });
-      dispatch(editMood(moodsList));
-    } else {
-      dispatch(editMood({}));
-    }
+    onMonthChange({ date: toDateData(), moods, dispatch });
     //reload notes
-    const notesQuery = (await database.get("notes").query().fetch()) as Note[];
-    if (notesQuery.length > 0) {
-      const serializedNotes = notesQuery.map((note) => serializeNote(note));
-      dispatch(editNote(serializedNotes));
-    } else {
-      dispatch(editNote([]));
-    }
+    reloadNotes({ dispatch });
   }
 
   useEffect(() => {
@@ -69,7 +43,6 @@ export default function Auth() {
   }, []);
 
   async function handleDataOnSignIn() {
-    // !! Make sure that session is not null !!
     setLoading(true);
     // query notes and moods
     const notes = await database.get("notes").query().fetchCount();
@@ -205,29 +178,20 @@ export default function Auth() {
         </View>
         <View style={styles.buttonContainer}>
           {!loading && (
-            <Pressable
-              style={[styles.button, styles.signIn]}
+            <Button
+              text="Sign In"
               onPress={signInWithEmail}
-            >
-              <Text style={styles.buttonText}>Sign In</Text>
-            </Pressable>
+              style={styles.signIn}
+            />
           )}
           {!loading && (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 10,
-                margin: "auto",
-              }}
-            >
+            <View style={styles.signUpContainer}>
               <Text style={styles.signUpText}>New account?</Text>
-              <Pressable
-                style={[styles.button, styles.signUp]}
+              <Button
+                text="Sign Up"
                 onPress={signUpWithEmail}
-              >
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </Pressable>
+                color={palette.rose}
+              />
             </View>
           )}
         </View>
@@ -275,25 +239,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     gap: 8,
   },
-  button: {
-    padding: 5,
-    borderRadius: 7,
+  signUpContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    margin: "auto",
   },
   signIn: {
-    backgroundColor: palette.primary,
     paddingVertical: 9,
-  },
-  signUp: {
-    backgroundColor: palette.rose,
   },
   signUpText: {
     fontSize: 17,
     fontFamily: "Inter_500Medium",
-  },
-  buttonText: {
-    color: palette.text,
-    fontFamily: "Inter_400Regular",
-    fontSize: 17,
-    margin: "auto",
   },
 });

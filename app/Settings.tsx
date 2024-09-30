@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import Setting from "../model/Setting";
 import { serializeSetting, setupSettings } from "../utils/functions";
 import { editSetting } from "../state/settingSlice";
+import Button from "../components/Button";
 
 export default function Screen() {
   const dispatch = useAppDispatch();
@@ -98,9 +99,12 @@ export default function Screen() {
           />
         </View>
         <View style={styles.separation}></View>
-        <Pressable style={styles.button} onPress={resetDatabase}>
-          <Text style={styles.buttonText}>Reset DB</Text>
-        </Pressable>
+        <Button
+          text="Reset DB"
+          onPress={resetDatabase}
+          color={palette.secondary}
+          style={{ margin: "auto" }}
+        />
       </View>
     </View>
   );
@@ -124,30 +128,12 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 7,
   },
-  // title: {
-  //   color: "white",
-  //   fontFamily: "Inter_900Black",
-  //   fontSize: 30,
-  //   marginHorizontal: "auto",
-  // },
   separation: {
     width: "90%",
     height: 1,
     backgroundColor: palette.primary,
     marginHorizontal: "auto",
     marginVertical: 5,
-  },
-  button: {
-    backgroundColor: palette.secondary,
-    padding: 2,
-    borderRadius: 7,
-    marginHorizontal: "auto",
-    marginVertical: 7,
-  },
-  buttonText: {
-    color: palette.text,
-    fontSize: 20,
-    fontFamily: "Inter_400Regular",
   },
   settingRow: {
     gap: 5,

@@ -2,19 +2,25 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { palette } from "../../utils/palette";
 import { CalendarList, DateData } from "react-native-calendars";
 import { useState } from "react";
-import { getCurrentDate } from "../../utils/functions";
-import { useAppSelector } from "../../state/hooks";
+import { getCurrentDate, serializeNote } from "../../utils/functions";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import Note from "../../model/Note";
 import { Direction, MarkedDates } from "react-native-calendars/src/types";
-import { NewNoteCalendarProp } from "../../types";
+import { NewNoteCalendarProp, SerializedNote } from "../../types";
 import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Arrow from "../Arrow";
+import getDaysOfMonth from "../../utils/month-functions";
+import { database } from "../../utils/watermelon";
+import { Q } from "@nozbe/watermelondb";
+import { editNote } from "../../state/noteSlice";
+import Button from "../Button";
 
 export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());
-  const notes = useAppSelector((state) => state.notes as Note[]);
+  const notes = useAppSelector((state) => state.notes as SerializedNote[]);
+  const dispatch = useAppDispatch();
   const { setNewNoteMenu } = props;
 
   const markedRef: MarkedDates = {
@@ -25,13 +31,43 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
   };
 
   for (const item in notes) {
-    const note = notes[item] as Note;
+    const note = notes[item] as SerializedNote;
     markedRef[note.day] = {
       ...markedRef[note.day],
       marked: true,
       dotColor: palette.background,
-      //   activeOpacity: 0,
+      activeOpacity: 0.8,
     };
+  }
+
+  function handleMonthChange(date: DateData) {
+    const notesCopy = [...notes];
+    let reduxUpdated = false;
+    // load all days of the three months. And load the notes if they aren't already
+    const allDays = getDaysOfMonth(date);
+
+    async function loadNote(day: string) {
+      const existingNote = await database
+        .get<Note>("notes")
+        .query(Q.where("day", day));
+      if (existingNote.length > 0) {
+        notesCopy.push(serializeNote(existingNote[0]));
+        if (!reduxUpdated) reduxUpdated = true;
+      }
+    }
+    const promises = allDays.map((day) => {
+      // if the day isn't in Redux
+      if (!notes.find((note) => note.day == day)) {
+        //load note if it's in the DB
+        return loadNote(day);
+      }
+    });
+    Promise.all(promises).then(() => {
+      if (reduxUpdated) {
+        console.log("DISPATCHING".toLowerCase());
+        dispatch(editNote(notesCopy));
+      }
+    });
   }
 
   function buttonText() {
@@ -77,10 +113,10 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
           ]}
           style={styles.calendarContainer}
         >
-          {/* <View style={styles.calendarContainer}> */}
           <CalendarList
             markedDates={markedRef}
             onDayPress={(day: DateData) => setSelectedDay(day.dateString)}
+            onMonthChange={(date) => handleMonthChange(date)}
             style={styles.calendar}
             theme={{
               calendarBackground: "transparent",
@@ -108,11 +144,12 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
               <Arrow direction={direction} />
             )}
           />
-          {/* </View> */}
         </LinearGradient>
-        <Pressable style={styles.button} onPress={createOrEditNote}>
-          <Text style={styles.buttonText}>{buttonText()}</Text>
-        </Pressable>
+        <Button
+          text={buttonText()}
+          onPress={createOrEditNote}
+          style={{ borderColor: palette.text, borderWidth: 2, margin: "auto" }}
+        />
       </View>
     </View>
   );
@@ -156,19 +193,5 @@ const styles = StyleSheet.create({
   calendar: {
     borderWidth: 2,
     borderColor: palette.rose,
-  },
-  button: {
-    margin: "auto",
-    backgroundColor: palette.primary,
-    borderWidth: 2,
-    borderColor: palette.text,
-    padding: 5,
-    borderRadius: 7,
-    // marginTop: "auto",
-  },
-  buttonText: {
-    color: palette.text,
-    fontFamily: "Inter_400Regular",
-    fontSize: 17,
   },
 });
