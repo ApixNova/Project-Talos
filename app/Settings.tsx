@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { palette } from "../utils/palette";
+import { View, Text, StyleSheet } from "react-native";
+import { dynamicTheme, getTheme } from "../utils/palette";
 import { database } from "../utils/watermelon";
 import Picker from "../components/Picker";
 import { useEffect } from "react";
@@ -12,11 +12,6 @@ import Button from "../components/Button";
 export default function Screen() {
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
-
-  function getTheme() {
-    const theme = settings.find((element) => element.type == "theme");
-    return theme ? theme.value : "Dark";
-  }
 
   function getFirstDay() {
     const firstDay = settings.find((element) => element.type == "firstDay");
@@ -77,20 +72,46 @@ export default function Screen() {
     });
   }
   return (
-    <View style={styles.background}>
-      <View style={styles.container}>
+    <View
+      style={[
+        styles.background,
+        {
+          backgroundColor: dynamicTheme(settings, "background"),
+          borderColor: dynamicTheme(settings, "text"),
+        },
+      ]}
+    >
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: dynamicTheme(settings, "accent") },
+        ]}
+      >
         <View style={styles.settingRow}>
-          <Text style={styles.text}>Theme</Text>
+          <Text
+            style={[styles.text, { color: dynamicTheme(settings, "text") }]}
+          >
+            Theme
+          </Text>
           <Picker
-            title={getTheme()}
+            title={getTheme(settings)}
             options={["Dark", "Light", "Auto"]}
-            state={getTheme()}
+            state={getTheme(settings)}
             setState={(value) => updateSettings("theme", value)}
           />
         </View>
-        <View style={styles.separation}></View>
+        <View
+          style={[
+            styles.separation,
+            { backgroundColor: dynamicTheme(settings, "primary") },
+          ]}
+        ></View>
         <View style={styles.settingRow}>
-          <Text style={styles.text}>First Day Of The Week</Text>
+          <Text
+            style={[styles.text, { color: dynamicTheme(settings, "text") }]}
+          >
+            First Day Of The Week
+          </Text>
           <Picker
             title={getFirstDay()}
             options={["Monday", "Sunday"]}
@@ -98,11 +119,16 @@ export default function Screen() {
             setState={(value) => updateSettings("firstDay", value)}
           />
         </View>
-        <View style={styles.separation}></View>
+        <View
+          style={[
+            styles.separation,
+            { backgroundColor: dynamicTheme(settings, "primary") },
+          ]}
+        ></View>
         <Button
           text="Reset DB"
           onPress={resetDatabase}
-          color={palette.secondary}
+          color={dynamicTheme(settings, "secondary")}
           style={{ margin: "auto" }}
         />
       </View>
@@ -112,17 +138,17 @@ export default function Screen() {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: palette.background,
+    // backgroundColor: palette.background,
     height: "100%",
     alignItems: "center",
     gap: 50,
     paddingTop: 20,
     borderWidth: 2,
-    borderColor: palette.text,
+    // borderColor: palette.text,
   },
   container: {
     maxWidth: 600,
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
     width: "90%",
     margin: "auto",
     padding: 5,
@@ -131,7 +157,7 @@ const styles = StyleSheet.create({
   separation: {
     width: "90%",
     height: 1,
-    backgroundColor: palette.primary,
+    // backgroundColor: palette.primary,
     marginHorizontal: "auto",
     marginVertical: 5,
   },
@@ -139,13 +165,13 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   text: {
-    color: palette.text,
+    // color: palette.text,
     fontSize: 20,
     fontFamily: "Inter_400Regular",
   },
-  textSetting: {
-    color: palette.accent,
-    fontSize: 20,
-    fontFamily: "Inter_400Regular",
-  },
+  // textSetting: {
+  //   color: palette.accent,
+  //   fontSize: 20,
+  //   fontFamily: "Inter_400Regular",
+  // },
 });

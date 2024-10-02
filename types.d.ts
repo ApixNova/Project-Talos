@@ -113,3 +113,16 @@ export type ReloadNotesProps = {
   > &
     Dispatch<UnknownAction>;
 };
+
+const themeTypeList = [
+  "background",
+  "text",
+  "primary",
+  "secondary",
+  "accent",
+  "rose",
+  "black",
+  "gray",
+] as const;
+
+type ThemeType = (typeof themeTypeList)[number];

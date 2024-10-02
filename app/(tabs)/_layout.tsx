@@ -3,9 +3,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { moodColor, palette } from "../../utils/palette";
+import { dynamicTheme, moodColor } from "../../utils/palette";
+import { useAppSelector } from "../../state/hooks";
+import Setting from "../../model/Setting";
 
 export default function Tablayout() {
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   return (
     <Tabs
       screenOptions={{
@@ -13,7 +16,7 @@ export default function Tablayout() {
         tabBarStyle: {
           backgroundColor: moodColor.black,
           borderTopWidth: 2,
-          borderTopColor: palette.rose,
+          borderTopColor: dynamicTheme(settings, "rose"),
           height: 50,
         },
         tabBarLabelStyle: {

@@ -1,15 +1,17 @@
+import { FontAwesome } from "@expo/vector-icons";
+import { useState } from "react";
 import {
+  Modal,
   Pressable,
   SafeAreaView,
   StyleSheet,
-  View,
   Text,
-  Modal,
+  View,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { palette } from "../utils/palette";
-import { useState } from "react";
+import Setting from "../model/Setting";
+import { useAppSelector } from "../state/hooks";
 import { PickerProps } from "../types";
+import { dynamicTheme } from "../utils/palette";
 
 export default function Picker({
   title,
@@ -18,6 +20,7 @@ export default function Picker({
   setState,
 }: PickerProps) {
   const [visible, setVisible] = useState(false);
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   function handlePress(option: string) {
     setState(option);
     setVisible(false);
@@ -36,7 +39,15 @@ export default function Picker({
       {visible && (
         <Modal animationType="fade" transparent={true}>
           <View style={styles.background}>
-            <View style={styles.container}>
+            <View
+              style={[
+                styles.container,
+                {
+                  backgroundColor: dynamicTheme(settings, "background"),
+                  borderColor: dynamicTheme(settings, "rose"),
+                },
+              ]}
+            >
               <Pressable
                 onPress={() => {
                   setVisible(false);
@@ -60,7 +71,15 @@ export default function Picker({
                       selectable={false}
                       style={[
                         styles.textList,
-                        option == state ? styles.selected : undefined,
+                        option == state
+                          ? [
+                              styles.selected,
+                              {
+                                color: dynamicTheme(settings, "text"),
+                                backgroundColor: dynamicTheme(settings, "rose"),
+                              },
+                            ]
+                          : undefined,
                       ]}
                     >
                       {option}
@@ -84,9 +103,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(24, 36, 74, 0.6)",
   },
   container: {
-    backgroundColor: palette.background,
+    // backgroundColor: palette.background,
     borderWidth: 2,
-    borderColor: palette.rose,
+    // borderColor: palette.rose,
     // width: "85%",
     minWidth: 200,
     paddingHorizontal: 13,
@@ -117,9 +136,9 @@ const styles = StyleSheet.create({
     // width: "100%",
   },
   selected: {
-    color: palette.text,
+    // color: palette.text,
     // borderWidth: 2,
     // borderColor: "white",
-    backgroundColor: palette.rose,
+    // backgroundColor: palette.rose,
   },
 });

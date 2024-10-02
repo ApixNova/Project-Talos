@@ -1,34 +1,35 @@
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { Q } from "@nozbe/watermelondb";
+import { router, useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
   Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
   useWindowDimensions,
+  View,
 } from "react-native";
+import Feeling from "../../model/Feeling";
+import Note from "../../model/Note";
+import Setting from "../../model/Setting";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { editMood } from "../../state/moodSlice";
+import { editNote } from "../../state/noteSlice";
+import { NoteProps, SerializedNote } from "../../types";
 import {
   fullDate,
   getCurrentDate,
   returnColor,
   serializeNote,
 } from "../../utils/functions";
-import { NoteProps, SerializedNote } from "../../types";
-import { database } from "../../utils/watermelon";
-import { Q } from "@nozbe/watermelondb";
-import MoodPicker from "../Moods/MoodPicker";
-import { useEffect, useState } from "react";
-import Note from "../../model/Note";
+import { dynamicTheme } from "../../utils/palette";
+import reloadNotes from "../../utils/reload-notes";
 import { updateMood } from "../../utils/updateMood";
-import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { editMood } from "../../state/moodSlice";
-import { palette } from "../../utils/palette";
-import Feeling from "../../model/Feeling";
-import { router, useNavigation, useSegments } from "expo-router";
-import { editNote } from "../../state/noteSlice";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { database } from "../../utils/watermelon";
 import AlertComponent from "../Alert";
 import Button from "../Button";
-import reloadNotes from "../../utils/reload-notes";
+import MoodPicker from "../Moods/MoodPicker";
 
 export function NoteComponent({ props }: NoteProps) {
   const { day, editing, id } = props;
@@ -39,6 +40,7 @@ export function NoteComponent({ props }: NoteProps) {
   const [message, setMessage] = useState("");
   const [moodType, setMoodType] = useState("");
   const moods = useAppSelector((state) => state.moods.value);
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
   //note fields
   const [title, setTitle] = useState("");
@@ -253,6 +255,7 @@ export function NoteComponent({ props }: NoteProps) {
         {
           width: width < 1200 ? "100%" : "80%",
           maxWidth: 1500,
+          backgroundColor: dynamicTheme(settings, "accent"),
         },
       ]}
     >
@@ -264,11 +267,23 @@ export function NoteComponent({ props }: NoteProps) {
         handleConfirm={deleteNote}
         handleExit={() => {}}
       />
-      <View style={styles.newNoteTitle}>
+      <View
+        style={[
+          styles.newNoteTitle,
+          {
+            backgroundColor: dynamicTheme(settings, "accent"),
+          },
+        ]}
+      >
         <TextInput
-          style={styles.newNoteTitleInput}
+          style={[
+            styles.newNoteTitleInput,
+            {
+              color: dynamicTheme(settings, "text"),
+            },
+          ]}
           placeholder="Title (optional)"
-          placeholderTextColor={palette.gray}
+          placeholderTextColor={dynamicTheme(settings, "gray")}
           value={title}
           onChangeText={setTitle}
         />
@@ -284,7 +299,12 @@ export function NoteComponent({ props }: NoteProps) {
             ]}
           ></Pressable>
           {moodPicker && (
-            <View style={styles.newNoteMoodPicker}>
+            <View
+              style={[
+                styles.newNoteMoodPicker,
+                { backgroundColor: dynamicTheme(settings, "accent") },
+              ]}
+            >
               <MoodPicker handlePress={handleMoodPress} />
             </View>
           )}
@@ -299,7 +319,12 @@ export function NoteComponent({ props }: NoteProps) {
             <SimpleLineIcons name="options" size={24} color="black" />
           </Pressable>
           {showOptions && (
-            <View style={styles.newNoteOptions}>
+            <View
+              style={[
+                styles.newNoteOptions,
+                { backgroundColor: dynamicTheme(settings, "accent") },
+              ]}
+            >
               <Button
                 text="Delete Note"
                 onPress={deletePressed}
@@ -309,12 +334,17 @@ export function NoteComponent({ props }: NoteProps) {
           )}
         </View>
       </View>
-      <View style={styles.newNoteMain}>
+      <View
+        style={[
+          styles.newNoteMain,
+          { backgroundColor: dynamicTheme(settings, "background") },
+        ]}
+      >
         <TextInput
           value={text}
           onChangeText={setText}
           placeholder="take a note about your day..."
-          placeholderTextColor={palette.gray}
+          placeholderTextColor={dynamicTheme(settings, "gray")}
           style={styles.newNoteInput}
           multiline
         />
@@ -331,10 +361,10 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 10,
     borderColor: "pink",
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
   },
   newNoteTitle: {
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
     height: "10%",
     maxHeight: 50,
     borderRadius: 10,
@@ -348,7 +378,7 @@ const styles = StyleSheet.create({
   newNoteTitleInput: {
     fontSize: 21,
     width: "80%",
-    color: palette.text,
+    // color: palette.text,
     paddingHorizontal: 5,
     fontFamily: "Inter_400Regular",
   },
@@ -364,7 +394,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     padding: 2,
     borderColor: "pink",
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
     position: "absolute",
     right: 0,
     top: 30,
@@ -379,7 +409,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     padding: 2,
     borderColor: "pink",
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
     position: "absolute",
     right: 0,
     top: 35,
@@ -392,7 +422,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
     borderRadius: 10,
-    backgroundColor: palette.background,
+    // backgroundColor: palette.background,
     padding: 2,
     flex: 9,
   },

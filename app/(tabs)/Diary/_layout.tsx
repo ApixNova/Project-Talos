@@ -1,5 +1,5 @@
 import { Stack, useNavigation } from "expo-router";
-import { palette } from "../../../utils/palette";
+import { dynamicTheme } from "../../../utils/palette";
 import {
   Platform,
   Text,
@@ -9,10 +9,13 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationType } from "../../../types";
+import { useAppSelector } from "../../../state/hooks";
+import Setting from "../../../model/Setting";
 
 export default function DiaryLayout() {
   const navigation = useNavigation<NavigationType>();
   const { width } = useWindowDimensions();
+  const settings = useAppSelector((state) => state.settings as Setting[]);
 
   return (
     <Stack>
@@ -29,7 +32,7 @@ export default function DiaryLayout() {
           // headerShown: false,
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: palette.black,
+            backgroundColor: dynamicTheme(settings, "black"),
           },
           // headerBackVisible: false,
           headerLeft: () => (

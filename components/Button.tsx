@@ -1,13 +1,14 @@
 import {
   GestureResponderEvent,
   Pressable,
-  PressableProps,
   StyleProp,
   StyleSheet,
   Text,
   ViewStyle,
 } from "react-native";
-import { palette } from "../utils/palette";
+import Setting from "../model/Setting";
+import { useAppSelector } from "../state/hooks";
+import { dynamicTheme } from "../utils/palette";
 
 export default function Button({
   text,
@@ -20,16 +21,20 @@ export default function Button({
   color?: string;
   style?: StyleProp<ViewStyle>;
 }) {
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   return (
     <Pressable
       onPress={onPress}
       style={[
         styles.button,
-        { backgroundColor: color || palette.primary },
+        { backgroundColor: color || dynamicTheme(settings, "primary") },
         style,
       ]}
     >
-      <Text numberOfLines={1} style={styles.buttonText}>
+      <Text
+        numberOfLines={1}
+        style={[styles.buttonText, { color: dynamicTheme(settings, "text") }]}
+      >
         {text}
       </Text>
     </Pressable>
@@ -42,7 +47,6 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   buttonText: {
-    color: palette.text,
     fontFamily: "Inter_400Regular",
     fontSize: 17,
     margin: "auto",

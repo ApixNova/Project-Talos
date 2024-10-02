@@ -1,12 +1,6 @@
 import { Provider } from "react-redux";
 import { store } from "../state/store";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
-import MyDrawer from "../components/MyDrawer";
-import { StyleSheet, Text } from "react-native";
-import { palette } from "../utils/palette";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet } from "react-native";
 import {
   useFonts,
   Inter_300Light,
@@ -15,6 +9,7 @@ import {
   Inter_600SemiBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
+import MainLayout from "../components/MainLayout";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -26,108 +21,7 @@ export default function App() {
   });
   return (
     <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Drawer
-          drawerContent={MyDrawer}
-          screenOptions={{
-            drawerActiveBackgroundColor: palette.rose,
-            headerStyle: {
-              backgroundColor: palette.rose,
-            },
-            headerShadowVisible: false,
-            headerTitleStyle: {
-              fontFamily: "Inter_400regular",
-            },
-            headerTitleAlign: "center",
-          }}
-        >
-          <Drawer.Screen
-            name="(tabs)"
-            options={{
-              drawerIcon: (color) => (
-                <FontAwesome5
-                  size={30}
-                  name="book"
-                  color={color.focused ? "white" : "pink"}
-                />
-              ),
-              drawerLabel: ({ color, focused }) => (
-                <Text
-                  style={[
-                    styles.drawerText,
-                    { color: focused ? "white" : "pink" },
-                  ]}
-                >
-                  Calendar & Diary
-                </Text>
-              ),
-              title: "Talos",
-              headerTitleStyle: {
-                fontFamily: "Inter_900Black",
-                fontSize: 30,
-                color: palette.background,
-              },
-              // headerTitle: (props) => (
-              //   <FontAwesome5 size={30} name="book" color={"white"} />
-              // ),
-            }}
-          />
-          <Drawer.Screen
-            name="Settings"
-            options={{
-              headerTitleStyle: {
-                fontFamily: "Inter_900Black",
-                fontSize: 30,
-                color: palette.background,
-              },
-              drawerIcon: (color) => (
-                <Ionicons
-                  name="settings-sharp"
-                  size={30}
-                  color={color.focused ? "white" : "pink"}
-                />
-              ),
-              drawerLabel: ({ color, focused }) => (
-                <Text
-                  style={[
-                    styles.drawerText,
-                    { color: focused ? "white" : "pink" },
-                  ]}
-                >
-                  Settings
-                </Text>
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="Sync"
-            options={{
-              headerTitleStyle: {
-                fontFamily: "Inter_900Black",
-                fontSize: 30,
-                color: palette.background,
-              },
-              drawerIcon: (color) => (
-                <FontAwesome5
-                  name="sync-alt"
-                  size={24}
-                  color={color.focused ? "white" : "pink"}
-                />
-              ),
-              drawerLabel: ({ color, focused }) => (
-                <Text
-                  style={[
-                    styles.drawerText,
-                    { color: focused ? "white" : "pink" },
-                  ]}
-                >
-                  Sync
-                </Text>
-              ),
-            }}
-          />
-        </Drawer>
-      </GestureHandlerRootView>
+      <MainLayout />
     </Provider>
   );
 }

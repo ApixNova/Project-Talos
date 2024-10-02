@@ -1,9 +1,7 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { MoodOption } from "./MoodOption";
-import { moodColor } from "../../utils/palette";
-import { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { MoodPickerProps } from "../../types";
-import { database } from "../../utils/watermelon";
+import { moodColor } from "../../utils/palette";
+import { MoodOption } from "./MoodOption";
 
 export default function MoodPicker({ handlePress }: MoodPickerProps) {
   return (

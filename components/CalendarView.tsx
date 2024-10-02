@@ -1,13 +1,13 @@
-import { View, StyleSheet, useWindowDimensions, Text } from "react-native";
-import { CalendarList, Calendar, DateData } from "react-native-calendars";
 import { useMemo } from "react";
-import { calendarProps } from "../types";
-import { palette } from "../utils/palette";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { CalendarList, DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
-import { getCurrentDate, returnColor } from "../utils/functions";
 import Setting from "../model/Setting";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { calendarProps } from "../types";
+import { getCurrentDate, returnColor } from "../utils/functions";
 import { onMonthChange } from "../utils/month-functions";
+import { dynamicTheme } from "../utils/palette";
 
 export default function CalendarView({ props }: calendarProps) {
   const { selectedDay, setSelectedDay } = props;
@@ -39,7 +39,7 @@ export default function CalendarView({ props }: calendarProps) {
         customStyles: {
           container: {
             backgroundColor: "inherit",
-            borderColor: palette.background,
+            borderColor: dynamicTheme(settings, "background"),
             borderWidth: 4,
             borderRadius: 0,
             width: "100%",
@@ -66,7 +66,10 @@ export default function CalendarView({ props }: calendarProps) {
             height: "100%",
           },
           text: {
-            color: day == getCurrentDate() ? "#f57a7a" : palette.text,
+            color:
+              day == getCurrentDate()
+                ? "#f57a7a"
+                : dynamicTheme(settings, "text"),
           },
         },
       };
@@ -74,7 +77,12 @@ export default function CalendarView({ props }: calendarProps) {
     return markedRef;
   }, [selectedDay, moods]);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { borderColor: dynamicTheme(settings, "text") },
+      ]}
+    >
       <CalendarList
         onDayPress={(day) => handleDayPress(day)}
         onMonthChange={(date) => onMonthChange({ date, moods, dispatch })}
@@ -83,18 +91,18 @@ export default function CalendarView({ props }: calendarProps) {
         theme={{
           backgroundColor: "black",
           calendarBackground: "#7d7bb3",
-          textSectionTitleColor: palette.background,
+          textSectionTitleColor: dynamicTheme(settings, "background"),
           textMonthFontFamily: "Inter_400Regular",
-          monthTextColor: palette.text,
+          monthTextColor: dynamicTheme(settings, "text"),
           textMonthFontSize: 20,
           textDayHeaderFontFamily: "Inter_400Regular",
           textDayHeaderFontSize: 15,
           textDayFontFamily: "Inter_300Light",
           textDayFontSize: 20,
           textDayStyle: {
-            color: palette.text,
+            color: dynamicTheme(settings, "text"),
           },
-          textDisabledColor: palette.accent,
+          textDisabledColor: dynamicTheme(settings, "accent"),
           // @ts-ignore: types / theme handling bug
           "stylesheet.day.basic": {
             base: {
@@ -131,7 +139,6 @@ export default function CalendarView({ props }: calendarProps) {
 const styles = StyleSheet.create({
   container: {
     borderWidth: 2,
-    borderColor: palette.text,
     // borderRadius: 20,
     // padding: 10,
     // backgroundColor: "#a0c0eb",

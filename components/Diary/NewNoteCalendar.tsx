@@ -1,32 +1,34 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { palette } from "../../utils/palette";
-import { CalendarList, DateData } from "react-native-calendars";
-import { useState } from "react";
-import { getCurrentDate, serializeNote } from "../../utils/functions";
-import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import Note from "../../model/Note";
-import { Direction, MarkedDates } from "react-native-calendars/src/types";
-import { NewNoteCalendarProp, SerializedNote } from "../../types";
 import { FontAwesome } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import Arrow from "../Arrow";
-import getDaysOfMonth from "../../utils/month-functions";
-import { database } from "../../utils/watermelon";
 import { Q } from "@nozbe/watermelondb";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { CalendarList, DateData } from "react-native-calendars";
+import { Direction, MarkedDates } from "react-native-calendars/src/types";
+import Note from "../../model/Note";
+import Setting from "../../model/Setting";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { editNote } from "../../state/noteSlice";
+import { NewNoteCalendarProp, SerializedNote } from "../../types";
+import { getCurrentDate, serializeNote } from "../../utils/functions";
+import getDaysOfMonth from "../../utils/month-functions";
+import { dynamicTheme } from "../../utils/palette";
+import { database } from "../../utils/watermelon";
+import Arrow from "../Arrow";
 import Button from "../Button";
 
 export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   const dispatch = useAppDispatch();
   const { setNewNoteMenu } = props;
 
   const markedRef: MarkedDates = {
     [selectedDay]: {
       selected: true,
-      selectedColor: palette.primary,
+      selectedColor: dynamicTheme(settings, "primary"),
     },
   };
 
@@ -35,7 +37,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
     markedRef[note.day] = {
       ...markedRef[note.day],
       marked: true,
-      dotColor: palette.background,
+      dotColor: dynamicTheme(settings, "background"),
       activeOpacity: 0.8,
     };
   }
@@ -86,7 +88,15 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
 
   return (
     <View style={styles.background}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: dynamicTheme(settings, "background"),
+            borderColor: dynamicTheme(settings, "rose"),
+          },
+        ]}
+      >
         <Pressable
           onPress={() => {
             setNewNoteMenu(false);
@@ -99,16 +109,18 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
             color="white"
           />
         </Pressable>
-        <Text style={styles.text}>Create or edit Diary entries</Text>
+        <Text style={[styles.text, { color: dynamicTheme(settings, "rose") }]}>
+          Create or edit Diary entries
+        </Text>
         <LinearGradient
           colors={[
             "rgba(124, 126, 192, 1)",
-            palette.accent,
-            palette.accent,
-            palette.accent,
-            // palette.accent,
-            // palette.accent,
-            // palette.accent,
+            dynamicTheme(settings, "accent"),
+            dynamicTheme(settings, "accent"),
+            dynamicTheme(settings, "accent"),
+            // dynamicTheme(settings, "accent"),
+            // dynamicTheme(settings, "accent"),
+            // dynamicTheme(settings, "accent"),
             "rgba(124, 126, 192, 1)",
           ]}
           style={styles.calendarContainer}
@@ -117,22 +129,27 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
             markedDates={markedRef}
             onDayPress={(day: DateData) => setSelectedDay(day.dateString)}
             onMonthChange={(date) => handleMonthChange(date)}
-            style={styles.calendar}
+            style={[
+              styles.calendar,
+              {
+                borderColor: dynamicTheme(settings, "rose"),
+              },
+            ]}
             theme={{
               calendarBackground: "transparent",
-              textSectionTitleColor: palette.background,
+              textSectionTitleColor: dynamicTheme(settings, "background"),
               textMonthFontFamily: "Inter_400Regular",
-              monthTextColor: palette.text,
+              monthTextColor: dynamicTheme(settings, "text"),
               textMonthFontSize: 20,
               textDayHeaderFontFamily: "Inter_400Regular",
               textDayHeaderFontSize: 15,
               textDayFontFamily: "Inter_400Regular",
               //   textDayFontSize: 20,
               textDayStyle: {
-                color: palette.text,
+                color: dynamicTheme(settings, "text"),
               },
-              textDisabledColor: palette.gray,
-              todayTextColor: palette.background,
+              textDisabledColor: dynamicTheme(settings, "gray"),
+              todayTextColor: dynamicTheme(settings, "background"),
             }}
             firstDay={1}
             hideArrows={false}
@@ -148,7 +165,11 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
         <Button
           text={buttonText()}
           onPress={createOrEditNote}
-          style={{ borderColor: palette.text, borderWidth: 2, margin: "auto" }}
+          style={{
+            borderColor: dynamicTheme(settings, "text"),
+            borderWidth: 2,
+            margin: "auto",
+          }}
         />
       </View>
     </View>
@@ -163,10 +184,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(24, 36, 74, 0.6)",
   },
   container: {
-    backgroundColor: palette.background,
+    // backgroundColor: palette.background,
     // padding: 7,
     borderWidth: 2,
-    borderColor: palette.rose,
+    // borderColor: palette.rose,
     // position: "absolute",
     // top: "20%",
     width: "85%",
@@ -179,7 +200,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
   text: {
-    color: palette.rose,
+    // color: palette.rose,
     marginHorizontal: "auto",
     marginBottom: 7,
     fontFamily: "Inter_400Regular",
@@ -192,6 +213,6 @@ const styles = StyleSheet.create({
   },
   calendar: {
     borderWidth: 2,
-    borderColor: palette.rose,
+    // borderColor: palette.rose,
   },
 });

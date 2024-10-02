@@ -1,14 +1,16 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { SaveMoodProps } from "../../types";
 import { FontAwesome } from "@expo/vector-icons";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Setting from "../../model/Setting";
 import { useAppSelector } from "../../state/hooks";
-import MoodPicker from "./MoodPicker";
+import { SaveMoodProps } from "../../types";
+import { dynamicTheme } from "../../utils/palette";
 import { updateMood } from "../../utils/updateMood";
-import { palette } from "../../utils/palette";
+import MoodPicker from "./MoodPicker";
 
 export default function SaveMood({ props }: SaveMoodProps) {
   const { moodPicker, setMoodPicker, setMoods, selectedDay } = props;
   const moods = useAppSelector((state) => state.moods.value);
+  const settings = useAppSelector((state) => state.settings as Setting[]);
 
   function onPress() {
     setMoodPicker((prev) => !prev);
@@ -21,10 +23,27 @@ export default function SaveMood({ props }: SaveMoodProps) {
     setMoods(moodsList);
   }
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          borderColor: dynamicTheme(settings, "text"),
+          backgroundColor: dynamicTheme(settings, "accent"),
+        },
+      ]}
+    >
       {!moodPicker ? (
         <Pressable onPress={onPress}>
-          <Text style={styles.buttonText}>Save Mood</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                color: dynamicTheme(settings, "background"),
+              },
+            ]}
+          >
+            Save Mood
+          </Text>
         </Pressable>
       ) : (
         <>
@@ -34,13 +53,23 @@ export default function SaveMood({ props }: SaveMoodProps) {
             }}
           >
             <FontAwesome
-              style={styles.close}
+              style={[
+                styles.close,
+                { color: dynamicTheme(settings, "background") },
+              ]}
               name="close"
               size={24}
               color="white"
             />
           </Pressable>
-          <Text style={styles.title}>How was your day ?</Text>
+          <Text
+            style={[
+              styles.title,
+              { color: dynamicTheme(settings, "background") },
+            ]}
+          >
+            How was your day ?
+          </Text>
 
           <MoodPicker handlePress={handlePress} />
         </>
@@ -52,26 +81,25 @@ export default function SaveMood({ props }: SaveMoodProps) {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
-    borderColor: palette.text,
+    // borderColor: palette.text,
     borderWidth: 2,
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
     padding: 15,
   },
   buttonText: {
-    color: palette.background,
+    // color: palette.background,
     fontFamily: "Inter_500Medium",
     fontSize: 16,
   },
   title: {
     textAlign: "center",
-    color: palette.background,
-
+    // color: palette.background,
     fontFamily: "Inter_500Medium",
     padding: 5,
     fontSize: 20,
   },
   close: {
     // textAlign: "center",
-    color: palette.background,
+    // color: palette.background,
   },
 });

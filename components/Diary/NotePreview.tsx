@@ -1,21 +1,22 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  useWindowDimensions,
-  Platform,
-} from "react-native";
-import { Moods, SerializedNote } from "../../types";
 import { router } from "expo-router";
-import { palette } from "../../utils/palette";
-import { getWeekDay, returnColor } from "../../utils/functions";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import Setting from "../../model/Setting";
 import { useAppSelector } from "../../state/hooks";
-import { useEffect } from "react";
+import { Moods, SerializedNote } from "../../types";
+import { getWeekDay, returnColor } from "../../utils/functions";
+import { dynamicTheme } from "../../utils/palette";
 
 export function NotePreview({ data }: { data: SerializedNote }) {
   const moods = useAppSelector((state) => state.moods.value as Moods);
   const { width } = useWindowDimensions();
+  const settings = useAppSelector((state) => state.settings as Setting[]);
 
   // useEffect(() => {}, [width]);
 
@@ -35,23 +36,52 @@ export function NotePreview({ data }: { data: SerializedNote }) {
     >
       {data.title ? (
         <>
-          <Text style={styles.title} numberOfLines={2}>
+          <Text
+            style={[styles.title, { color: dynamicTheme(settings, "text") }]}
+            numberOfLines={2}
+          >
             {data.title}
           </Text>
-          <Text style={styles.date}>{data.day}</Text>
+          <Text
+            style={[styles.date, { color: dynamicTheme(settings, "gray") }]}
+          >
+            {data.day}
+          </Text>
         </>
       ) : (
         <>
-          <Text style={styles.dayOfWeek}>
+          <Text
+            style={[
+              styles.dayOfWeek,
+              { color: dynamicTheme(settings, "text") },
+            ]}
+          >
             {getWeekDay(new Date(data.day).getDay())}
           </Text>
-          <Text style={styles.date}>{data.day}</Text>
+          <Text
+            style={[styles.date, { color: dynamicTheme(settings, "gray") }]}
+          >
+            {data.day}
+          </Text>
         </>
       )}
       <View
         style={[
           styles.mood,
-          { backgroundColor: returnColor(JSON.stringify(moods[data.day])) },
+          {
+            backgroundColor: returnColor(JSON.stringify(moods[data.day])),
+            ...Platform.select({
+              ios: {
+                shadowColor: dynamicTheme(settings, "text"),
+              },
+              android: {
+                shadowColor: dynamicTheme(settings, "text"),
+              },
+              web: {
+                boxShadow: dynamicTheme(settings, "text") + " 0px 0px 4px",
+              },
+            }),
+          },
         ]}
       ></View>
     </Pressable>
@@ -71,7 +101,7 @@ const styles = StyleSheet.create({
     maxWidth: 1350,
   },
   date: {
-    color: palette.gray,
+    // color: palette.gray,
     fontSize: 17,
     fontFamily: "Inter_400Regular",
     // marginLeft: 13,
@@ -81,12 +111,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Inter_400Regular",
-    color: palette.text,
+    // color: palette.text,
     fontSize: 20,
     marginLeft: 5,
   },
   dayOfWeek: {
-    color: palette.text,
+    // color: palette.text,
     fontFamily: "Inter_300Light",
     fontSize: 20,
     marginLeft: 5,
@@ -99,7 +129,6 @@ const styles = StyleSheet.create({
     // shadow
     ...Platform.select({
       ios: {
-        shadowColor: palette.text,
         shadowOffset: {
           width: 0,
           height: 0,
@@ -108,11 +137,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
       },
       android: {
-        shadowColor: palette.text,
         elevation: 5,
-      },
-      web: {
-        boxShadow: palette.text + " 0px 0px 4px",
       },
     }),
   },

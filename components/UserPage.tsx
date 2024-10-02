@@ -1,16 +1,19 @@
-import { StyleSheet, View, Text, Pressable, Alert } from "react-native";
-import { palette } from "../utils/palette";
-import { syncDatabase } from "../utils/sync";
-import { useEffect, useState } from "react";
-import { supabase } from "../utils/supabase";
 import { Session } from "@supabase/supabase-js";
-import AlertComponent from "./Alert";
+import { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Setting from "../model/Setting";
+import { useAppSelector } from "../state/hooks";
+import { dynamicTheme } from "../utils/palette";
+import { supabase } from "../utils/supabase";
+import { syncDatabase } from "../utils/sync";
 import { database } from "../utils/watermelon";
+import AlertComponent from "./Alert";
 
 export default function UserPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
+  const settings = useAppSelector((state) => state.settings as Setting[]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -43,7 +46,12 @@ export default function UserPage() {
     const { error } = await supabase.auth.signOut();
   }
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: dynamicTheme(settings, "accent") },
+      ]}
+    >
       <AlertComponent
         message={message}
         setShowAlert={setShowAlert}
@@ -56,7 +64,14 @@ export default function UserPage() {
       />
       {session && session.user && (
         <>
-          <Text style={styles.title}>{session.user.email}</Text>
+          <Text
+            style={[
+              styles.title,
+              { color: dynamicTheme(settings, "background") },
+            ]}
+          >
+            {session.user.email}
+          </Text>
           <Pressable
             onPress={() => {
               syncDatabase();
@@ -69,7 +84,13 @@ export default function UserPage() {
           >
             <Text>Sync</Text>
           </Pressable>
-          <Pressable style={styles.button} onPress={handleSignOutPress}>
+          <Pressable
+            style={[
+              styles.button,
+              { backgroundColor: dynamicTheme(settings, "rose") },
+            ]}
+            onPress={handleSignOutPress}
+          >
             <Text style={styles.text}>Log out</Text>
           </Pressable>
         </>
@@ -80,7 +101,7 @@ export default function UserPage() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
     height: "100%",
     width: "80%",
     maxWidth: 600,
@@ -92,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   title: {
-    color: palette.background,
+    // color: palette.background,
     fontFamily: "Inter_400Regular",
     fontSize: 20,
   },
@@ -107,7 +128,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "pink",
   },
   button: {
-    backgroundColor: palette.rose,
+    // backgroundColor: palette.rose,
     padding: 5,
     borderRadius: 7,
   },

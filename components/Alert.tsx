@@ -1,6 +1,8 @@
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { palette } from "../utils/palette";
 import { FontAwesome } from "@expo/vector-icons";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import Setting from "../model/Setting";
+import { useAppSelector } from "../state/hooks";
+import { dynamicTheme } from "../utils/palette";
 
 export default function AlertComponent({
   message,
@@ -17,6 +19,7 @@ export default function AlertComponent({
   handleConfirm?: () => void;
   handleExit?: () => void;
 }) {
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   function close() {
     setShowAlert(false);
   }
@@ -25,7 +28,15 @@ export default function AlertComponent({
       {visible && (
         <Modal animationType="fade" transparent={true}>
           <View style={styles.background}>
-            <View style={styles.container}>
+            <View
+              style={[
+                styles.container,
+                {
+                  backgroundColor: dynamicTheme(settings, "background"),
+                  borderColor: dynamicTheme(settings, "rose"),
+                },
+              ]}
+            >
               <Pressable
                 onPress={() => {
                   if (handleExit) handleExit();
@@ -45,7 +56,10 @@ export default function AlertComponent({
                 {giveChoice && handleConfirm && handleExit ? (
                   <>
                     <Pressable
-                      style={styles.button}
+                      style={[
+                        styles.button,
+                        { backgroundColor: dynamicTheme(settings, "rose") },
+                      ]}
                       onPress={() => {
                         handleConfirm();
                         close();
@@ -58,7 +72,7 @@ export default function AlertComponent({
                     <Pressable
                       style={[
                         styles.button,
-                        { backgroundColor: palette.primary },
+                        { backgroundColor: dynamicTheme(settings, "primary") },
                       ]}
                       onPress={() => {
                         handleExit();
@@ -93,9 +107,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(24, 36, 74, 0.6)",
   },
   container: {
-    backgroundColor: palette.background,
+    // backgroundColor: palette.background,
     borderWidth: 2,
-    borderColor: palette.rose,
+    // borderColor: palette.rose,
     width: "85%",
     minWidth: 200,
     paddingHorizontal: 13,
@@ -124,6 +138,6 @@ const styles = StyleSheet.create({
   button: {
     padding: 4,
     borderRadius: 7,
-    backgroundColor: palette.rose,
+    // backgroundColor: palette.rose,
   },
 });

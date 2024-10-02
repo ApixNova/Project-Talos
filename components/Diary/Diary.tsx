@@ -1,19 +1,20 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { fullDate, getCurrentDate, serializeNote } from "../../utils/functions";
-import { FlashList } from "@shopify/flash-list";
-import { NoteComponent } from "./NoteComponent";
-import { useEffect, useState } from "react";
-import { NotePreview } from "./NotePreview";
-import { SerializedNote } from "../../types";
-import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { palette } from "../../utils/palette";
-import NewNoteCalendar from "./NewNoteCalendar";
-import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
-import { database } from "../../utils/watermelon";
 import { Q } from "@nozbe/watermelondb";
+import { FlashList } from "@shopify/flash-list";
+import { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 import Note from "../../model/Note";
+import Setting from "../../model/Setting";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { editNote } from "../../state/noteSlice";
+import { SerializedNote } from "../../types";
+import { fullDate, getCurrentDate, serializeNote } from "../../utils/functions";
+import { dynamicTheme } from "../../utils/palette";
+import { database } from "../../utils/watermelon";
+import NewNoteCalendar from "./NewNoteCalendar";
+import { NoteComponent } from "./NoteComponent";
+import { NotePreview } from "./NotePreview";
 
 export function Diary() {
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
@@ -21,6 +22,7 @@ export function Diary() {
   const [newNoteMenu, setNewNoteMenu] = useState(false);
   const dispatch = useAppDispatch();
   const rotateZ = useSharedValue("0deg");
+  const settings = useAppSelector((state) => state.settings as Setting[]);
 
   function onPressNewNote() {
     setNewNoteMenu(true);
@@ -77,7 +79,12 @@ export function Diary() {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: dynamicTheme(settings, "background") },
+      ]}
+    >
       <Text style={styles.mainTitle}>{fullDate(getCurrentDate())}</Text>
       <View
         style={[
@@ -104,7 +111,13 @@ export function Diary() {
           />
         )}
       </View>
-      <Pressable style={styles.newEntry} onPress={onPressNewNote}>
+      <Pressable
+        style={[
+          styles.newEntry,
+          { backgroundColor: dynamicTheme(settings, "rose") },
+        ]}
+        onPress={onPressNewNote}
+      >
         <Animated.View
           style={{
             transform: [{ rotateZ }],
@@ -127,7 +140,7 @@ export function Diary() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: palette.background,
+    // backgroundColor: palette.background,
     alignItems: "center",
     flex: 1,
   },
@@ -155,7 +168,7 @@ const styles = StyleSheet.create({
     height: 60,
     position: "absolute",
     bottom: 10,
-    backgroundColor: palette.rose,
+    // backgroundColor: palette.rose,
   },
   plus: {
     margin: "auto",

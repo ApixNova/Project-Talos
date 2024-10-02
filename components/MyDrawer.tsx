@@ -1,20 +1,21 @@
 import {
+  DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerContentComponentProps,
 } from "@react-navigation/drawer";
-import { StyleSheet, View } from "react-native";
-import { palette } from "../utils/palette";
 import { useEffect } from "react";
-import { database } from "../utils/watermelon";
-import { serializeSetting, setupSettings } from "../utils/functions";
-import { useAppDispatch } from "../state/hooks";
+import { StyleSheet } from "react-native";
 import Setting from "../model/Setting";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editSetting } from "../state/settingSlice";
+import { serializeSetting, setupSettings } from "../utils/functions";
+import { dynamicTheme } from "../utils/palette";
 import reloadNotes from "../utils/reload-notes";
+import { database } from "../utils/watermelon";
 
 export default function MyDrawer(props: DrawerContentComponentProps) {
   const dispatch = useAppDispatch();
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   useEffect(() => {
     //on load query the last 10 notes and setting tables
     reloadNotes({ dispatch });
@@ -33,7 +34,16 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
     getSettings();
   }, []);
   return (
-    <DrawerContentScrollView {...props} style={styles.drawer}>
+    <DrawerContentScrollView
+      {...props}
+      style={[
+        styles.drawer,
+        {
+          backgroundColor: dynamicTheme(settings, "background"),
+          borderColor: dynamicTheme(settings, "rose"),
+        },
+      ]}
+    >
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
   );
@@ -41,8 +51,8 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
 
 const styles = StyleSheet.create({
   drawer: {
-    backgroundColor: palette.background,
+    // backgroundColor: palette.background,
     borderRightWidth: 3,
-    borderColor: palette.rose,
+    // borderColor: palette.rose,
   },
 });

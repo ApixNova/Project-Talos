@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Alert, TextInput, View, Text, StyleSheet } from "react-native";
-import { supabase } from "../utils/supabase";
-import { palette } from "../utils/palette";
-import { database } from "../utils/watermelon";
 import { Session } from "@supabase/supabase-js";
-import { syncDatabase } from "../utils/sync";
+import React, { useEffect, useState } from "react";
+import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
+import Setting from "../model/Setting";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { toDateData } from "../utils/functions";
+import { onMonthChange } from "../utils/month-functions";
+import { dynamicTheme } from "../utils/palette";
+import reloadNotes from "../utils/reload-notes";
+import { supabase } from "../utils/supabase";
+import { syncDatabase } from "../utils/sync";
+import { database } from "../utils/watermelon";
 import AlertComponent from "./Alert";
 import Button from "./Button";
-import { onMonthChange } from "../utils/month-functions";
-import reloadNotes from "../utils/reload-notes";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -21,6 +22,8 @@ export default function Auth() {
   const [message, setMessage] = useState("");
   const moods = useAppSelector((state) => state.moods.value);
   const dispatch = useAppDispatch();
+
+  const settings = useAppSelector((state) => state.settings as Setting[]);
 
   async function reloadRedux() {
     //reload moods
@@ -143,16 +146,32 @@ export default function Auth() {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: dynamicTheme(settings, "accent") },
+      ]}
+    >
       <AlertComponent
         message={message}
         setShowAlert={setShowAlert}
         visible={showAlert}
       />
-      <Text style={styles.title}>Sign in</Text>
+      <Text
+        style={[styles.title, { color: dynamicTheme(settings, "background") }]}
+      >
+        Sign in
+      </Text>
       <View style={styles.inputContainer}>
         <View>
-          <Text style={styles.text}>Email</Text>
+          <Text
+            style={[
+              styles.text,
+              { color: dynamicTheme(settings, "background") },
+            ]}
+          >
+            Email
+          </Text>
           <TextInput
             style={styles.input}
             autoComplete="email"
@@ -163,7 +182,14 @@ export default function Auth() {
           />
         </View>
         <View>
-          <Text style={styles.text}>Password</Text>
+          <Text
+            style={[
+              styles.text,
+              { color: dynamicTheme(settings, "background") },
+            ]}
+          >
+            Password
+          </Text>
           <TextInput
             style={styles.input}
             autoComplete="password"
@@ -190,7 +216,7 @@ export default function Auth() {
               <Button
                 text="Sign Up"
                 onPress={signUpWithEmail}
-                color={palette.rose}
+                color={dynamicTheme(settings, "rose")}
               />
             </View>
           )}
@@ -205,13 +231,13 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     borderRadius: 7,
     width: "90%",
-    backgroundColor: palette.accent,
+    // backgroundColor: palette.accent,
     marginHorizontal: "auto",
     padding: 5,
   },
   title: {
     fontSize: 25,
-    color: palette.background,
+    // color: palette.background,
     fontFamily: "Inter_500Medium",
     marginBottom: 30,
     marginTop: 10,
@@ -220,7 +246,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontFamily: "Inter_500Medium",
-    color: palette.background,
+    // color: palette.background,
   },
   input: {
     borderWidth: 2,
