@@ -18,9 +18,9 @@ export default function Page() {
     >
       <View style={styles.noteContainer}>
         {id.match(/^\d{4}-\d{2}-\d{2}$/) ? (
-          <NoteComponent props={{ editing: false, id: "", day: id }} />
+          <NoteComponent props={{ id: "", day: id }} />
         ) : (
-          <NoteComponent props={{ editing: true, id, day: "" }} />
+          <NoteComponent props={{ id, day: "" }} />
         )}
       </View>
     </View>

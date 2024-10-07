@@ -54,7 +54,6 @@ export type SerializedNote = {
 export type NoteProps = {
   props: {
     day: string;
-    editing: boolean;
     id: string;
   };
 };
@@ -126,3 +125,8 @@ const themeTypeList = [
 ] as const;
 
 type ThemeType = (typeof themeTypeList)[number];
+
+export type AuthProps = {
+  setLoginPressed(state: boolean): void;
+  setAlert(message: string): void;
+};

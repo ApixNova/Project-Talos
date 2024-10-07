@@ -46,17 +46,6 @@ export function Diary() {
     return notes.length > 0;
   }
 
-  useEffect(() => {
-    if (havingNotes()) {
-      //check if there is a note for today
-      const noteForToday = notes.find((note) => note.day == getCurrentDate());
-      if (noteForToday) {
-        console.log("we are editing!");
-        setEditing(true);
-      }
-    }
-  }, [notes]);
-
   function scrollEndReached() {
     const notesSorted = sortedNotes();
     const currentNote = notesSorted[notesSorted.length - 1];
@@ -92,9 +81,7 @@ export function Diary() {
           { height: havingNotes() ? "50%" : "80%" },
         ]}
       >
-        <NoteComponent
-          props={{ day: getCurrentDate(), editing: editing, id: "" }}
-        />
+        <NoteComponent props={{ day: getCurrentDate(), id: "" }} />
       </View>
       <View style={styles.noteList}>
         {havingNotes() && (

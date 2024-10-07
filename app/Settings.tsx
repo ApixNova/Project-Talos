@@ -2,16 +2,27 @@ import { View, Text, StyleSheet } from "react-native";
 import { dynamicTheme, getTheme } from "../utils/palette";
 import { database } from "../utils/watermelon";
 import Picker from "../components/Picker";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import Setting from "../model/Setting";
-import { serializeSetting, setupSettings } from "../utils/functions";
+import {
+  serializeSetting,
+  setupSettings,
+  toDateData,
+} from "../utils/functions";
 import { editSetting } from "../state/settingSlice";
 import Button from "../components/Button";
+import AlertComponent from "../components/Alert";
+import { onMonthChange } from "../utils/month-functions";
+import reloadNotes from "../utils/reload-notes";
+import { editMood } from "../state/moodSlice";
 
 export default function Screen() {
+  const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
+  const moods = useAppSelector((state) => state.moods.value);
 
   function getFirstDay() {
     const firstDay = settings.find((element) => element.type == "firstDay");
@@ -65,11 +76,20 @@ export default function Screen() {
     updateRedux();
   }
 
-  function resetDatabase() {
+  function resetPressed() {
+    setMessage("Are you sure you want to delete all the local data?");
+    setShowAlert(true);
+  }
+
+  async function resetDatabase() {
     console.log("resetting db");
-    database.write(async () => {
-      database.unsafeResetDatabase();
+    await database.write(async () => {
+      await database.unsafeResetDatabase();
     });
+    //reload moods and notes
+    dispatch(editMood({}));
+    onMonthChange({ date: toDateData(), moods, dispatch });
+    reloadNotes({ dispatch });
   }
   return (
     <View
@@ -81,6 +101,14 @@ export default function Screen() {
         },
       ]}
     >
+      <AlertComponent
+        message={message}
+        visible={showAlert}
+        setShowAlert={setShowAlert}
+        giveChoice
+        handleConfirm={resetDatabase}
+        handleExit={() => {}}
+      />
       <View
         style={[
           styles.container,
@@ -127,7 +155,7 @@ export default function Screen() {
         ></View>
         <Button
           text="Reset DB"
-          onPress={resetDatabase}
+          onPress={resetPressed}
           color={dynamicTheme(settings, "secondary")}
           style={{ margin: "auto" }}
         />

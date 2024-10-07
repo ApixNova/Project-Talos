@@ -3,6 +3,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import Setting from "../model/Setting";
 import { useAppSelector } from "../state/hooks";
 import { dynamicTheme } from "../utils/palette";
+import Button from "./Button";
 
 export default function AlertComponent({
   message,
@@ -85,11 +86,14 @@ export default function AlertComponent({
                     </Pressable>
                   </>
                 ) : (
-                  <Pressable style={styles.button} onPress={close}>
-                    <Text style={styles.text} selectable={false}>
-                      Ok
-                    </Text>
-                  </Pressable>
+                  <Button
+                    text="Ok"
+                    onPress={() => {
+                      if (handleExit) handleExit();
+                      close();
+                    }}
+                    color={dynamicTheme(settings, "rose")}
+                  />
                 )}
               </View>
             </View>

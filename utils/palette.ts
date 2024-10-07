@@ -20,14 +20,14 @@ export const paletteDark = {
 };
 
 const paletteLight = {
-  background: "#c2cbe1",
-  text: "#eae9fc",
+  background: "#4a4d87",
+  text: "#0c0414",
   primary: "#4650d8",
   secondary: "#dc254a",
   accent: "#8f97ea",
-  rose: "#de5974",
+  rose: "pink",
   black: "black",
-  gray: "#757272",
+  gray: "pink",
 };
 
 export function dynamicTheme(settings: Setting[], type: ThemeType) {

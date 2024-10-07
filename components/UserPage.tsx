@@ -2,18 +2,24 @@ import { Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Setting from "../model/Setting";
-import { useAppSelector } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { dynamicTheme } from "../utils/palette";
 import { supabase } from "../utils/supabase";
 import { syncDatabase } from "../utils/sync";
 import { database } from "../utils/watermelon";
 import AlertComponent from "./Alert";
+import { editMood } from "../state/moodSlice";
+import { onMonthChange } from "../utils/month-functions";
+import { toDateData } from "../utils/functions";
+import reloadNotes from "../utils/reload-notes";
 
 export default function UserPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
   const settings = useAppSelector((state) => state.settings as Setting[]);
+  const moods = useAppSelector((state) => state.moods.value);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -23,6 +29,13 @@ export default function UserPage() {
       setSession(session);
     });
   }, []);
+
+  async function handleSync() {
+    await syncDatabase();
+    dispatch(editMood({}));
+    onMonthChange({ date: toDateData(), moods, dispatch });
+    reloadNotes({ dispatch });
+  }
 
   function clearLocalData() {
     // syncDatabase
@@ -73,9 +86,7 @@ export default function UserPage() {
             {session.user.email}
           </Text>
           <Pressable
-            onPress={() => {
-              syncDatabase();
-            }}
+            onPress={handleSync}
             style={{
               backgroundColor: "pink",
               padding: 5,

@@ -32,13 +32,14 @@ import Button from "../Button";
 import MoodPicker from "../Moods/MoodPicker";
 
 export function NoteComponent({ props }: NoteProps) {
-  const { day, editing, id } = props;
+  const { day, id } = props;
   const [moodPicker, setMoodPicker] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertGiveChoice, setAlertGiveChoice] = useState(true);
   const [message, setMessage] = useState("");
   const [moodType, setMoodType] = useState("");
+  const [alertExit, setAlertExit] = useState<any>(() => {});
   const moods = useAppSelector((state) => state.moods.value);
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
@@ -60,26 +61,40 @@ export function NoteComponent({ props }: NoteProps) {
 
   useEffect(() => {
     // on load check if we're editing the note to update it
-    let noteCopy;
-    if (editing) {
-      async function handleEdit() {
-        //if editing
-        if (id !== "") {
-          //check if id is provided
+    let noteCopy: Note[];
+    async function handleEdit() {
+      if (id !== "") {
+        //check if id is provided
+        try {
           const noteInDB = [await database.get<Note>("notes").find(id)];
           setExistingNote(noteInDB);
           noteCopy = [...noteInDB];
           setUpdatedDay(noteCopy[0].day);
-        } else {
-          //else get the day's note
-          const noteInDB = await database
-            .get<Note>("notes")
-            .query(Q.where("day", updatedDay));
+        } catch (error) {
+          // alert and reroute
+          setMessage("Note Not Found");
+          setAlertGiveChoice(false);
+          setAlertExit(() => () => {
+            router.navigate("/Diary/");
+          });
+          setShowAlert(true);
+        }
+      } else {
+        //else get the day's note
+        const noteInDB = await database
+          .get<Note>("notes")
+          .query(Q.where("day", updatedDay));
+        if (noteInDB.length > 0) {
           setExistingNote(noteInDB);
           noteCopy = [...noteInDB];
           setUpdatedDay(noteCopy[0].day);
+        } else if (existingNote.length > 0) {
+          console.log("we gotta reset things");
+          setExistingNote([]);
         }
-        //get the day's mood if existing
+      }
+      //get the day's mood if existing
+      if (noteCopy) {
         const moodInDB = await database
           .get<Feeling>("feelings")
           .query(Q.where("day", noteCopy[0].day));
@@ -87,26 +102,30 @@ export function NoteComponent({ props }: NoteProps) {
           setMoodType(JSON.stringify(moodInDB[0].type));
         }
       }
-      handleEdit();
-    } else {
-      if (day !== "") {
-        async function getDayMood() {
-          const moodInDB = await database
-            .get<Feeling>("feelings")
-            .query(Q.where("day", updatedDay));
-          if (moodInDB.length > 0) {
-            setMoodType(JSON.stringify(moodInDB[0].type));
-          }
-        }
-        getDayMood();
-      }
     }
-  }, [editing]);
+    handleEdit();
+    if (day !== "") {
+      async function getDayMood() {
+        const moodInDB = await database
+          .get<Feeling>("feelings")
+          .query(Q.where("day", updatedDay));
+        if (moodInDB.length > 0) {
+          setMoodType(JSON.stringify(moodInDB[0].type));
+        }
+      }
+      getDayMood();
+    }
+  }, [notes]);
 
   useEffect(() => {
     if (existingNote.length > 0) {
       setTitle(existingNote[0].title);
       setText(existingNote[0].content);
+    } else {
+      console.log("CHANGE");
+      setMoodType("");
+      setTitle("");
+      setText("");
     }
   }, [existingNote]);
 
@@ -119,7 +138,7 @@ export function NoteComponent({ props }: NoteProps) {
       //if text field is empty alert
       console.log("Cannot save, text field is empty");
     } else {
-      if (editing) {
+      if (existingNote.length > 0) {
         //if editing
         //edit db
         const currentNote = existingNote[0];
@@ -129,7 +148,7 @@ export function NoteComponent({ props }: NoteProps) {
         }
         if (currentNote.content !== text) {
           updateNoteField("content", text);
-          // updateRedux("content", text);
+          updateRedux("content", text);
         }
         async function updateNoteField(
           field: "title" | "content",
@@ -215,19 +234,21 @@ export function NoteComponent({ props }: NoteProps) {
   }
 
   function deletePressed() {
-    if (editing) {
+    if (existingNote.length > 0) {
       setMessage("Are you sure you want to delete this note?");
       setAlertGiveChoice(true);
       setShowOptions(false);
+      setAlertExit(() => {});
       setShowAlert(true);
     } else {
       setAlertGiveChoice(false);
       setMessage("There is nothing to delete");
+      setAlertExit(() => {});
       setShowAlert(true);
     }
   }
   async function deleteNote() {
-    if (editing) {
+    if (existingNote.length > 0) {
       try {
         await database.write(async () => {
           const noteInDB = await database
@@ -240,6 +261,7 @@ export function NoteComponent({ props }: NoteProps) {
       } catch (e) {
         setAlertGiveChoice(false);
         setMessage("Error");
+        setAlertExit(() => {});
         setShowAlert(true);
       }
     }
@@ -265,7 +287,7 @@ export function NoteComponent({ props }: NoteProps) {
         visible={showAlert}
         giveChoice={alertGiveChoice}
         handleConfirm={deleteNote}
-        handleExit={() => {}}
+        handleExit={alertExit}
       />
       <View
         style={[
