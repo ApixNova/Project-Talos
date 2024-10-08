@@ -1,17 +1,43 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import Setting from "../../model/Setting";
 import { useAppSelector } from "../../state/hooks";
 import { SaveMoodProps } from "../../types";
 import { dynamicTheme } from "../../utils/palette";
 import { updateMood } from "../../utils/updateMood";
 import MoodPicker from "./MoodPicker";
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import { useEffect } from "react";
 
 export default function SaveMood({ props }: SaveMoodProps) {
   const { moodPicker, setMoodPicker, setMoods, selectedDay } = props;
   const moods = useAppSelector((state) => state.moods.value);
   const settings = useAppSelector((state) => state.settings as Setting[]);
+  const height = useSharedValue(0);
 
+  useEffect(() => {
+    if (moodPicker) {
+      height.value = withSpring(40);
+    } else {
+      height.value = withSpring(0);
+    }
+  }, [moodPicker]);
+
+  const backdropStyle = useAnimatedStyle(() => ({
+    // opacity: 1 -
+  }));
   function onPress() {
     setMoodPicker((prev) => !prev);
   }
@@ -23,16 +49,16 @@ export default function SaveMood({ props }: SaveMoodProps) {
     setMoods(moodsList);
   }
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          borderColor: dynamicTheme(settings, "text"),
-          backgroundColor: dynamicTheme(settings, "accent"),
-        },
-      ]}
-    >
-      {!moodPicker ? (
+    <>
+      <View
+        style={[
+          styles.container,
+          {
+            borderColor: dynamicTheme(settings, "text"),
+            backgroundColor: dynamicTheme(settings, "accent"),
+          },
+        ]}
+      >
         <Pressable onPress={onPress}>
           <Text
             style={[
@@ -45,36 +71,49 @@ export default function SaveMood({ props }: SaveMoodProps) {
             Save Mood
           </Text>
         </Pressable>
-      ) : (
+      </View>
+      {moodPicker && (
         <>
-          <Pressable
-            onPress={() => {
-              setMoodPicker(false);
-            }}
-          >
-            <FontAwesome
-              style={[
-                styles.close,
-                { color: dynamicTheme(settings, "background") },
-              ]}
-              name="close"
-              size={24}
-              color="white"
-            />
-          </Pressable>
-          <Text
+          <Animated.View
             style={[
-              styles.title,
-              { color: dynamicTheme(settings, "background") },
+              styles.container,
+              {
+                borderColor: dynamicTheme(settings, "text"),
+                backgroundColor: dynamicTheme(settings, "accent"),
+                position: "absolute",
+                bottom: height,
+              },
             ]}
           >
-            How was your day ?
-          </Text>
+            <Pressable
+              onPress={() => {
+                setMoodPicker(false);
+              }}
+            >
+              <FontAwesome
+                style={[
+                  styles.close,
+                  { color: dynamicTheme(settings, "background") },
+                ]}
+                name="close"
+                size={24}
+                color="white"
+              />
+            </Pressable>
+            <Text
+              style={[
+                styles.title,
+                { color: dynamicTheme(settings, "background") },
+              ]}
+            >
+              How was your day ?
+            </Text>
 
-          <MoodPicker handlePress={handlePress} />
+            <MoodPicker handlePress={handlePress} />
+          </Animated.View>
         </>
       )}
-    </View>
+    </>
   );
 }
 
