@@ -10,7 +10,7 @@ import { database } from "../utils/watermelon";
 import AlertComponent from "./Alert";
 import { editMood } from "../state/moodSlice";
 import { onMonthChange } from "../utils/month-functions";
-import { toDateData } from "../utils/functions";
+import { setupSettings, toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
 
 export default function UserPage() {
@@ -39,9 +39,13 @@ export default function UserPage() {
 
   function clearLocalData() {
     // syncDatabase
-    database.write(async () => {
-      database.unsafeResetDatabase();
-    });
+    database
+      .write(async () => {
+        database.unsafeResetDatabase();
+      })
+      .then(() => {
+        setupSettings();
+      });
   }
   async function handleSignOutPress() {
     const notes = await database.get("notes").query().fetchCount();

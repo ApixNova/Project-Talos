@@ -31,6 +31,7 @@ export default function Screen() {
 
   //on load fetch settings and update Redux
   useEffect(() => {
+    console.log("settings again");
     async function fetchSettings() {
       const settingsQuery = await database
         .get<Setting>("settings")
@@ -86,6 +87,7 @@ export default function Screen() {
     await database.write(async () => {
       await database.unsafeResetDatabase();
     });
+    await setupSettings();
     //reload moods and notes
     dispatch(editMood({}));
     onMonthChange({ date: toDateData(), moods, dispatch });
