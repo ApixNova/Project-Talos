@@ -79,7 +79,7 @@ export default function Screen() {
     if (notes == 0 && moods == 0) {
       // load user data with a sync call
       console.log("no local data, sync");
-      await syncDatabase();
+      await syncDatabase(setAlert);
       reloadRedux();
       setLoading(false);
       // if there is local data
@@ -95,7 +95,7 @@ export default function Screen() {
           .eq("user_id", nextSession.user.id);
         if (notesError && notesStatus !== 406) {
           setLoading(false);
-          throw notesError;
+          setAlert("Error: " + notesError.message);
         }
 
         const {
@@ -108,7 +108,7 @@ export default function Screen() {
           .eq("user_id", nextSession.user.id);
         if (moodsError && moodsStatus !== 406) {
           setLoading(false);
-          throw moodsError;
+          setAlert("Error: " + moodsError.message);
         }
         // if the user doesn't have data on Supabase
         ///
@@ -119,7 +119,7 @@ export default function Screen() {
         if (!notesCount && !moodsCount) {
           // call sync and sync local changes to Supabase
           console.log("No data on Supabase, syncing");
-          await syncDatabase(true);
+          await syncDatabase(setAlert, true);
           setLoading(false);
           // if there is data on Supabase
         } else {
@@ -127,14 +127,12 @@ export default function Screen() {
           const { error } = await supabase.auth.signOut();
           setLoading(false);
           setAlert(
-            "for now it's not possible to merge local data with the server one, sorry"
+            "For now it's not possible to merge local data with the server one, sorry"
           );
         }
       } catch (error) {
         if (error instanceof Error) {
-          console.log(error.message);
-          setMessage(error.message);
-          setShowAlert(true);
+          setAlert(error.message);
         }
       }
     }

@@ -2,7 +2,10 @@ import { SyncDatabaseChangeSet, synchronize } from "@nozbe/watermelondb/sync";
 import { database } from "./watermelon";
 import { supabase } from "./supabase";
 
-export async function syncDatabase(initialSync: boolean = false) {
+export async function syncDatabase(
+  setAlert: (message: string) => void,
+  initialSync: boolean = false
+) {
   console.log("Sync called");
   await synchronize({
     database,
@@ -18,7 +21,7 @@ export async function syncDatabase(initialSync: boolean = false) {
       });
       console.log(data);
       if (error) {
-        throw new Error("🍉".concat(error.message));
+        setAlert("Error: " + error.message);
       }
       const { changes, timestamp } = data as {
         changes: SyncDatabaseChangeSet;
@@ -31,7 +34,7 @@ export async function syncDatabase(initialSync: boolean = false) {
       const { error } = await supabase.rpc("push", { changes });
 
       if (error) {
-        throw new Error("🍉".concat(error.message));
+        setAlert("Error: " + error.message);
       }
     },
     sendCreatedAsUpdated: true,

@@ -12,11 +12,14 @@ import { editMood } from "../state/moodSlice";
 import { onMonthChange } from "../utils/month-functions";
 import { setupSettings, toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
+import Button from "./Button";
 
 export default function UserPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
+  const [alertGiveChoice, setAlertGiveChoice] = useState(false);
+  const [alertExit, setAlertExit] = useState<() => void>(() => {});
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const moods = useAppSelector((state) => state.moods.value);
   const dispatch = useAppDispatch();
@@ -31,7 +34,7 @@ export default function UserPage() {
   }, []);
 
   async function handleSync() {
-    await syncDatabase();
+    await syncDatabase(setAlert);
     dispatch(editMood({}));
     onMonthChange({ date: toDateData(), moods, dispatch });
     reloadNotes({ dispatch });
@@ -47,6 +50,15 @@ export default function UserPage() {
         setupSettings();
       });
   }
+
+  // a function to display a message, with no options to chose from
+  function setAlert(message: string) {
+    setMessage(message);
+    setAlertGiveChoice(false);
+    setAlertExit(() => {});
+    setShowAlert(true);
+  }
+
   async function handleSignOutPress() {
     const notes = await database.get("notes").query().fetchCount();
     const moods = await database.get("feelings").query().fetchCount();
@@ -55,12 +67,15 @@ export default function UserPage() {
       signOut();
     } else {
       //ask user before logging off
-      setMessage("Would you like to remove local data?");
-      setShowAlert(true);
+      setAlert("Would you like to remove local data?");
+      setAlertExit(signOut);
     }
   }
   async function signOut() {
     const { error } = await supabase.auth.signOut();
+    if (error) {
+      setAlert("Error: " + error.message);
+    }
   }
   return (
     <View
@@ -73,7 +88,7 @@ export default function UserPage() {
         message={message}
         setShowAlert={setShowAlert}
         visible={showAlert}
-        giveChoice
+        giveChoice={alertGiveChoice}
         handleConfirm={() => {
           console.log("WIP ;)");
         }}
@@ -89,25 +104,16 @@ export default function UserPage() {
           >
             {session.user.email}
           </Text>
-          <Pressable
+          <Button
+            text="Sync"
             onPress={handleSync}
-            style={{
-              backgroundColor: "pink",
-              padding: 5,
-              borderRadius: 10,
-            }}
-          >
-            <Text>Sync</Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.button,
-              { backgroundColor: dynamicTheme(settings, "rose") },
-            ]}
+            color={dynamicTheme(settings, "primary")}
+          />
+          <Button
+            text="Log out"
             onPress={handleSignOutPress}
-          >
-            <Text style={styles.text}>Log out</Text>
-          </Pressable>
+            color={dynamicTheme(settings, "rose")}
+          />
         </>
       )}
     </View>

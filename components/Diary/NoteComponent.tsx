@@ -39,7 +39,7 @@ export function NoteComponent({ props }: NoteProps) {
   const [alertGiveChoice, setAlertGiveChoice] = useState(true);
   const [message, setMessage] = useState("");
   const [moodType, setMoodType] = useState("");
-  const [alertExit, setAlertExit] = useState<any>(() => {});
+  const [alertExit, setAlertExit] = useState<() => void>(() => {});
   const moods = useAppSelector((state) => state.moods.value);
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
