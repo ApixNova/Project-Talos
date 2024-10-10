@@ -110,6 +110,45 @@ export default function MainLayout() {
             ),
           }}
         />
+        <Drawer.Screen
+          name="About"
+          options={{
+            headerTitleStyle: {
+              fontFamily: "Inter_900Black",
+              fontSize: 30,
+              color: dynamicTheme(settings, "background"),
+            },
+            drawerIcon: (color) => (
+              <FontAwesome5
+                name="info-circle"
+                size={24}
+                color={color.focused ? "white" : "pink"}
+              />
+            ),
+            drawerLabel: ({ color, focused }) => (
+              <Text
+                style={[
+                  styles.drawerText,
+                  { color: focused ? "white" : "pink" },
+                ]}
+              >
+                About
+              </Text>
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="MailConfirmation"
+          options={{
+            headerTitleStyle: {
+              fontFamily: "Inter_900Black",
+              fontSize: 26,
+              color: dynamicTheme(settings, "background"),
+            },
+            headerTitle: "Mail Confirmation",
+            drawerItemStyle: { display: "none" },
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );
