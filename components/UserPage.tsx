@@ -1,6 +1,6 @@
 import { Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Setting from "../model/Setting";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { dynamicTheme } from "../utils/palette";
@@ -13,6 +13,7 @@ import { onMonthChange } from "../utils/month-functions";
 import { setupSettings, toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
 import Button from "./Button";
+import { editNote } from "../state/noteSlice";
 
 export default function UserPage() {
   const [session, setSession] = useState<Session | null>(null);
@@ -20,6 +21,7 @@ export default function UserPage() {
   const [message, setMessage] = useState("");
   const [alertGiveChoice, setAlertGiveChoice] = useState(false);
   const [alertExit, setAlertExit] = useState<() => void>(() => {});
+  const [alertConfirm, setAlertConfirm] = useState<() => void>(() => {});
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const moods = useAppSelector((state) => state.moods.value);
   const dispatch = useAppDispatch();
@@ -40,15 +42,20 @@ export default function UserPage() {
     reloadNotes({ dispatch });
   }
 
-  function clearLocalData() {
+  async function clearLocalData() {
     // syncDatabase
-    database
+    await syncDatabase(setAlert);
+    await database
       .write(async () => {
-        database.unsafeResetDatabase();
+        await database.unsafeResetDatabase();
       })
       .then(() => {
         setupSettings();
+        //reload moods and notes
+        dispatch(editMood({}));
+        dispatch(editNote([]));
       });
+    console.log("local data synced then cleared");
   }
 
   // a function to display a message, with no options to chose from
@@ -56,22 +63,36 @@ export default function UserPage() {
     setMessage(message);
     setAlertGiveChoice(false);
     setAlertExit(() => {});
+    setAlertConfirm(() => {});
     setShowAlert(true);
   }
 
   async function handleSignOutPress() {
+    console.log("handleSignOutPress");
     const notes = await database.get("notes").query().fetchCount();
     const moods = await database.get("feelings").query().fetchCount();
     //if there's data
     if (notes == 0 && moods == 0) {
       signOut();
     } else {
-      //ask user before logging off
-      setAlert("Would you like to remove local data?");
-      setAlertExit(signOut);
+      //ask user before loging off
+      await syncDatabase(setAlert);
+      setMessage(
+        "Would you like to remove local data?\nYour data is still saved on the server"
+      );
+
+      setAlertGiveChoice(true);
+      setAlertExit(() => signOut);
+      setAlertConfirm(() => () => {
+        clearLocalData().then(() => {
+          signOut();
+        });
+      });
+      setShowAlert(true);
     }
   }
   async function signOut() {
+    console.log("signing out");
     const { error } = await supabase.auth.signOut();
     if (error) {
       setAlert("Error: " + error.message);
@@ -89,10 +110,8 @@ export default function UserPage() {
         setShowAlert={setShowAlert}
         visible={showAlert}
         giveChoice={alertGiveChoice}
-        handleConfirm={() => {
-          console.log("WIP ;)");
-        }}
-        handleExit={signOut}
+        handleConfirm={alertConfirm}
+        handleExit={alertExit}
       />
       {session && session.user && (
         <>

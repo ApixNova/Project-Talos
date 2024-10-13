@@ -8,6 +8,7 @@ import Button from "./Button";
 export default function AlertComponent({
   message,
   visible,
+  confirmLabel,
   setShowAlert,
   giveChoice,
   handleConfirm,
@@ -15,6 +16,7 @@ export default function AlertComponent({
 }: {
   message: string;
   visible?: boolean;
+  confirmLabel?: string;
   setShowAlert: React.Dispatch<React.SetStateAction<boolean>>;
   giveChoice?: boolean;
   handleConfirm?: () => void;
@@ -67,7 +69,7 @@ export default function AlertComponent({
                       }}
                     >
                       <Text style={styles.text} selectable={false}>
-                        Yes
+                        {confirmLabel || "Yes"}
                       </Text>
                     </Pressable>
                     <Pressable

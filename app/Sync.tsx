@@ -2,7 +2,7 @@ import { View, StyleSheet, useWindowDimensions } from "react-native";
 import Auth from "../components/Auth";
 import { dynamicTheme } from "../utils/palette";
 import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
+import { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
 import UserPage from "../components/UserPage";
 import AlertComponent from "../components/Alert";
@@ -16,11 +16,15 @@ import { toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
 
 export default function Screen() {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<
+    [Session | null, AuthChangeEvent | null]
+  >([null, null]);
   const { height } = useWindowDimensions();
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("Error");
   const [alertGiveChoice, setAlertGiveChoice] = useState(false);
+  const [alertConfirm, setAlertConfirm] = useState<() => void>(() => {});
+  const [alertLabel, setAlertLabel] = useState("");
   const [loginPressed, setLoginPressed] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -38,12 +42,10 @@ export default function Screen() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+      setSession([session, null]);
     });
     supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      // if (_event == 'SIGNED_IN' && session && session.user ) {
-      // }
+      setSession([session, _event]);
       if (_event == "SIGNED_OUT") {
         console.log("signed out");
         setLoginPressed(false);
@@ -58,13 +60,46 @@ export default function Screen() {
   // a function to display a message, with no options to chose from
   function setAlert(message: string) {
     setMessage(message);
+    setAlertLabel("");
     setAlertGiveChoice(false);
+    setAlertConfirm(() => {});
     setShowAlert(true);
   }
 
+  function mailConfirmationAlert(mail: string) {
+    //ask the user if they want to reset their mail
+    setMessage("It seems your confirmation link has expired");
+    setAlertGiveChoice(true);
+    setAlertLabel("Resend Confirmation Link");
+    setAlertConfirm(() => () => resendMailLink(mail));
+    setShowAlert(true);
+  }
+
+  async function resendMailLink(mail: string) {
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: mail,
+      options: {
+        emailRedirectTo: "http://localhost:8081/MailConfirmation",
+      },
+    });
+    if (error) {
+      setAlert("Error: Request Failed");
+    } else {
+      setAlert("Please check your inbox for email verification!");
+    }
+  }
+
   useEffect(() => {
-    if (loginPressed && session && session.user) {
-      handleDataOnSignIn(session);
+    const currentSession = session[0];
+    const event = session[1];
+    if (
+      loginPressed &&
+      currentSession &&
+      currentSession.user &&
+      event != "TOKEN_REFRESHED"
+    ) {
+      handleDataOnSignIn(currentSession);
     }
   }, [session]);
 
@@ -79,7 +114,7 @@ export default function Screen() {
     if (notes == 0 && moods == 0) {
       // load user data with a sync call
       console.log("no local data, sync");
-      await syncDatabase(setAlert);
+      await syncDatabase(setAlert, true);
       reloadRedux();
       setLoading(false);
       // if there is local data
@@ -127,7 +162,7 @@ export default function Screen() {
           const { error } = await supabase.auth.signOut();
           setLoading(false);
           setAlert(
-            "For now it's not possible to merge local data with the server one, sorry"
+            "For now it is not possible to merge local data with the server one, sorry"
           );
         }
       } catch (error) {
@@ -137,7 +172,7 @@ export default function Screen() {
       }
     }
     setLoading(false);
-    // setLoginPressed(false);
+    setLoginPressed(false);
   }
 
   return (
@@ -154,8 +189,9 @@ export default function Screen() {
         setShowAlert={setShowAlert}
         visible={showAlert}
         giveChoice={alertGiveChoice}
-        handleConfirm={() => console.log("Confimed")}
-        handleExit={() => console.log("Denied")}
+        handleConfirm={alertConfirm}
+        handleExit={() => {}}
+        confirmLabel={alertLabel == "" ? undefined : alertLabel}
       />
       <View
         style={{
@@ -163,11 +199,15 @@ export default function Screen() {
           width: "100%",
         }}
       >
-        {session && session.user ? (
+        {session[0] && session[0].user ? (
           <UserPage />
         ) : (
           <View style={styles.auth}>
-            <Auth setLoginPressed={handleLoginPress} setAlert={setAlert} />
+            <Auth
+              setLoginPressed={handleLoginPress}
+              setAlert={setAlert}
+              mailConfirmationAlert={mailConfirmationAlert}
+            />
           </View>
         )}
       </View>

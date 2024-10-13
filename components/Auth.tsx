@@ -7,7 +7,11 @@ import { supabase } from "../utils/supabase";
 import Button from "./Button";
 import { AuthProps } from "../types";
 
-export default function Auth({ setLoginPressed, setAlert }: AuthProps) {
+export default function Auth({
+  setLoginPressed,
+  setAlert,
+  mailConfirmationAlert,
+}: AuthProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,7 +27,11 @@ export default function Auth({ setLoginPressed, setAlert }: AuthProps) {
     setLoginPressed(true);
 
     if (error) {
-      setAlert("Error: " + error.message);
+      if (error.message == "Email not confirmed") {
+        mailConfirmationAlert(email);
+      } else {
+        setAlert("Error: " + error.message);
+      }
     }
     setLoading(false);
 
@@ -45,8 +53,9 @@ export default function Auth({ setLoginPressed, setAlert }: AuthProps) {
 
     if (error) {
       setAlert("Error: " + error.message);
+    } else {
+      setAlert("Please check your inbox for email verification!");
     }
-    setAlert("Please check your inbox for email verification!");
     setLoading(false);
     setPassword("");
   }

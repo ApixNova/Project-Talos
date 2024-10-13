@@ -129,4 +129,5 @@ type ThemeType = (typeof themeTypeList)[number];
 export type AuthProps = {
   setLoginPressed(state: boolean): void;
   setAlert(message: string): void;
+  mailConfirmationAlert(mail: string): void;
 };

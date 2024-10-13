@@ -5,24 +5,33 @@ import Picker from "../components/Picker";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import Setting from "../model/Setting";
-import {
-  serializeSetting,
-  setupSettings,
-  toDateData,
-} from "../utils/functions";
+import { serializeSetting, setupSettings } from "../utils/functions";
 import { editSetting } from "../state/settingSlice";
 import Button from "../components/Button";
 import AlertComponent from "../components/Alert";
-import { onMonthChange } from "../utils/month-functions";
-import reloadNotes from "../utils/reload-notes";
 import { editMood } from "../state/moodSlice";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "../utils/supabase";
+import { editNote } from "../state/noteSlice";
 
 export default function Screen() {
+  const [session, setSession] = useState<Session | null>(null);
   const [message, setMessage] = useState("");
+  const [alertGiveChoice, setAlertGiveChoice] = useState(false);
+  const [alertConfirm, setAlertConfirm] = useState<() => void>(() => {});
   const [showAlert, setShowAlert] = useState(false);
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const moods = useAppSelector((state) => state.moods.value);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   function getFirstDay() {
     const firstDay = settings.find((element) => element.type == "firstDay");
@@ -79,7 +88,51 @@ export default function Screen() {
 
   function resetPressed() {
     setMessage("Are you sure you want to delete all the local data?");
+    setAlertConfirm(() => () => {
+      resetDatabase();
+    });
+    setAlertGiveChoice(true);
     setShowAlert(true);
+  }
+
+  // a function to display a message, with no options to chose from
+  function setAlert(message: string) {
+    setMessage(message);
+    setAlertGiveChoice(false);
+    setAlertConfirm(() => () => {});
+    setShowAlert(true);
+  }
+
+  function resetSupabasePressed() {
+    setMessage(
+      "Are you sure you want to permanently delete all your data?\n\nIf you only want to delete local data, please log out first :]"
+    );
+    setAlertGiveChoice(true);
+    setAlertConfirm(() => () => {
+      if (session && session.user) {
+        resetSupabase();
+      }
+    });
+    setShowAlert(true);
+  }
+
+  async function resetSupabase() {
+    console.log("resetting supabase");
+    try {
+      const { error: errorFeelings } = await supabase
+        .from("feelings")
+        .delete()
+        .eq("user_id", session?.user.id);
+      const { error: errorNotes } = await supabase
+        .from("notes")
+        .delete()
+        .eq("user_id", session?.user.id);
+      await resetDatabase();
+    } catch (error) {
+      if (error instanceof Error) {
+        setAlert(error.message);
+      }
+    }
   }
 
   async function resetDatabase() {
@@ -90,8 +143,9 @@ export default function Screen() {
     await setupSettings();
     //reload moods and notes
     dispatch(editMood({}));
-    onMonthChange({ date: toDateData(), moods, dispatch });
-    reloadNotes({ dispatch });
+    // onMonthChange({ date: toDateData(), moods, dispatch });
+    // reloadNotes({ dispatch });
+    dispatch(editNote([]));
   }
   return (
     <View
@@ -107,8 +161,8 @@ export default function Screen() {
         message={message}
         visible={showAlert}
         setShowAlert={setShowAlert}
-        giveChoice
-        handleConfirm={resetDatabase}
+        giveChoice={alertGiveChoice}
+        handleConfirm={alertConfirm}
         handleExit={() => {}}
       />
       <View
@@ -155,12 +209,20 @@ export default function Screen() {
             { backgroundColor: dynamicTheme(settings, "primary") },
           ]}
         ></View>
-        <Button
-          text="Reset DB"
-          onPress={resetPressed}
-          color={dynamicTheme(settings, "secondary")}
-          style={{ margin: "auto" }}
-        />
+        {session && session.user ? (
+          <Button
+            text="Reset local and online data"
+            onPress={resetSupabasePressed}
+            color={dynamicTheme(settings, "secondary")}
+          />
+        ) : (
+          <Button
+            text="Reset DB"
+            onPress={resetPressed}
+            color={dynamicTheme(settings, "secondary")}
+            style={{ margin: "auto" }}
+          />
+        )}
       </View>
     </View>
   );
