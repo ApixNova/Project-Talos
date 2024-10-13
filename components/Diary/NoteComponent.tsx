@@ -238,12 +238,12 @@ export function NoteComponent({ props }: NoteProps) {
       setMessage("Are you sure you want to delete this note?");
       setAlertGiveChoice(true);
       setShowOptions(false);
-      setAlertExit(() => {});
+      setAlertExit(() => () => {});
       setShowAlert(true);
     } else {
       setAlertGiveChoice(false);
       setMessage("There is nothing to delete");
-      setAlertExit(() => {});
+      setAlertExit(() => () => {});
       setShowAlert(true);
     }
   }
@@ -261,7 +261,7 @@ export function NoteComponent({ props }: NoteProps) {
       } catch (e) {
         setAlertGiveChoice(false);
         setMessage("Error");
-        setAlertExit(() => {});
+        setAlertExit(() => () => {});
         setShowAlert(true);
       }
     }
