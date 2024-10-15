@@ -14,14 +14,10 @@ import { setupSettings, toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
 import Button from "./Button";
 import { editNote } from "../state/noteSlice";
+import { UserPageProps } from "../types";
 
-export default function UserPage() {
+export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
   const [session, setSession] = useState<Session | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
-  const [message, setMessage] = useState("");
-  const [alertGiveChoice, setAlertGiveChoice] = useState(false);
-  const [alertExit, setAlertExit] = useState<() => void>(() => {});
-  const [alertConfirm, setAlertConfirm] = useState<() => void>(() => {});
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const moods = useAppSelector((state) => state.moods.value);
   const dispatch = useAppDispatch();
@@ -30,9 +26,26 @@ export default function UserPage() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
-    supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (_event == "INITIAL_SESSION") {
+        async function checkSession() {
+          const { data, error } = await supabase.auth.refreshSession();
+          // If there is an error, the session is invalid
+          if (error) {
+            setAlert("Session is invalid or expired, you've been logged out");
+            console.log(error.message);
+            return;
+          }
+          // If no error, session is valid
+          console.log("Session is still valid: ", data);
+        }
+        checkSession();
+      }
     });
+    return () => {
+      data.subscription.unsubscribe();
+    };
   }, []);
 
   async function handleSync() {
@@ -40,31 +53,6 @@ export default function UserPage() {
     dispatch(editMood({}));
     onMonthChange({ date: toDateData(), moods, dispatch });
     reloadNotes({ dispatch });
-  }
-
-  async function clearLocalData() {
-    // syncDatabase
-    await syncDatabase(setAlert);
-    await database
-      .write(async () => {
-        await database.unsafeResetDatabase();
-      })
-      .then(() => {
-        setupSettings();
-        //reload moods and notes
-        dispatch(editMood({}));
-        dispatch(editNote([]));
-      });
-    console.log("local data synced then cleared");
-  }
-
-  // a function to display a message, with no options to chose from
-  function setAlert(message: string) {
-    setMessage(message);
-    setAlertGiveChoice(false);
-    setAlertExit(() => {});
-    setAlertConfirm(() => {});
-    setShowAlert(true);
   }
 
   async function handleSignOutPress() {
@@ -77,18 +65,7 @@ export default function UserPage() {
     } else {
       //ask user before loging off
       await syncDatabase(setAlert);
-      setMessage(
-        "Would you like to remove local data?\nYour data is still saved on the server"
-      );
-
-      setAlertGiveChoice(true);
-      setAlertExit(() => signOut);
-      setAlertConfirm(() => () => {
-        clearLocalData().then(() => {
-          signOut();
-        });
-      });
-      setShowAlert(true);
+      await alertOnSignout(signOut);
     }
   }
   async function signOut() {
@@ -105,14 +82,6 @@ export default function UserPage() {
         { backgroundColor: dynamicTheme(settings, "accent") },
       ]}
     >
-      <AlertComponent
-        message={message}
-        setShowAlert={setShowAlert}
-        visible={showAlert}
-        giveChoice={alertGiveChoice}
-        handleConfirm={alertConfirm}
-        handleExit={alertExit}
-      />
       {session && session.user && (
         <>
           <Text

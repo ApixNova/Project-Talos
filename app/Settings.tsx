@@ -22,15 +22,17 @@ export default function Screen() {
   const [showAlert, setShowAlert] = useState(false);
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
-  const moods = useAppSelector((state) => state.moods.value);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
-    supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+    return () => {
+      data.subscription.unsubscribe();
+    };
   }, []);
 
   function getFirstDay() {

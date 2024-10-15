@@ -12,8 +12,9 @@ import { database } from "../utils/watermelon";
 import { syncDatabase } from "../utils/sync";
 import { editMood } from "../state/moodSlice";
 import { onMonthChange } from "../utils/month-functions";
-import { toDateData } from "../utils/functions";
+import { setupSettings, toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
+import { editNote } from "../state/noteSlice";
 
 export default function Screen() {
   const [session, setSession] = useState<
@@ -24,6 +25,7 @@ export default function Screen() {
   const [message, setMessage] = useState("Error");
   const [alertGiveChoice, setAlertGiveChoice] = useState(false);
   const [alertConfirm, setAlertConfirm] = useState<() => void>(() => {});
+  const [alertExit, setAlertExit] = useState<() => void>(() => {});
   const [alertLabel, setAlertLabel] = useState("");
   const [loginPressed, setLoginPressed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -44,13 +46,16 @@ export default function Screen() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession([session, null]);
     });
-    supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession([session, _event]);
       if (_event == "SIGNED_OUT") {
         console.log("signed out");
         setLoginPressed(false);
       }
     });
+    return () => {
+      data.subscription.unsubscribe();
+    };
   }, []);
 
   function handleLoginPress(state: boolean) {
@@ -63,6 +68,40 @@ export default function Screen() {
     setAlertLabel("");
     setAlertGiveChoice(false);
     setAlertConfirm(() => {});
+    setAlertExit(() => {});
+    setShowAlert(true);
+  }
+
+  async function clearLocalData() {
+    // syncDatabase
+    await syncDatabase(setAlert);
+    await database
+      .write(async () => {
+        await database.unsafeResetDatabase();
+      })
+      .then(() => {
+        setupSettings();
+        //reload moods and notes
+        dispatch(editMood({}));
+        dispatch(editNote([]));
+      });
+    console.log("local data synced then cleared");
+  }
+
+  function alertOnSignout(signOut: () => Promise<void>) {
+    setMessage(
+      "Would you like to remove local data?\nYour data is still saved on the server"
+    );
+
+    setAlertGiveChoice(true);
+    setAlertExit(() => () => {
+      signOut();
+    });
+    setAlertConfirm(() => () => {
+      clearLocalData().then(() => {
+        signOut();
+      });
+    });
     setShowAlert(true);
   }
 
@@ -72,6 +111,7 @@ export default function Screen() {
     setAlertGiveChoice(true);
     setAlertLabel("Resend Confirmation Link");
     setAlertConfirm(() => () => resendMailLink(mail));
+    setAlertExit(() => {});
     setShowAlert(true);
   }
 
@@ -189,7 +229,7 @@ export default function Screen() {
         visible={showAlert}
         giveChoice={alertGiveChoice}
         handleConfirm={alertConfirm}
-        handleExit={() => {}}
+        handleExit={alertExit}
         confirmLabel={alertLabel == "" ? undefined : alertLabel}
       />
       <View
@@ -199,7 +239,7 @@ export default function Screen() {
         }}
       >
         {session[0] && session[0].user ? (
-          <UserPage />
+          <UserPage setAlert={setAlert} alertOnSignout={alertOnSignout} />
         ) : (
           <View style={styles.auth}>
             <Auth

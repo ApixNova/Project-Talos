@@ -131,3 +131,8 @@ export type AuthProps = {
   setAlert(message: string): void;
   mailConfirmationAlert(mail: string): void;
 };
+
+export type UserPageProps = {
+  setAlert(message: string): void;
+  alertOnSignout(signOut: () => Promise<void>): void;
+};
