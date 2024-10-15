@@ -36,7 +36,7 @@ export default function UserPage() {
   }, []);
 
   async function handleSync() {
-    await syncDatabase(setAlert);
+    await syncDatabase(setAlert, false, session);
     dispatch(editMood({}));
     onMonthChange({ date: toDateData(), moods, dispatch });
     reloadNotes({ dispatch });

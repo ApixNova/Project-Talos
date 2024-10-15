@@ -158,12 +158,11 @@ export default function Screen() {
           setLoading(false);
           // if there is data on Supabase
         } else {
-          console.log("there is data on Supabase! Logging out");
-          const { error } = await supabase.auth.signOut();
-          setLoading(false);
-          setAlert(
-            "For now it is not possible to merge local data with the server one, sorry"
+          console.log(
+            "there is data on Supabase! Syncing and resolving conflicts..."
           );
+          await syncDatabase(setAlert, false, session[0]);
+          setLoading(false);
         }
       } catch (error) {
         if (error instanceof Error) {

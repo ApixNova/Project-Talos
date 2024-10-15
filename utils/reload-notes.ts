@@ -11,6 +11,7 @@ export default async function reloadNotes({ dispatch }: ReloadNotesProps) {
     .query(Q.sortBy("day", Q.desc), Q.take(10))) as Note[];
   if (notesQuery.length > 0) {
     const serializedNotes = notesQuery.map((note) => serializeNote(note));
+    console.log("NOTES: " + JSON.stringify(serializedNotes));
     dispatch(editNote(serializedNotes));
   } else {
     dispatch(editNote([]));
