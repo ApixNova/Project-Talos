@@ -70,7 +70,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
   }
   async function signOut() {
     console.log("signing out");
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut({ scope: "local" });
     if (error) {
       setAlert("Error: " + error.message);
     }
