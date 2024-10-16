@@ -12,20 +12,22 @@ export const paletteDark = {
   background: "#0c0414",
   text: "#eae9fc",
   primary: "#4650d8",
-  secondary: "#dc254a",
-  accent: "#8f97ea",
+  // secondary: "#dc254a",
+  // accent: "#8f97ea",
+  secondary: "#8f97ea",
+  accent: "#dc254a",
   rose: "#de5974",
   black: "black",
   gray: "#757272",
 };
 
 const paletteLight = {
-  background: "#4a4d87",
+  background: "#c6def1",
   text: "#0c0414",
   primary: "#4650d8",
   secondary: "#dc254a",
   accent: "#8f97ea",
-  rose: "pink",
+  rose: "#de5974",
   black: "black",
   gray: "pink",
 };

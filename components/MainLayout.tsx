@@ -32,14 +32,16 @@ export default function MainLayout() {
               <FontAwesome5
                 size={30}
                 name="book"
-                color={color.focused ? "white" : "pink"}
+                color={color.focused ? "white" : dynamicTheme(settings, "text")}
               />
             ),
             drawerLabel: ({ color, focused }) => (
               <Text
                 style={[
                   styles.drawerText,
-                  { color: focused ? "white" : "pink" },
+                  {
+                    color: focused ? "white" : dynamicTheme(settings, "text"),
+                  },
                 ]}
               >
                 Calendar & Diary
@@ -68,14 +70,14 @@ export default function MainLayout() {
               <Ionicons
                 name="settings-sharp"
                 size={30}
-                color={color.focused ? "white" : "pink"}
+                color={color.focused ? "white" : dynamicTheme(settings, "text")}
               />
             ),
             drawerLabel: ({ color, focused }) => (
               <Text
                 style={[
                   styles.drawerText,
-                  { color: focused ? "white" : "pink" },
+                  { color: focused ? "white" : dynamicTheme(settings, "text") },
                 ]}
               >
                 Settings
@@ -95,14 +97,14 @@ export default function MainLayout() {
               <FontAwesome5
                 name="sync-alt"
                 size={24}
-                color={color.focused ? "white" : "pink"}
+                color={color.focused ? "white" : dynamicTheme(settings, "text")}
               />
             ),
             drawerLabel: ({ color, focused }) => (
               <Text
                 style={[
                   styles.drawerText,
-                  { color: focused ? "white" : "pink" },
+                  { color: focused ? "white" : dynamicTheme(settings, "text") },
                 ]}
               >
                 Sync
@@ -122,14 +124,14 @@ export default function MainLayout() {
               <FontAwesome5
                 name="info-circle"
                 size={24}
-                color={color.focused ? "white" : "pink"}
+                color={color.focused ? "white" : dynamicTheme(settings, "text")}
               />
             ),
             drawerLabel: ({ color, focused }) => (
               <Text
                 style={[
                   styles.drawerText,
-                  { color: focused ? "white" : "pink" },
+                  { color: focused ? "white" : dynamicTheme(settings, "text") },
                 ]}
               >
                 About
@@ -155,7 +157,7 @@ export default function MainLayout() {
 }
 const styles = StyleSheet.create({
   drawerText: {
-    fontFamily: "Inter_300Light",
+    fontFamily: "Inter_400Regular",
     fontSize: 16,
   },
 });

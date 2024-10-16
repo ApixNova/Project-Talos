@@ -7,13 +7,11 @@ import { dynamicTheme } from "../utils/palette";
 import { supabase } from "../utils/supabase";
 import { syncDatabase } from "../utils/sync";
 import { database } from "../utils/watermelon";
-import AlertComponent from "./Alert";
 import { editMood } from "../state/moodSlice";
 import { onMonthChange } from "../utils/month-functions";
-import { setupSettings, toDateData } from "../utils/functions";
+import { toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
 import Button from "./Button";
-import { editNote } from "../state/noteSlice";
 import { UserPageProps } from "../types";
 
 export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
@@ -37,8 +35,6 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
             console.log(error.message);
             return;
           }
-          // If no error, session is valid
-          console.log("Session is still valid: ", data);
         }
         checkSession();
       }
@@ -79,7 +75,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
     <View
       style={[
         styles.container,
-        { backgroundColor: dynamicTheme(settings, "accent") },
+        { backgroundColor: dynamicTheme(settings, "secondary") },
       ]}
     >
       {session && session.user && (
@@ -110,7 +106,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: palette.accent,
+    // backgroundColor: palette.secondary,
     height: "100%",
     width: "80%",
     maxWidth: 600,

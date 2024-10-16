@@ -55,7 +55,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
           styles.container,
           {
             borderColor: dynamicTheme(settings, "text"),
-            backgroundColor: dynamicTheme(settings, "accent"),
+            backgroundColor: dynamicTheme(settings, "secondary"),
           },
         ]}
       >
@@ -79,7 +79,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
               styles.container,
               {
                 borderColor: dynamicTheme(settings, "text"),
-                backgroundColor: dynamicTheme(settings, "accent"),
+                backgroundColor: dynamicTheme(settings, "secondary"),
                 position: "absolute",
                 bottom: height,
               },
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     // borderColor: palette.text,
     borderWidth: 2,
-    // backgroundColor: palette.accent,
+    // backgroundColor: palette.secondary,
     padding: 15,
   },
   buttonText: {

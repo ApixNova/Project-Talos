@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: "Inter_400Regular",
-    fontSize: 17,
+    fontSize: 19,
     margin: "auto",
   },
 });

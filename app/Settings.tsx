@@ -170,7 +170,7 @@ export default function Screen() {
       <View
         style={[
           styles.container,
-          { backgroundColor: dynamicTheme(settings, "accent") },
+          { backgroundColor: dynamicTheme(settings, "secondary") },
         ]}
       >
         <View style={styles.settingRow}>
@@ -232,17 +232,14 @@ export default function Screen() {
 
 const styles = StyleSheet.create({
   background: {
-    // backgroundColor: palette.background,
     height: "100%",
     alignItems: "center",
     gap: 50,
     paddingTop: 20,
     borderWidth: 2,
-    // borderColor: palette.text,
   },
   container: {
     maxWidth: 600,
-    // backgroundColor: palette.accent,
     width: "90%",
     margin: "auto",
     padding: 5,
@@ -251,7 +248,6 @@ const styles = StyleSheet.create({
   separation: {
     width: "90%",
     height: 1,
-    // backgroundColor: palette.primary,
     marginHorizontal: "auto",
     marginVertical: 5,
   },
@@ -259,13 +255,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   text: {
-    // color: palette.text,
     fontSize: 20,
     fontFamily: "Inter_400Regular",
   },
-  // textSetting: {
-  //   color: palette.accent,
-  //   fontSize: 20,
-  //   fontFamily: "Inter_400Regular",
-  // },
 });

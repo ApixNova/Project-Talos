@@ -18,8 +18,6 @@ export function NotePreview({ data }: { data: SerializedNote }) {
   const { width } = useWindowDimensions();
   const settings = useAppSelector((state) => state.settings as Setting[]);
 
-  // useEffect(() => {}, [width]);
-
   function handlePress() {
     router.navigate("/Diary/" + data.id);
   }
@@ -30,6 +28,7 @@ export function NotePreview({ data }: { data: SerializedNote }) {
         styles.container,
         {
           width: width < 1200 ? "94%" : "75%",
+          borderColor: dynamicTheme(settings, "text"),
         },
       ]}
       onPress={handlePress}
@@ -93,7 +92,6 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 10,
     padding: 3,
-    borderColor: "pink",
     marginVertical: 1,
     margin: "auto",
     flexDirection: "row",
@@ -101,7 +99,6 @@ const styles = StyleSheet.create({
     maxWidth: 1350,
   },
   date: {
-    // color: palette.gray,
     fontSize: 17,
     fontFamily: "Inter_400Regular",
     // marginLeft: 13,
@@ -111,12 +108,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Inter_400Regular",
-    // color: palette.text,
     fontSize: 20,
     marginLeft: 5,
   },
   dayOfWeek: {
-    // color: palette.text,
     fontFamily: "Inter_300Light",
     fontSize: 20,
     marginLeft: 5,

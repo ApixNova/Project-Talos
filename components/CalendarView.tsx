@@ -102,7 +102,7 @@ export default function CalendarView({ props }: calendarProps) {
           textDayStyle: {
             color: dynamicTheme(settings, "text"),
           },
-          textDisabledColor: dynamicTheme(settings, "accent"),
+          textDisabledColor: dynamicTheme(settings, "secondary"),
           // @ts-ignore: types / theme handling bug
           "stylesheet.day.basic": {
             base: {

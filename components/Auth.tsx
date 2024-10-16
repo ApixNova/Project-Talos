@@ -64,7 +64,7 @@ export default function Auth({
     <View
       style={[
         styles.container,
-        { backgroundColor: dynamicTheme(settings, "accent") },
+        { backgroundColor: dynamicTheme(settings, "secondary") },
       ]}
     >
       <Text
@@ -141,13 +141,11 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     borderRadius: 7,
     width: "90%",
-    // backgroundColor: palette.accent,
     marginHorizontal: "auto",
     padding: 5,
   },
   title: {
     fontSize: 25,
-    // color: palette.background,
     fontFamily: "Inter_500Medium",
     marginBottom: 30,
     marginTop: 10,
@@ -156,7 +154,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontFamily: "Inter_500Medium",
-    // color: palette.background,
   },
   input: {
     borderWidth: 2,

@@ -58,34 +58,21 @@ export default function AlertComponent({
               <View style={styles.buttonContainer}>
                 {giveChoice && handleConfirm && handleExit ? (
                   <>
-                    <Pressable
-                      style={[
-                        styles.button,
-                        { backgroundColor: dynamicTheme(settings, "rose") },
-                      ]}
+                    <Button
+                      text={confirmLabel || "Yes"}
+                      color={dynamicTheme(settings, "rose")}
                       onPress={() => {
                         handleConfirm();
                         close();
                       }}
-                    >
-                      <Text style={styles.text} selectable={false}>
-                        {confirmLabel || "Yes"}
-                      </Text>
-                    </Pressable>
-                    <Pressable
-                      style={[
-                        styles.button,
-                        { backgroundColor: dynamicTheme(settings, "primary") },
-                      ]}
+                    />
+                    <Button
+                      text="No"
                       onPress={() => {
                         handleExit();
                         close();
                       }}
-                    >
-                      <Text style={styles.text} selectable={false}>
-                        No
-                      </Text>
-                    </Pressable>
+                    />
                   </>
                 ) : (
                   <Button
@@ -113,9 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(24, 36, 74, 0.6)",
   },
   container: {
-    // backgroundColor: palette.background,
     borderWidth: 2,
-    // borderColor: palette.rose,
     width: "85%",
     minWidth: 200,
     paddingHorizontal: 13,
@@ -140,10 +125,5 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     marginTop: 8,
     gap: 10,
-  },
-  button: {
-    padding: 4,
-    borderRadius: 7,
-    // backgroundColor: palette.rose,
   },
 });

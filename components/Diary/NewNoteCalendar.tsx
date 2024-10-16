@@ -115,12 +115,12 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
         <LinearGradient
           colors={[
             "rgba(124, 126, 192, 1)",
-            dynamicTheme(settings, "accent"),
-            dynamicTheme(settings, "accent"),
-            dynamicTheme(settings, "accent"),
-            // dynamicTheme(settings, "accent"),
-            // dynamicTheme(settings, "accent"),
-            // dynamicTheme(settings, "accent"),
+            dynamicTheme(settings, "secondary"),
+            dynamicTheme(settings, "secondary"),
+            dynamicTheme(settings, "secondary"),
+            // dynamicTheme(settings, "secondary"),
+            // dynamicTheme(settings, "secondary"),
+            // dynamicTheme(settings, "secondary"),
             "rgba(124, 126, 192, 1)",
           ]}
           style={styles.calendarContainer}

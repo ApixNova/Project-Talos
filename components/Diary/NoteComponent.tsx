@@ -35,6 +35,7 @@ export function NoteComponent({ props }: NoteProps) {
   const { day, id } = props;
   const [moodPicker, setMoodPicker] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [save, setSave] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertGiveChoice, setAlertGiveChoice] = useState(true);
   const [message, setMessage] = useState("");
@@ -132,6 +133,31 @@ export function NoteComponent({ props }: NoteProps) {
   function handleMoodPress(moodType: number) {
     setMoodType(JSON.stringify(moodType));
     setMoodPicker(false);
+  }
+
+  function handleChangeText(value: string, type: "title" | "content") {
+    function isValid() {
+      return type == "title" ? true : value != "";
+    }
+    function titleValue() {
+      return type == "title" ? value : title;
+    }
+    function textValue() {
+      return type == "title" ? text : value;
+    }
+    if (isValid() && existingNote.length > 0) {
+      const currentNote = existingNote[0];
+      if (
+        currentNote.title !== titleValue() ||
+        currentNote.content !== textValue()
+      ) {
+        setSave(true);
+      } else {
+        setSave(false);
+      }
+    } else {
+      setSave(false);
+    }
   }
   async function saveNote() {
     if (text == "") {
@@ -277,7 +303,8 @@ export function NoteComponent({ props }: NoteProps) {
         {
           width: width < 1200 ? "100%" : "80%",
           maxWidth: 1500,
-          backgroundColor: dynamicTheme(settings, "accent"),
+          backgroundColor: dynamicTheme(settings, "secondary"),
+          borderColor: dynamicTheme(settings, "text"),
         },
       ]}
     >
@@ -293,7 +320,7 @@ export function NoteComponent({ props }: NoteProps) {
         style={[
           styles.newNoteTitle,
           {
-            backgroundColor: dynamicTheme(settings, "accent"),
+            backgroundColor: dynamicTheme(settings, "secondary"),
           },
         ]}
       >
@@ -307,24 +334,35 @@ export function NoteComponent({ props }: NoteProps) {
           placeholder="Title (optional)"
           placeholderTextColor={dynamicTheme(settings, "gray")}
           value={title}
-          onChangeText={setTitle}
+          onChangeText={(value) => {
+            setTitle(value);
+            handleChangeText(value, "title");
+          }}
         />
-        <Pressable onPress={saveNote} style={styles.save}>
-          <Text style={styles.newNoteSave}>Save</Text>
-        </Pressable>
+        {save && (
+          <Pressable onPress={saveNote} style={styles.save}>
+            <Text style={styles.newNoteSave}>Save</Text>
+          </Pressable>
+        )}
         <View>
           <Pressable
             onPress={() => setMoodPicker((prev) => !prev)}
             style={[
               styles.newNoteTitleMood,
-              { backgroundColor: returnColor(moodType) },
+              {
+                backgroundColor: returnColor(moodType),
+                borderColor: dynamicTheme(settings, "text"),
+              },
             ]}
           ></Pressable>
           {moodPicker && (
             <View
               style={[
                 styles.newNoteMoodPicker,
-                { backgroundColor: dynamicTheme(settings, "accent") },
+                {
+                  backgroundColor: dynamicTheme(settings, "secondary"),
+                  borderColor: dynamicTheme(settings, "text"),
+                },
               ]}
             >
               <MoodPicker handlePress={handleMoodPress} />
@@ -344,7 +382,7 @@ export function NoteComponent({ props }: NoteProps) {
             <View
               style={[
                 styles.newNoteOptions,
-                { backgroundColor: dynamicTheme(settings, "accent") },
+                { backgroundColor: dynamicTheme(settings, "secondary") },
               ]}
             >
               <Button
@@ -359,15 +397,26 @@ export function NoteComponent({ props }: NoteProps) {
       <View
         style={[
           styles.newNoteMain,
-          { backgroundColor: dynamicTheme(settings, "background") },
+          {
+            backgroundColor: dynamicTheme(settings, "background"),
+            borderColor: dynamicTheme(settings, "text"),
+          },
         ]}
       >
         <TextInput
           value={text}
-          onChangeText={setText}
+          onChangeText={(value) => {
+            setText(value);
+            handleChangeText(value, "content");
+          }}
           placeholder="take a note about your day..."
           placeholderTextColor={dynamicTheme(settings, "gray")}
-          style={styles.newNoteInput}
+          style={[
+            styles.newNoteInput,
+            {
+              color: dynamicTheme(settings, "text"),
+            },
+          ]}
           multiline
         />
       </View>
@@ -380,18 +429,15 @@ const styles = StyleSheet.create({
     // padding: 3,
     marginHorizontal: "auto",
     height: "100%",
-    borderWidth: 3,
+    borderWidth: 2,
     borderRadius: 10,
-    borderColor: "pink",
-    // backgroundColor: palette.accent,
   },
   newNoteTitle: {
-    // backgroundColor: palette.accent,
     height: "10%",
     maxHeight: 50,
     borderRadius: 10,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     paddingHorizontal: 5,
     zIndex: 1,
@@ -400,23 +446,20 @@ const styles = StyleSheet.create({
   newNoteTitleInput: {
     fontSize: 21,
     width: "80%",
-    // color: palette.text,
     paddingHorizontal: 5,
+    marginRight: "auto",
     fontFamily: "Inter_400Regular",
   },
   newNoteTitleMood: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    borderColor: "pink",
-    borderWidth: 2,
+    borderWidth: 1,
     paddingHorizontal: 5,
   },
   newNoteMoodPicker: {
-    borderWidth: 3,
+    borderWidth: 2,
     padding: 2,
-    borderColor: "pink",
-    // backgroundColor: palette.accent,
     position: "absolute",
     right: 0,
     top: 30,
@@ -425,13 +468,10 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   optionsIcon: {
-    paddingLeft: 4,
+    paddingLeft: 8,
   },
   newNoteOptions: {
-    borderWidth: 3,
     padding: 2,
-    borderColor: "pink",
-    // backgroundColor: palette.accent,
     position: "absolute",
     right: 0,
     top: 35,
@@ -442,9 +482,7 @@ const styles = StyleSheet.create({
   },
   newNoteMain: {
     borderWidth: 2,
-    borderColor: "white",
     borderRadius: 10,
-    // backgroundColor: palette.background,
     padding: 2,
     flex: 9,
   },
