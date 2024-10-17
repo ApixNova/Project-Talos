@@ -6,4 +6,6 @@ export default class Feeling extends Model {
 
   @field("type") type!: number;
   @text("day") day!: string;
+  @field("created_at") createdAt!: number;
+  @field("updated_at") updatedAt!: number;
 }

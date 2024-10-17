@@ -1,13 +1,15 @@
 import { appSchema, tableSchema } from "@nozbe/watermelondb";
 
 export default appSchema({
-  version: 2,
+  version: 3,
   tables: [
     tableSchema({
       name: "feelings",
       columns: [
         { name: "type", type: "number" },
         { name: "day", type: "string" },
+        { name: "created_at", type: "number" },
+        { name: "updated_at", type: "number" },
       ],
     }),
     tableSchema({
