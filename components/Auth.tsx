@@ -83,7 +83,12 @@ export default function Auth({
             Email
           </Text>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                borderColor: dynamicTheme(settings, "text"),
+              },
+            ]}
             autoComplete="email"
             inputMode="email"
             onChangeText={setEmail}
@@ -101,7 +106,12 @@ export default function Auth({
             Password
           </Text>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                borderColor: dynamicTheme(settings, "text"),
+              },
+            ]}
             autoComplete="password"
             secureTextEntry={true}
             onChangeText={setPassword}
@@ -159,7 +169,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 9,
     fontSize: 17,
-    borderColor: "pink",
     fontFamily: "Inter_400Regular",
     padding: 5,
   },

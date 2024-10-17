@@ -106,7 +106,6 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: palette.secondary,
     height: "100%",
     width: "80%",
     maxWidth: 600,
@@ -118,7 +117,6 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   title: {
-    // color: palette.background,
     fontFamily: "Inter_400Regular",
     fontSize: 20,
   },
@@ -130,10 +128,8 @@ const styles = StyleSheet.create({
     // marginTop: "10%",
     height: "50%",
     width: "100%",
-    // backgroundColor: "pink",
   },
   button: {
-    // backgroundColor: palette.rose,
     padding: 5,
     borderRadius: 7,
   },

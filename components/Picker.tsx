@@ -33,7 +33,16 @@ export default function Picker({
             setVisible(true);
           }}
         >
-          <Text style={styles.text}>{title}</Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                color: dynamicTheme(settings, "accent"),
+              },
+            ]}
+          >
+            {title}
+          </Text>
         </Pressable>
       </SafeAreaView>
       {visible && (
@@ -57,26 +66,36 @@ export default function Picker({
                   style={styles.close}
                   name="close"
                   size={24}
-                  color="white"
+                  color={dynamicTheme(settings, "text")}
                 />
               </Pressable>
               {options.map((option, index) => {
                 return (
                   <Pressable
                     key={index}
-                    style={styles.option}
+                    style={[
+                      styles.option,
+                      {
+                        borderColor:
+                          option == state
+                            ? dynamicTheme(settings, "rose")
+                            : "transparent",
+                      },
+                    ]}
                     onPress={() => handlePress(option)}
                   >
                     <Text
                       selectable={false}
                       style={[
                         styles.textList,
+                        { color: dynamicTheme(settings, "text") },
                         option == state
                           ? [
                               styles.selected,
                               {
                                 color: dynamicTheme(settings, "text"),
                                 backgroundColor: dynamicTheme(settings, "rose"),
+                                borderColor: dynamicTheme(settings, "rose"),
                               },
                             ]
                           : undefined,
@@ -105,15 +124,12 @@ const styles = StyleSheet.create({
   container: {
     // backgroundColor: palette.background,
     borderWidth: 2,
-    // borderColor: palette.rose,
-    // width: "85%",
     minWidth: 200,
     paddingHorizontal: 13,
     paddingBottom: 10,
     maxWidth: 470,
     margin: "auto",
     minHeight: 70,
-    // height: "70%",
   },
   close: {
     // marginLeft: 10,
@@ -127,17 +143,18 @@ const styles = StyleSheet.create({
   textList: {
     fontFamily: "Inter_400Regular",
     fontSize: 20,
-    color: "white",
   },
   option: {
-    // color: "white",
     // margin: "auto",
-    padding: 5,
-    // width: "100%",
+    // padding: 5,
+    borderWidth: 5,
+    borderRadius: 5,
+    // borderColor: "transparent",
   },
   selected: {
     // color: palette.text,
     // borderWidth: 2,
+    // padding: 2,
     // borderColor: "white",
     // backgroundColor: palette.rose,
   },

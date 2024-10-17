@@ -122,6 +122,7 @@ const themeTypeList = [
   "rose",
   "black",
   "gray",
+  // "calendarBackground",
 ] as const;
 
 type ThemeType = (typeof themeTypeList)[number];

@@ -69,7 +69,8 @@ export default function CalendarView({ props }: calendarProps) {
             color:
               day == getCurrentDate()
                 ? "#f57a7a"
-                : dynamicTheme(settings, "text"),
+                : // : dynamicTheme(settings, "text"),
+                  "white",
           },
         },
       };
@@ -80,7 +81,11 @@ export default function CalendarView({ props }: calendarProps) {
     <View
       style={[
         styles.container,
-        { borderColor: dynamicTheme(settings, "text") },
+        {
+          borderColor: dynamicTheme(settings, "text"),
+          // calendar background color
+          backgroundColor: "#8f97ea",
+        },
       ]}
     >
       <CalendarList
@@ -90,8 +95,8 @@ export default function CalendarView({ props }: calendarProps) {
         markedDates={markedDates}
         theme={{
           backgroundColor: "black",
-          calendarBackground: "#7d7bb3",
-          textSectionTitleColor: dynamicTheme(settings, "background"),
+          calendarBackground: "transparent",
+          textSectionTitleColor: "black",
           textMonthFontFamily: "Inter_400Regular",
           monthTextColor: dynamicTheme(settings, "text"),
           textMonthFontSize: 20,
@@ -102,7 +107,7 @@ export default function CalendarView({ props }: calendarProps) {
           textDayStyle: {
             color: dynamicTheme(settings, "text"),
           },
-          textDisabledColor: dynamicTheme(settings, "secondary"),
+          textDisabledColor: dynamicTheme(settings, "gray"),
           // @ts-ignore: types / theme handling bug
           "stylesheet.day.basic": {
             base: {
@@ -141,7 +146,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     // borderRadius: 20,
     // padding: 10,
-    // backgroundColor: "#a0c0eb",
     // justifyContent: "center",
     height: 370,
   },

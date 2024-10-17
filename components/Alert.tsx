@@ -51,10 +51,19 @@ export default function AlertComponent({
                   style={styles.close}
                   name="close"
                   size={24}
-                  color="white"
+                  color={dynamicTheme(settings, "text")}
                 />
               </Pressable>
-              <Text style={styles.text}>{message}</Text>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    color: dynamicTheme(settings, "text"),
+                  },
+                ]}
+              >
+                {message}
+              </Text>
               <View style={styles.buttonContainer}>
                 {giveChoice && handleConfirm && handleExit ? (
                   <>
@@ -118,7 +127,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Inter_400Regular",
     fontSize: 20,
-    color: "white",
+    // color: "white",
   },
   buttonContainer: {
     flexDirection: "row",

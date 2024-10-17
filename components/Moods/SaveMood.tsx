@@ -1,11 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Setting from "../../model/Setting";
 import { useAppSelector } from "../../state/hooks";
 import { SaveMoodProps } from "../../types";
@@ -14,10 +8,8 @@ import { updateMood } from "../../utils/updateMood";
 import MoodPicker from "./MoodPicker";
 import Animated, {
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
 
@@ -93,17 +85,20 @@ export default function SaveMood({ props }: SaveMoodProps) {
               <FontAwesome
                 style={[
                   styles.close,
-                  { color: dynamicTheme(settings, "background") },
+                  // { color: dynamicTheme(settings, "background") },
                 ]}
                 name="close"
                 size={24}
-                color="white"
+                color="#0c0414"
               />
             </Pressable>
             <Text
               style={[
                 styles.title,
-                { color: dynamicTheme(settings, "background") },
+                {
+                  // color: dynamicTheme(settings, "background")
+                  color: "#0c0414",
+                },
               ]}
             >
               How was your day ?

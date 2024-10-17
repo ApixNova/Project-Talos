@@ -8,12 +8,10 @@ import {
 import Setting from "../../model/Setting";
 import { useAppSelector } from "../../state/hooks";
 import { MoodOptionProps } from "../../types";
-import { dynamicTheme } from "../../utils/palette";
 import Animated, {
   useDerivedValue,
   useSharedValue,
   withSequence,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 
@@ -63,12 +61,11 @@ export function MoodOption({ props }: MoodOptionProps) {
           style={[
             style,
             styles.color,
-            // styles.Bottom,
             {
               width: squareSizeLimited(),
               height: squareSizeLimited(),
               borderRadius: squareSizeLimited() / 2,
-              borderColor: dynamicTheme(settings, "background"),
+              borderColor: "#0c0414",
               // zIndex: 0,
             },
           ]}
@@ -77,7 +74,6 @@ export function MoodOption({ props }: MoodOptionProps) {
           style={[
             styles.animation,
             style,
-            // styles.Top,
             {
               width: sizeAnimated,
               height: sizeAnimated,
@@ -93,7 +89,10 @@ export function MoodOption({ props }: MoodOptionProps) {
       <Text
         style={[
           styles.moodTitle,
-          { color: dynamicTheme(settings, "background") },
+          {
+            // color: dynamicTheme(settings, "background")
+            color: "#0c0414",
+          },
         ]}
       >
         {text}

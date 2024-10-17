@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { dynamicTheme, getTheme } from "../utils/palette";
 import { database } from "../utils/watermelon";
 import Picker from "../components/Picker";
@@ -13,6 +13,12 @@ import { editMood } from "../state/moodSlice";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
 import { editNote } from "../state/noteSlice";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Screen() {
   const [session, setSession] = useState<Session | null>(null);
@@ -22,6 +28,10 @@ export default function Screen() {
   const [showAlert, setShowAlert] = useState(false);
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
+  const height = useSharedValue(0);
+  const rotateZ = useSharedValue("0deg");
+  const [dataToggle, setDataToggle] = useState(false);
+  const toggle = useSharedValue(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -42,7 +52,6 @@ export default function Screen() {
 
   //on load fetch settings and update Redux
   useEffect(() => {
-    console.log("settings again");
     async function fetchSettings() {
       const settingsQuery = await database
         .get<Setting>("settings")
@@ -145,17 +154,27 @@ export default function Screen() {
     await setupSettings();
     //reload moods and notes
     dispatch(editMood({}));
-    // onMonthChange({ date: toDateData(), moods, dispatch });
-    // reloadNotes({ dispatch });
     dispatch(editNote([]));
   }
+  const animatedStyle = useAnimatedStyle(() => ({
+    height: withTiming(40 * Number(dataToggle), { duration: 300 }),
+    overflow: "hidden",
+  }));
+  const dataArrowStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        rotateZ: withTiming(`${180 * Number(dataToggle) - 90}deg`, {
+          duration: 300,
+        }),
+      },
+    ],
+  }));
   return (
     <View
       style={[
         styles.background,
         {
           backgroundColor: dynamicTheme(settings, "background"),
-          borderColor: dynamicTheme(settings, "text"),
         },
       ]}
     >
@@ -170,7 +189,7 @@ export default function Screen() {
       <View
         style={[
           styles.container,
-          { backgroundColor: dynamicTheme(settings, "secondary") },
+          // { backgroundColor: dynamicTheme(settings, "secondary") },
         ]}
       >
         <View style={styles.settingRow}>
@@ -189,7 +208,7 @@ export default function Screen() {
         <View
           style={[
             styles.separation,
-            { backgroundColor: dynamicTheme(settings, "primary") },
+            { backgroundColor: dynamicTheme(settings, "text") },
           ]}
         ></View>
         <View style={styles.settingRow}>
@@ -208,23 +227,56 @@ export default function Screen() {
         <View
           style={[
             styles.separation,
-            { backgroundColor: dynamicTheme(settings, "primary") },
+            { backgroundColor: dynamicTheme(settings, "text") },
           ]}
         ></View>
-        {session && session.user ? (
-          <Button
-            text="Reset local and online data"
-            onPress={resetSupabasePressed}
-            color={dynamicTheme(settings, "secondary")}
-          />
-        ) : (
-          <Button
-            text="Reset DB"
-            onPress={resetPressed}
-            color={dynamicTheme(settings, "secondary")}
-            style={{ margin: "auto" }}
-          />
-        )}
+        <Pressable
+          onPress={() => {
+            setDataToggle((prev) => !prev);
+          }}
+        >
+          <View style={styles.data}>
+            <Text
+              style={[styles.text, { color: dynamicTheme(settings, "text") }]}
+            >
+              Data
+            </Text>
+            <Animated.View
+              style={[
+                dataArrowStyle,
+                {
+                  marginLeft: 20,
+                },
+              ]}
+            >
+              <Ionicons
+                style={[styles.dataToggle]}
+                name="chevron-back-outline"
+                size={25}
+                color={dynamicTheme(settings, "text")}
+              />
+            </Animated.View>
+          </View>
+        </Pressable>
+        <View style={{ margin: "auto" }}>
+          {dataToggle && (
+            <Animated.View style={animatedStyle}>
+              {session && session.user ? (
+                <Button
+                  text="Delete local and online Data"
+                  onPress={resetSupabasePressed}
+                  color={dynamicTheme(settings, "accent")}
+                />
+              ) : (
+                <Button
+                  text="Delete Data"
+                  onPress={resetPressed}
+                  color={dynamicTheme(settings, "accent")}
+                />
+              )}
+            </Animated.View>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -236,12 +288,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 50,
     paddingTop: 20,
-    borderWidth: 2,
   },
   container: {
     maxWidth: 600,
     width: "90%",
-    margin: "auto",
+    // margin: "auto",
     padding: 5,
     borderRadius: 7,
   },
@@ -250,6 +301,12 @@ const styles = StyleSheet.create({
     height: 1,
     marginHorizontal: "auto",
     marginVertical: 5,
+  },
+  data: {
+    flexDirection: "row",
+  },
+  dataToggle: {
+    marginLeft: "auto",
   },
   settingRow: {
     gap: 5,

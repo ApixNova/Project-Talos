@@ -33,7 +33,13 @@ export default function Button({
     >
       <Text
         numberOfLines={1}
-        style={[styles.buttonText, { color: dynamicTheme(settings, "text") }]}
+        style={[
+          styles.buttonText,
+          {
+            // color: dynamicTheme(settings, "text"),
+            color: "white",
+          },
+        ]}
       >
         {text}
       </Text>
