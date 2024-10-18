@@ -148,13 +148,16 @@ export function NoteComponent({ props }: NoteProps) {
     if (isValid() && existingNote.length > 0) {
       const currentNote = existingNote[0];
       if (
-        currentNote.title !== titleValue() ||
-        currentNote.content !== textValue()
+        textValue() != "" &&
+        (currentNote.title !== titleValue() ||
+          currentNote.content !== textValue())
       ) {
         setSave(true);
       } else {
         setSave(false);
       }
+    } else if (textValue() != "") {
+      setSave(true);
     } else {
       setSave(false);
     }
@@ -191,6 +194,7 @@ export function NoteComponent({ props }: NoteProps) {
             })
             .then(() => {
               console.log("Note updated");
+              setSave(false);
             });
         }
         //update redux
@@ -227,6 +231,7 @@ export function NoteComponent({ props }: NoteProps) {
             })
             .then(() => {
               console.log("Note created");
+              setSave(false);
             });
           // update redux
           async function updateNotes() {

@@ -23,11 +23,10 @@ export async function syncDatabase(
       if (initialSync) {
         lastPulledAtValue = null;
       }
-      console.log(lastPulledAtValue);
       const { data, error } = await supabase.rpc("pull", {
         last_pulled_at: lastPulledAtValue,
       });
-      console.log("Data: " + JSON.stringify(data));
+      // console.log("Data: " + JSON.stringify(data));
       if (error) {
         setAlert("Error: " + error.message);
       }
@@ -40,7 +39,8 @@ export async function syncDatabase(
       if (session && !initialSync) mergeData();
 
       async function mergeData() {
-        console.log("merge data called");
+        // console.log("merge data called");
+
         //handle conflicts by deleting duplicates and prioritizing most recent data
         let notesChanges = syncedChanges.notes.updated;
         for (const [index, note] of notesChanges.entries()) {
@@ -102,8 +102,7 @@ export async function syncDatabase(
           }
         }
       }
-      console.log("Changes: " + JSON.stringify(changesOriginal));
-      console.log("Changes updated: " + JSON.stringify(syncedChanges));
+      // console.log("Changes: " + JSON.stringify(syncedChanges));
       const changes = syncedChanges as SyncDatabaseChangeSet;
       return { changes, timestamp };
     },
@@ -118,9 +117,4 @@ export async function syncDatabase(
     sendCreatedAsUpdated: true,
     migrationsEnabledAtVersion: 2,
   });
-  console.log(
-    "Sync complete, changes object that I should return: " +
-      JSON.stringify(syncedChanges)
-  );
-  return syncedChanges;
 }

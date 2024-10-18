@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   container: {},
   selection: {
     flexDirection: "row",
+    gap: 4,
   },
   black: {
     backgroundColor: moodColor.black,

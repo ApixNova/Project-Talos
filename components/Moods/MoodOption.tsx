@@ -103,14 +103,16 @@ export function MoodOption({ props }: MoodOptionProps) {
 
 const styles = StyleSheet.create({
   mood: {
-    margin: 1,
+    marginVertical: 1,
+    marginHorizontal: "auto",
   },
   color: {
     borderWidth: 3,
     zIndex: 0,
   },
   moodTitle: {
-    margin: 10,
+    marginVertical: 10,
+    marginHorizontal: "auto",
     textAlign: "center",
     fontFamily: "Inter_400Regular",
   },
