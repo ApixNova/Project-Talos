@@ -137,3 +137,33 @@ export type UserPageProps = {
   setAlert(message: string): void;
   alertOnSignout(signOut: () => Promise<void>): void;
 };
+
+type ChangesData = {
+  notes: {
+    created: [];
+    deleted: string[];
+    updated: [
+      {
+        id: string;
+        day: string;
+        title: string;
+        content: string;
+        created_at: number;
+        updated_at: number;
+      }
+    ];
+  };
+  feelings: {
+    created: [];
+    deleted: string[];
+    updated: [
+      {
+        id: string;
+        day: string;
+        type: number;
+        created_at: number;
+        updated_at: number;
+      }
+    ];
+  };
+};

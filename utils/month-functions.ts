@@ -54,7 +54,7 @@ export function onMonthChange({ date, moods, dispatch }: OnMonthChangeProps) {
   }
   const promises = allDays.map((day) => {
     // if the day isn't in Redux
-    if (!moods[day]) {
+    if (moods[day] == undefined) {
       //load mood if it's in the DB
       return loadFeeling(day);
     }
