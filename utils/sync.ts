@@ -43,6 +43,7 @@ export async function syncDatabase(
 
         //handle conflicts by deleting duplicates and prioritizing most recent data
         let notesChanges = syncedChanges.notes.updated;
+        let notesChangesUpdated = [];
         for (const [index, note] of notesChanges.entries()) {
           //query db for a record with the same day
           const noteInDB = await database
@@ -62,22 +63,26 @@ export async function syncDatabase(
                     .eq("id", note.id);
                   console.log("deleted supabase note");
                 } catch (e) {}
-                notesChanges.splice(index, 1);
+                // notesChanges.splice(index, 1);
               } else {
                 try {
                   // else we delete local data permanently
                   await noteInDB[0].destroyPermanently();
                   console.log("deleted local note");
+                  notesChangesUpdated.push(note);
                 } catch (e) {}
               }
             }
           }
         }
         let feelingsChanges = syncedChanges.feelings.updated;
+        let feelingsChangesUpdated = [];
         for (const [index, feeling] of feelingsChanges.entries()) {
           const feelingInDB = await database
             .get<Feeling>("feelings")
             .query(Q.where("day", feeling.day));
+          // console.log("feeling: " + JSON.stringify(feeling));
+          // console.log(feelingInDB[0]);
           if (feelingInDB.length > 0) {
             if (feeling.id != feelingInDB[0].id) {
               if (feelingInDB[0].updatedAt > feeling.updated_at) {
@@ -90,18 +95,22 @@ export async function syncDatabase(
                     .eq("id", feeling.id);
                   console.log("deleted supabase feeling");
                 } catch (e) {}
-                feelingsChanges.splice(index, 1);
+                // feelingsChanges.splice(index, 1);
               } else {
                 try {
                   // else we delete local data permanently
                   await feelingInDB[0].destroyPermanently();
                   console.log("deleted local feeling");
+                  feelingsChangesUpdated.push(feeling);
                 } catch (e) {}
               }
             }
           }
         }
+        notesChanges = notesChangesUpdated;
+        feelingsChanges = feelingsChangesUpdated;
       }
+      // console.log("Original Changes: " + JSON.stringify(changesOriginal));
       // console.log("Changes: " + JSON.stringify(syncedChanges));
       const changes = syncedChanges as SyncDatabaseChangeSet;
       return { changes, timestamp };
