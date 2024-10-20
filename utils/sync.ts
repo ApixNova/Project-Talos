@@ -14,11 +14,11 @@ export async function syncDatabase(
   session?: Session | null
 ) {
   let syncedChanges = {} as ChangesData;
-  console.log("Sync called");
+  // console.log("Sync called");
   await synchronize({
     database,
     pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
-      console.log(lastPulledAt);
+      // console.log(lastPulledAt);
       let lastPulledAtValue = lastPulledAt as number | null;
       if (initialSync) {
         lastPulledAtValue = null;
@@ -36,11 +36,11 @@ export async function syncDatabase(
       };
       syncedChanges = structuredClone(changesOriginal) as ChangesData;
 
-      if (session && !initialSync) mergeData();
+      if (session && !initialSync) {
+        await mergeData();
+      }
 
       async function mergeData() {
-        // console.log("merge data called");
-
         //handle conflicts by deleting duplicates and prioritizing most recent data
         let notesChanges = syncedChanges.notes.updated;
         let notesChangesUpdated = [];
@@ -61,16 +61,21 @@ export async function syncDatabase(
                     .delete()
                     .eq("user_id", session?.user.id)
                     .eq("id", note.id);
-                  console.log("deleted supabase note");
-                } catch (e) {}
-                // notesChanges.splice(index, 1);
+                  // console.log("deleted supabase note");
+                } catch (e) {
+                  setAlert("Error: " + e);
+                }
               } else {
                 try {
                   // else we delete local data permanently
-                  await noteInDB[0].destroyPermanently();
-                  console.log("deleted local note");
+                  await database.write(async () => {
+                    await noteInDB[0].destroyPermanently();
+                  });
+                  // console.log("deleted local note");
                   notesChangesUpdated.push(note);
-                } catch (e) {}
+                } catch (e) {
+                  setAlert("Error: " + e);
+                }
               }
             }
           }
@@ -93,16 +98,21 @@ export async function syncDatabase(
                     .delete()
                     .eq("user_id", session?.user.id)
                     .eq("id", feeling.id);
-                  console.log("deleted supabase feeling");
-                } catch (e) {}
-                // feelingsChanges.splice(index, 1);
+                  // console.log("deleted supabase feeling");
+                } catch (e) {
+                  setAlert("Error: " + e);
+                }
               } else {
                 try {
                   // else we delete local data permanently
-                  await feelingInDB[0].destroyPermanently();
-                  console.log("deleted local feeling");
+                  await database.write(async () => {
+                    await feelingInDB[0].destroyPermanently();
+                  });
+                  // console.log("deleted local feeling");
                   feelingsChangesUpdated.push(feeling);
-                } catch (e) {}
+                } catch (e) {
+                  setAlert("Error: " + e);
+                }
               }
             }
           }
@@ -116,7 +126,7 @@ export async function syncDatabase(
       return { changes, timestamp };
     },
     pushChanges: async ({ changes, lastPulledAt }) => {
-      console.log("changes debug: " + JSON.stringify(changes));
+      // console.log("changes sent to pushChanges: " + JSON.stringify(changes));
       const { error } = await supabase.rpc("push", { changes });
 
       if (error) {

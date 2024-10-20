@@ -13,7 +13,6 @@ import { dynamicTheme } from "../utils/palette";
 import reloadNotes from "../utils/reload-notes";
 import { database } from "../utils/watermelon";
 import AlertComponent from "./Alert";
-import { Session } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabase";
 
 export default function MyDrawer(props: DrawerContentComponentProps) {
@@ -39,7 +38,6 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
     getSettings();
     // we also check if the session is valid
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      // setSession(session);
       if (_event == "INITIAL_SESSION") {
         async function checkSession() {
           const { data, error } = await supabase.auth.refreshSession();
