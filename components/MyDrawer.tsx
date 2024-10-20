@@ -3,7 +3,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import Setting from "../model/Setting";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -12,8 +12,13 @@ import { serializeSetting, setupSettings } from "../utils/functions";
 import { dynamicTheme } from "../utils/palette";
 import reloadNotes from "../utils/reload-notes";
 import { database } from "../utils/watermelon";
+import AlertComponent from "./Alert";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "../utils/supabase";
 
 export default function MyDrawer(props: DrawerContentComponentProps) {
+  const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
   useEffect(() => {
@@ -32,7 +37,30 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
       dispatch(editSetting(serializedSettings));
     }
     getSettings();
+    // we also check if the session is valid
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      // setSession(session);
+      if (_event == "INITIAL_SESSION") {
+        async function checkSession() {
+          const { data, error } = await supabase.auth.refreshSession();
+          // If there is an error, the session is invalid
+          if (error) {
+            setAlert("Session is invalid or expired, you've been logged out");
+            console.log(error.message);
+            return;
+          }
+        }
+        checkSession();
+      }
+    });
+    return () => {
+      data.subscription.unsubscribe();
+    };
   }, []);
+  function setAlert(message: string) {
+    setMessage(message);
+    setShowAlert(true);
+  }
   return (
     <DrawerContentScrollView
       {...props}
@@ -45,6 +73,11 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
       ]}
     >
       <DrawerItemList {...props} />
+      <AlertComponent
+        message={message}
+        setShowAlert={setShowAlert}
+        visible={showAlert}
+      />
     </DrawerContentScrollView>
   );
 }
