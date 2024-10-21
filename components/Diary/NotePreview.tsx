@@ -100,19 +100,19 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 17,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     // marginLeft: 13,
     marginLeft: "auto",
     marginRight: 13,
     flexShrink: 0,
   },
   title: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     fontSize: 20,
     marginLeft: 5,
   },
   dayOfWeek: {
-    fontFamily: "Inter_300Light",
+    fontFamily: "Inter-Light",
     fontSize: 20,
     marginLeft: 5,
   },

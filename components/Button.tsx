@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   buttonText: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     fontSize: 19,
     margin: "auto",
   },

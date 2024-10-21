@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     marginBottom: 11,
   },
   text: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     fontSize: 20,
     // color: "white",
   },

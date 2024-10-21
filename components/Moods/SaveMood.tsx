@@ -122,13 +122,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     // color: palette.background,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter-Medium",
     fontSize: 16,
   },
   title: {
     textAlign: "center",
     // color: palette.background,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter-Medium",
     padding: 5,
     fontSize: 20,
   },

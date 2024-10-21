@@ -138,12 +138,12 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
             theme={{
               calendarBackground: "transparent",
               textSectionTitleColor: dynamicTheme(settings, "background"),
-              textMonthFontFamily: "Inter_400Regular",
+              textMonthFontFamily: "Inter-Regular",
               monthTextColor: dynamicTheme(settings, "text"),
               textMonthFontSize: 20,
-              textDayHeaderFontFamily: "Inter_400Regular",
+              textDayHeaderFontFamily: "Inter-Regular",
               textDayHeaderFontSize: 15,
-              textDayFontFamily: "Inter_400Regular",
+              textDayFontFamily: "Inter-Regular",
               //   textDayFontSize: 20,
               textDayStyle: {
                 color: dynamicTheme(settings, "text"),
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     // color: palette.rose,
     marginHorizontal: "auto",
     marginBottom: 7,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     fontSize: 20,
   },
   calendarContainer: {
