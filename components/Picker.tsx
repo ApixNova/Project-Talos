@@ -137,11 +137,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   text: {
-    fontFamily: "Inter_600SemiBold",
+    fontFamily: "Inter-SemiBold",
     fontSize: 20,
   },
   textList: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     fontSize: 20,
   },
   option: {

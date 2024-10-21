@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: "auto",
     textAlign: "center",
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
   },
   animation: {
     position: "absolute",

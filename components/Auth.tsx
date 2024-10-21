@@ -156,20 +156,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 25,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter-Medium",
     marginBottom: 30,
     marginTop: 10,
     marginHorizontal: "auto",
   },
   text: {
     fontSize: 20,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter-Medium",
   },
   input: {
     borderWidth: 2,
     borderRadius: 9,
     fontSize: 17,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     padding: 5,
   },
   inputContainer: {
@@ -192,6 +192,6 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     fontSize: 17,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter-Medium",
   },
 });

@@ -20,7 +20,7 @@ export default function MainLayout() {
           },
           headerShadowVisible: false,
           headerTitleStyle: {
-            fontFamily: "Inter_400regular",
+            fontFamily: "Inter-Regular",
           },
           headerTitleAlign: "center",
         }}
@@ -49,7 +49,7 @@ export default function MainLayout() {
             ),
             title: "Talos",
             headerTitleStyle: {
-              fontFamily: "Inter_900Black",
+              fontFamily: "Inter-Black",
               fontSize: 30,
               color: dynamicTheme(settings, "background"),
             },
@@ -62,7 +62,7 @@ export default function MainLayout() {
           name="Settings"
           options={{
             headerTitleStyle: {
-              fontFamily: "Inter_900Black",
+              fontFamily: "Inter-Black",
               fontSize: 30,
               color: dynamicTheme(settings, "background"),
             },
@@ -89,7 +89,7 @@ export default function MainLayout() {
           name="Sync"
           options={{
             headerTitleStyle: {
-              fontFamily: "Inter_900Black",
+              fontFamily: "Inter-Black",
               fontSize: 30,
               color: dynamicTheme(settings, "background"),
             },
@@ -116,7 +116,7 @@ export default function MainLayout() {
           name="About"
           options={{
             headerTitleStyle: {
-              fontFamily: "Inter_900Black",
+              fontFamily: "Inter-Black",
               fontSize: 30,
               color: dynamicTheme(settings, "background"),
             },
@@ -143,7 +143,7 @@ export default function MainLayout() {
           name="MailConfirmation"
           options={{
             headerTitleStyle: {
-              fontFamily: "Inter_900Black",
+              fontFamily: "Inter-Black",
               fontSize: 26,
               color: dynamicTheme(settings, "background"),
             },
@@ -157,7 +157,7 @@ export default function MainLayout() {
 }
 const styles = StyleSheet.create({
   drawerText: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     fontSize: 16,
   },
 });

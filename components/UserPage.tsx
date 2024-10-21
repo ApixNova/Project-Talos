@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   title: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
     fontSize: 20,
   },
   text: {
     color: "white",
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
   },
   auth: {
     // marginTop: "10%",

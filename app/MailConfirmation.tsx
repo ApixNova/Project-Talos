@@ -67,6 +67,6 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontSize: 20,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
   },
 });

@@ -453,7 +453,7 @@ const styles = StyleSheet.create({
     width: "80%",
     paddingHorizontal: 5,
     marginRight: "auto",
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
   },
   newNoteTitleMood: {
     width: 30,
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     top: 35,
   },
   newNoteSave: {
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Inter-Medium",
     fontSize: 16,
   },
   newNoteMain: {
@@ -496,6 +496,6 @@ const styles = StyleSheet.create({
     height: "100%",
     fontSize: 20,
     paddingHorizontal: 5,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter-Regular",
   },
 });

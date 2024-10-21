@@ -13,11 +13,11 @@ import MainLayout from "../components/MainLayout";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
-    Inter_300Light,
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_900Black,
+    "Inter-Light": Inter_300Light,
+    "Inter-Regular": Inter_400Regular,
+    "Inter-Medium": Inter_500Medium,
+    "Inter-SemiBold": Inter_600SemiBold,
+    "Inter-Black": Inter_900Black,
   });
   return (
     <Provider store={store}>
@@ -28,7 +28,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   drawerText: {
-    fontFamily: "Inter_300Light",
+    fontFamily: "@expo-google-fonts/inter",
     fontSize: 16,
   },
 });
