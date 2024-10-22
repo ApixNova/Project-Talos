@@ -123,7 +123,6 @@ export function NoteComponent({ props }: NoteProps) {
       setTitle(existingNote[0].title);
       setText(existingNote[0].content);
     } else {
-      console.log("CHANGE");
       setMoodType("");
       setTitle("");
       setText("");

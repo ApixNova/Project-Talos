@@ -20,7 +20,7 @@ export default function Tablayout() {
           height: 50,
         },
         tabBarLabelStyle: {
-          fontFamily: "Inter_400regular",
+          fontFamily: "Inter-Regular",
         },
         headerStyle: {
           backgroundColor: moodColor.black,
