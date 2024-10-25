@@ -61,7 +61,6 @@ export function onMonthChange({ date, moods, dispatch }: OnMonthChangeProps) {
   });
   Promise.all(promises).then(() => {
     if (reduxUpdated) {
-      console.log("DISPATCHING".toLowerCase());
       dispatch(editMood(moodsList));
     }
   });

@@ -66,7 +66,6 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
     });
     Promise.all(promises).then(() => {
       if (reduxUpdated) {
-        console.log("DISPATCHING".toLowerCase());
         dispatch(editNote(notesCopy));
       }
     });

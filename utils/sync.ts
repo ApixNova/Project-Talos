@@ -14,11 +14,9 @@ export async function syncDatabase(
   session?: Session | null
 ) {
   let syncedChanges = {} as ChangesData;
-  // console.log("Sync called");
   await synchronize({
     database,
     pullChanges: async ({ lastPulledAt, schemaVersion, migration }) => {
-      // console.log(lastPulledAt);
       let lastPulledAtValue = lastPulledAt as number | null;
       if (initialSync) {
         lastPulledAtValue = null;
@@ -26,7 +24,6 @@ export async function syncDatabase(
       const { data, error } = await supabase.rpc("pull", {
         last_pulled_at: lastPulledAtValue,
       });
-      // console.log("Data: " + JSON.stringify(data));
       if (error) {
         setAlert("Error: " + error.message);
       }
@@ -61,7 +58,6 @@ export async function syncDatabase(
                     .delete()
                     .eq("user_id", session?.user.id)
                     .eq("id", note.id);
-                  // console.log("deleted supabase note");
                 } catch (e) {
                   setAlert("Error: " + e);
                 }
@@ -71,7 +67,6 @@ export async function syncDatabase(
                   await database.write(async () => {
                     await noteInDB[0].destroyPermanently();
                   });
-                  // console.log("deleted local note");
                   notesChangesUpdated.push(note);
                 } catch (e) {
                   setAlert("Error: " + e);
@@ -86,8 +81,6 @@ export async function syncDatabase(
           const feelingInDB = await database
             .get<Feeling>("feelings")
             .query(Q.where("day", feeling.day));
-          // console.log("feeling: " + JSON.stringify(feeling));
-          // console.log(feelingInDB[0]);
           if (feelingInDB.length > 0) {
             if (feeling.id != feelingInDB[0].id) {
               if (feelingInDB[0].updatedAt > feeling.updated_at) {
@@ -98,7 +91,6 @@ export async function syncDatabase(
                     .delete()
                     .eq("user_id", session?.user.id)
                     .eq("id", feeling.id);
-                  // console.log("deleted supabase feeling");
                 } catch (e) {
                   setAlert("Error: " + e);
                 }
@@ -108,7 +100,6 @@ export async function syncDatabase(
                   await database.write(async () => {
                     await feelingInDB[0].destroyPermanently();
                   });
-                  // console.log("deleted local feeling");
                   feelingsChangesUpdated.push(feeling);
                 } catch (e) {
                   setAlert("Error: " + e);
@@ -120,13 +111,10 @@ export async function syncDatabase(
         notesChanges = notesChangesUpdated;
         feelingsChanges = feelingsChangesUpdated;
       }
-      // console.log("Original Changes: " + JSON.stringify(changesOriginal));
-      // console.log("Changes: " + JSON.stringify(syncedChanges));
       const changes = syncedChanges as SyncDatabaseChangeSet;
       return { changes, timestamp };
     },
     pushChanges: async ({ changes, lastPulledAt }) => {
-      // console.log("changes sent to pushChanges: " + JSON.stringify(changes));
       const { error } = await supabase.rpc("push", { changes });
 
       if (error) {

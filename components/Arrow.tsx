@@ -5,7 +5,6 @@ import { useAppSelector } from "../state/hooks";
 import { dynamicTheme } from "../utils/palette";
 
 export default function Arrow({ direction }: { direction: Direction }) {
-  //   console.log(direction);
   const settings = useAppSelector((state) => state.settings as Setting[]);
   return direction == "right" ? (
     <AntDesign
