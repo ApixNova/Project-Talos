@@ -151,6 +151,18 @@ export default function MainLayout() {
             drawerItemStyle: { display: "none" },
           }}
         />
+        <Drawer.Screen
+          options={{
+            headerTitleStyle: {
+              fontFamily: "Inter-Black",
+              fontSize: 26,
+              color: dynamicTheme(settings, "background"),
+            },
+            headerTitle: "Welcome",
+            drawerItemStyle: { display: "none" },
+          }}
+          name="index"
+        />
       </Drawer>
     </GestureHandlerRootView>
   );

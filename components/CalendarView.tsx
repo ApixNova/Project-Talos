@@ -40,7 +40,7 @@ export default function CalendarView({ props }: calendarProps) {
           container: {
             backgroundColor: "inherit",
             borderColor: dynamicTheme(settings, "background"),
-            borderWidth: 4,
+            borderWidth: 3,
             borderRadius: 0,
             width: "100%",
             height: "100%",
@@ -60,7 +60,7 @@ export default function CalendarView({ props }: calendarProps) {
         customStyles: {
           container: {
             borderColor: day == selectedDay ? "#adcadb" : "transparent",
-            borderWidth: 4,
+            borderWidth: 3,
             borderRadius: 0,
             width: "100%",
             height: "100%",
