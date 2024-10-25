@@ -1,4 +1,4 @@
-import { Stack, useNavigation } from "expo-router";
+import { Stack } from "expo-router";
 import { dynamicTheme } from "../../../utils/palette";
 import {
   Platform,
@@ -8,12 +8,10 @@ import {
   useWindowDimensions,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { NavigationType } from "../../../types";
 import { useAppSelector } from "../../../state/hooks";
 import Setting from "../../../model/Setting";
 
 export default function DiaryLayout() {
-  const navigation = useNavigation<NavigationType>();
   const { width } = useWindowDimensions();
   const settings = useAppSelector((state) => state.settings as Setting[]);
 
@@ -27,7 +25,7 @@ export default function DiaryLayout() {
       />
       <Stack.Screen
         name="[id]"
-        options={{
+        options={({ navigation }) => ({
           title: "Edit Note",
           // headerShown: false,
           headerShadowVisible: false,
@@ -39,7 +37,7 @@ export default function DiaryLayout() {
             <Pressable
               style={styles.headerButton}
               onPress={() => {
-                navigation.navigate("index");
+                navigation.popToTop();
               }}
             >
               <Ionicons name="chevron-back-outline" size={27} color="white" />
@@ -52,9 +50,9 @@ export default function DiaryLayout() {
           headerTintColor: "#fff",
           headerTitleAlign: "center",
           headerTitleStyle: {
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Inter-Regular",
           },
-        }}
+        })}
       />
     </Stack>
   );
