@@ -8,16 +8,26 @@ import { StyleSheet } from "react-native";
 import Setting from "../model/Setting";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editSetting } from "../state/settingSlice";
-import { serializeSetting, setupSettings } from "../utils/functions";
+import {
+  serializeSetting,
+  setupSettings,
+  toDateData,
+} from "../utils/functions";
 import { dynamicTheme } from "../utils/palette";
 import reloadNotes from "../utils/reload-notes";
 import { database } from "../utils/watermelon";
 import AlertComponent from "./Alert";
 import { supabase } from "../utils/supabase";
+import { Session } from "@supabase/supabase-js";
+import { syncDatabase } from "../utils/sync";
+import { editMood } from "../state/moodSlice";
+import { onMonthChange } from "../utils/month-functions";
 
 export default function MyDrawer(props: DrawerContentComponentProps) {
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const moods = useAppSelector((state) => state.moods.value);
+  const [session, setSession] = useState<Session | null>(null);
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
   useEffect(() => {
@@ -38,6 +48,7 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
     getSettings();
     // we also check if the session is valid
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
       if (_event == "INITIAL_SESSION" && session) {
         async function checkSession() {
           const { data, error } = await supabase.auth.refreshSession();
@@ -49,6 +60,15 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
           }
         }
         checkSession();
+        if (session.user) {
+          async function handleSync() {
+            await syncDatabase(setAlert, false, session);
+            dispatch(editMood({}));
+            onMonthChange({ date: toDateData(), moods, dispatch });
+            reloadNotes({ dispatch });
+          }
+          handleSync();
+        }
       }
     });
     return () => {

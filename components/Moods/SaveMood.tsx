@@ -6,11 +6,7 @@ import { SaveMoodProps } from "../../types";
 import { dynamicTheme } from "../../utils/palette";
 import { updateMood } from "../../utils/updateMood";
 import MoodPicker from "./MoodPicker";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
+import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 import { useEffect } from "react";
 
 export default function SaveMood({ props }: SaveMoodProps) {
@@ -27,9 +23,6 @@ export default function SaveMood({ props }: SaveMoodProps) {
     }
   }, [moodPicker]);
 
-  const backdropStyle = useAnimatedStyle(() => ({
-    // opacity: 1 -
-  }));
   function onPress() {
     setMoodPicker((prev) => !prev);
   }

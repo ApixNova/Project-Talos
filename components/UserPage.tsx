@@ -40,11 +40,11 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
     onMonthChange({ date: toDateData(), moods, dispatch });
     reloadNotes({ dispatch });
     setLoading(false);
+    setAlert("Sync done");
   }
 
   async function handleSignOutPress() {
     setLoading(true);
-    // console.log("handleSignOutPress");
     const notes = await database.get("notes").query().fetchCount();
     const moods = await database.get("feelings").query().fetchCount();
     //if there's data
@@ -54,6 +54,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
       //ask user before loging off
       await syncDatabase(setAlert);
       alertOnSignout(signOut);
+      setLoading(false);
     }
   }
   async function signOut() {
@@ -89,6 +90,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
             text="Log out"
             onPress={handleSignOutPress}
             color={dynamicTheme(settings, "rose")}
+            disabled={loading}
           />
         </>
       )}
