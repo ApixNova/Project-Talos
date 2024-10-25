@@ -215,7 +215,7 @@ export default function Screen() {
           <Text
             style={[styles.text, { color: dynamicTheme(settings, "text") }]}
           >
-            First Day Of The Week
+            First day of the week
           </Text>
           <Picker
             title={getFirstDay()}

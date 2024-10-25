@@ -19,7 +19,7 @@ export default function Auth({
   const settings = useAppSelector((state) => state.settings as Setting[]);
 
   async function signInWithEmail() {
-    // setLoading(true);
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
@@ -47,7 +47,7 @@ export default function Auth({
       email: email,
       password: password,
       options: {
-        emailRedirectTo: "http://localhost:8081/MailConfirmation",
+        emailRedirectTo: "https://talostheapp.com/MailConfirmation",
       },
     });
 

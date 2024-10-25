@@ -70,10 +70,6 @@ export type NewNoteCalendarProp = {
   };
 };
 
-export type NavigationType = {
-  navigate: (path: "index") => void;
-};
-
 export type PickerProps = {
   title: string;
   options: string[];

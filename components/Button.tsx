@@ -15,16 +15,19 @@ export default function Button({
   onPress,
   color,
   style,
+  disabled,
 }: {
   text: string;
   onPress: ((event: GestureResponderEvent) => void) | null | undefined;
   color?: string;
   style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
 }) {
   const settings = useAppSelector((state) => state.settings as Setting[]);
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={[
         styles.button,
         { backgroundColor: color || dynamicTheme(settings, "primary") },

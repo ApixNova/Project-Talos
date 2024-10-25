@@ -18,6 +18,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
   const [session, setSession] = useState<Session | null>(null);
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const moods = useAppSelector((state) => state.moods.value);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -33,14 +34,17 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
   }, []);
 
   async function handleSync() {
+    setLoading(true);
     await syncDatabase(setAlert, false, session);
     dispatch(editMood({}));
     onMonthChange({ date: toDateData(), moods, dispatch });
     reloadNotes({ dispatch });
+    setLoading(false);
+    setAlert("Sync done");
   }
 
   async function handleSignOutPress() {
-    // console.log("handleSignOutPress");
+    setLoading(true);
     const notes = await database.get("notes").query().fetchCount();
     const moods = await database.get("feelings").query().fetchCount();
     //if there's data
@@ -50,10 +54,10 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
       //ask user before loging off
       await syncDatabase(setAlert);
       alertOnSignout(signOut);
+      setLoading(false);
     }
   }
   async function signOut() {
-    // console.log("signing out");
     const { error } = await supabase.auth.signOut({ scope: "local" });
     if (error) {
       setAlert("Error: " + error.message);
@@ -80,11 +84,13 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
             text="Sync"
             onPress={handleSync}
             color={dynamicTheme(settings, "primary")}
+            disabled={loading}
           />
           <Button
             text="Log out"
             onPress={handleSignOutPress}
             color={dynamicTheme(settings, "rose")}
+            disabled={loading}
           />
         </>
       )}
@@ -105,6 +111,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   title: {
+    marginTop: 10,
     fontFamily: "Inter-Regular",
     fontSize: 20,
   },

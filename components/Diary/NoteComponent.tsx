@@ -287,18 +287,22 @@ export function NoteComponent({ props }: NoteProps) {
           noteInDB[0].markAsDeleted();
           setTitle("");
           setText("");
+          setAlert("Note Deleted");
         });
       } catch (e) {
-        setAlertGiveChoice(false);
-        setMessage("Error");
-        setAlertExit(() => () => {});
-        setShowAlert(true);
+        setAlert("Error" + e);
       }
     }
     //reload redux
     reloadNotes({ dispatch });
     //reroute to /Diary/
     router.navigate("/Diary/");
+  }
+  function setAlert(message: string) {
+    setAlertGiveChoice(false);
+    setMessage(message);
+    setAlertExit(() => () => {});
+    setShowAlert(true);
   }
   return (
     <View

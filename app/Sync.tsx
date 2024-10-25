@@ -73,7 +73,6 @@ export default function Screen() {
   }
 
   async function clearLocalData() {
-    // syncDatabase
     await syncDatabase(setAlert);
     await database
       .write(async () => {
@@ -120,7 +119,7 @@ export default function Screen() {
       type: "signup",
       email: mail,
       options: {
-        emailRedirectTo: "http://localhost:8081/MailConfirmation",
+        emailRedirectTo: "https://talostheapp.com/MailConfirmation",
       },
     });
     if (error) {
@@ -202,6 +201,7 @@ export default function Screen() {
             "there is data on Supabase! Syncing and resolving conflicts..."
           );
           await syncDatabase(setAlert, false, session[0]);
+          reloadRedux();
           setLoading(false);
         }
       } catch (error) {
