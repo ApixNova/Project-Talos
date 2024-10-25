@@ -38,7 +38,7 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
     getSettings();
     // we also check if the session is valid
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (_event == "INITIAL_SESSION") {
+      if (_event == "INITIAL_SESSION" && session) {
         async function checkSession() {
           const { data, error } = await supabase.auth.refreshSession();
           // If there is an error, the session is invalid
