@@ -39,7 +39,7 @@ export default function getDaysOfMonth(date: DateData) {
 
 // handles loading moods on month change
 export function onMonthChange({ date, moods, dispatch }: OnMonthChangeProps) {
-  let moodsList = structuredClone(moods);
+  let moodsList = JSON.parse(JSON.stringify(moods));
   let reduxUpdated = false;
   const allDays = getDaysOfMonth(date);
 
