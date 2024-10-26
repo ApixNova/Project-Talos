@@ -29,7 +29,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
   async function handlePress(moodType: number) {
     await updateMood(moodType, selectedDay);
     //update state
-    let moodsList = { ...moods };
+    let moodsList = JSON.parse(JSON.stringify(moods));
     moodsList[selectedDay] = moodType;
     setMoods(moodsList);
   }

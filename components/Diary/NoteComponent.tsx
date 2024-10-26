@@ -249,7 +249,7 @@ export function NoteComponent({ props }: NoteProps) {
     if (moodType !== "") {
       await updateMood(parseInt(moodType), updatedDay);
       //update state
-      let moodsList = { ...moods };
+      let moodsList = JSON.parse(JSON.stringify(moods));
       moodsList[updatedDay] = parseInt(moodType);
       dispatch(editMood(moodsList));
     }
