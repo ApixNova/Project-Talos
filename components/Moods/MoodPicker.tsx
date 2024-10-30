@@ -1,18 +1,31 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { MoodPickerProps } from "../../types";
 import { moodColor } from "../../utils/palette";
 import { MoodOption } from "./MoodOption";
+import { useState } from "react";
 
 export default function MoodPicker({ handlePress }: MoodPickerProps) {
+  const { width } = useWindowDimensions();
+  const [moodUpdating, setMoodUpdating] = useState(false);
   return (
-    <View style={styles.container}>
-      <View style={styles.selection}>
+    <View>
+      <View
+        style={[
+          styles.selection,
+          {
+            width: width / 1.4,
+            maxWidth: 280,
+          },
+        ]}
+      >
         <MoodOption
           props={{
             text: "abyss",
             handlePress,
             type: 0,
             style: styles.black,
+            disable: moodUpdating,
+            setMoodUpdating: setMoodUpdating,
           }}
         />
         <MoodOption
@@ -21,6 +34,8 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
             handlePress,
             type: 1,
             style: styles.red,
+            disable: moodUpdating,
+            setMoodUpdating: setMoodUpdating,
           }}
         />
         <MoodOption
@@ -29,6 +44,8 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
             handlePress,
             type: 2,
             style: styles.blue,
+            disable: moodUpdating,
+            setMoodUpdating: setMoodUpdating,
           }}
         />
         <MoodOption
@@ -37,6 +54,8 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
             handlePress,
             type: 3,
             style: styles.green,
+            disable: moodUpdating,
+            setMoodUpdating: setMoodUpdating,
           }}
         />
       </View>
@@ -45,10 +64,10 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
   selection: {
     flexDirection: "row",
     gap: 4,
+    marginHorizontal: "auto",
   },
   black: {
     backgroundColor: moodColor.black,
