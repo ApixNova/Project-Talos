@@ -29,13 +29,13 @@ export type MoodOptionProps = {
     style: {
       backgroundColor: string;
     };
+    disable: boolean;
+    setMoodUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   };
 };
 
 export type SaveMoodProps = {
   props: {
-    moodPicker: boolean;
-    setMoodPicker: React.Dispatch<React.SetStateAction<boolean>>;
     // moods: Moods;
     setMoods: (list: Moods) => void;
     selectedDay: string;
