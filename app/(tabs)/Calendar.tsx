@@ -31,8 +31,6 @@ export default function Tab() {
       <CalendarView props={{ selectedDay, setSelectedDay }} />
       <SaveMood
         props={{
-          moodPicker,
-          setMoodPicker,
           setMoods,
           selectedDay,
         }}

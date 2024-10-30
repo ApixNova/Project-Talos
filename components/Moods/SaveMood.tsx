@@ -6,27 +6,43 @@ import { SaveMoodProps } from "../../types";
 import { dynamicTheme } from "../../utils/palette";
 import { updateMood } from "../../utils/updateMood";
 import MoodPicker from "./MoodPicker";
-import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
-import { useEffect } from "react";
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 
 export default function SaveMood({ props }: SaveMoodProps) {
-  const { moodPicker, setMoodPicker, setMoods, selectedDay } = props;
+  const { setMoods, selectedDay } = props;
   const moods = useAppSelector((state) => state.moods.value);
   const settings = useAppSelector((state) => state.settings as Setting[]);
-  const height = useSharedValue(0);
 
-  useEffect(() => {
-    if (moodPicker) {
-      height.value = withSpring(40);
-    } else {
-      height.value = withSpring(0);
-    }
-  }, [moodPicker]);
-
-  function onPress() {
-    setMoodPicker((prev) => !prev);
-  }
+  const opacity = useSharedValue(0);
+  const open = useSharedValue(false);
+  const toggle = () => {
+    open.value = !open.value;
+    opacity.value = 1;
+  };
+  const derivedHeight = useDerivedValue(() => {
+    return withTiming(20 * Number(open.value), { duration: 500 });
+  });
+  const derivedOpacity = useDerivedValue(() => {
+    return withSpring(opacity.value * Number(open.value));
+  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    bottom: derivedHeight.value,
+    opacity: derivedOpacity.value,
+    display: open.value ? "flex" : "none",
+  }));
+  const animatedToggle = useAnimatedStyle(() => ({
+    opacity: 1 - derivedOpacity.value,
+  }));
   async function handlePress(moodType: number) {
+    if (moods[selectedDay] == moodType) {
+      return;
+    }
     await updateMood(moodType, selectedDay);
     //update state
     let moodsList = JSON.parse(JSON.stringify(moods));
@@ -35,72 +51,47 @@ export default function SaveMood({ props }: SaveMoodProps) {
   }
   return (
     <>
-      <View
+      <Animated.View style={animatedToggle}>
+        <Pressable
+          onPress={toggle}
+          style={{
+            width: 70,
+            height: 70,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <FontAwesome
+            name="plus"
+            size={60}
+            color={dynamicTheme(settings, "text")}
+          />
+        </Pressable>
+      </Animated.View>
+      <Animated.View
         style={[
           styles.container,
+          animatedStyle,
           {
             borderColor: dynamicTheme(settings, "text"),
             backgroundColor: dynamicTheme(settings, "secondary"),
+            position: "absolute",
+            overflow: "hidden",
           },
         ]}
       >
-        <Pressable onPress={onPress}>
-          <Text
-            style={[
-              styles.buttonText,
-              {
-                color: dynamicTheme(settings, "background"),
-              },
-            ]}
+        <View>
+          <Pressable
+            onPress={() => {
+              toggle();
+            }}
           >
-            Save Mood
-          </Text>
-        </Pressable>
-      </View>
-      {moodPicker && (
-        <>
-          <Animated.View
-            style={[
-              styles.container,
-              {
-                borderColor: dynamicTheme(settings, "text"),
-                backgroundColor: dynamicTheme(settings, "secondary"),
-                position: "absolute",
-                bottom: height,
-              },
-            ]}
-          >
-            <Pressable
-              onPress={() => {
-                setMoodPicker(false);
-              }}
-            >
-              <FontAwesome
-                style={[
-                  styles.close,
-                  // { color: dynamicTheme(settings, "background") },
-                ]}
-                name="close"
-                size={24}
-                color="#0c0414"
-              />
-            </Pressable>
-            <Text
-              style={[
-                styles.title,
-                {
-                  // color: dynamicTheme(settings, "background")
-                  color: "#0c0414",
-                },
-              ]}
-            >
-              How was your day ?
-            </Text>
-
-            <MoodPicker handlePress={handlePress} />
-          </Animated.View>
-        </>
-      )}
+            <FontAwesome name="close" size={24} color="#0c0414" />
+          </Pressable>
+          <Text style={styles.title}>How was your day ?</Text>
+          <MoodPicker handlePress={handlePress} />
+        </View>
+      </Animated.View>
     </>
   );
 }
@@ -108,25 +99,14 @@ export default function SaveMood({ props }: SaveMoodProps) {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
-    // borderColor: palette.text,
     borderWidth: 2,
-    // backgroundColor: palette.secondary,
     padding: 15,
-  },
-  buttonText: {
-    // color: palette.background,
-    fontFamily: "Inter-Medium",
-    fontSize: 16,
   },
   title: {
     textAlign: "center",
-    // color: palette.background,
     fontFamily: "Inter-Medium",
     padding: 5,
     fontSize: 20,
-  },
-  close: {
-    // textAlign: "center",
-    // color: palette.background,
+    color: "#0c0414",
   },
 });
