@@ -49,7 +49,6 @@ export default function Screen() {
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession([session, _event]);
       if (_event == "SIGNED_OUT") {
-        console.log("signed out");
         setLoginPressed(false);
       }
     });
@@ -84,7 +83,6 @@ export default function Screen() {
         dispatch(editMood({}));
         dispatch(editNote([]));
       });
-    console.log("local data synced then cleared");
   }
 
   function alertOnSignout(signOut: () => Promise<void>) {
@@ -143,7 +141,6 @@ export default function Screen() {
   }, [session]);
 
   async function handleDataOnSignIn(nextSession: Session) {
-    console.log("handle data on sign in");
     // query notes and moods
     const notes = await database.get("notes").query().fetchCount();
 
@@ -152,7 +149,6 @@ export default function Screen() {
     // if there is no local data
     if (notes == 0 && moods == 0) {
       // load user data with a sync call
-      console.log("no local data, sync");
       await syncDatabase(setAlert, true);
       reloadRedux();
       setLoading(false);
@@ -185,21 +181,12 @@ export default function Screen() {
           setAlert("Error: " + moodsError.message);
         }
         // if the user doesn't have data on Supabase
-        ///
-        console.log("checking if there is data on Supabase: ");
-        console.log("notesData: " + notesCount);
-        console.log("moodsData: " + moodsCount);
-        ///
         if (!notesCount && !moodsCount) {
           // call sync and sync local changes to Supabase
-          console.log("No data on Supabase, syncing");
           await syncDatabase(setAlert, true);
           setLoading(false);
           // if there is data on Supabase
         } else {
-          console.log(
-            "there is data on Supabase! Syncing and resolving conflicts..."
-          );
           await syncDatabase(setAlert, false, session[0]);
           reloadRedux();
           setLoading(false);

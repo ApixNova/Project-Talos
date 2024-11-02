@@ -55,7 +55,6 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
           // If there is an error, the session is invalid
           if (error) {
             setAlert("Session is invalid or expired, you've been logged out");
-            console.log(error.message);
             return;
           }
         }
