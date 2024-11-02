@@ -15,12 +15,12 @@ import Animated, {
 } from "react-native-reanimated";
 
 export default function SaveMood({ props }: SaveMoodProps) {
-  const { setMoods, selectedDay } = props;
+  const { setMoods, selectedDay, open } = props;
   const moods = useAppSelector((state) => state.moods.value);
   const settings = useAppSelector((state) => state.settings as Setting[]);
 
   const opacity = useSharedValue(0);
-  const open = useSharedValue(false);
+
   const toggle = () => {
     open.value = !open.value;
     opacity.value = 1;
@@ -51,7 +51,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
   }
   return (
     <>
-      <Animated.View style={animatedToggle}>
+      <Animated.View style={[styles.plus, animatedToggle]}>
         <Pressable
           onPress={toggle}
           style={{
@@ -101,6 +101,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     padding: 15,
+  },
+  plus: {
+    marginVertical: "auto",
   },
   title: {
     textAlign: "center",

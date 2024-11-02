@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { CalendarList, DateData } from "react-native-calendars";
+import { Calendar, DateData } from "react-native-calendars";
 import { Direction, MarkedDates } from "react-native-calendars/src/types";
 import Note from "../../model/Note";
 import Setting from "../../model/Setting";
@@ -66,6 +66,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
     });
     Promise.all(promises).then(() => {
       if (reduxUpdated) {
+        console.log("DISPATCHING".toLowerCase());
         dispatch(editNote(notesCopy));
       }
     });
@@ -109,7 +110,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
           />
         </Pressable>
         <Text style={[styles.text, { color: dynamicTheme(settings, "rose") }]}>
-          Create or edit Diary entries
+          Create or edit diary entries
         </Text>
         <LinearGradient
           colors={[
@@ -124,10 +125,10 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
           ]}
           style={styles.calendarContainer}
         >
-          <CalendarList
+          <Calendar
             markedDates={markedRef}
             onDayPress={(day: DateData) => setSelectedDay(day.dateString)}
-            onMonthChange={(date) => handleMonthChange(date)}
+            onMonthChange={(date: DateData) => handleMonthChange(date)}
             style={[
               styles.calendar,
               {
@@ -159,6 +160,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
             renderArrow={(direction: Direction) => (
               <Arrow direction={direction} />
             )}
+            enableSwipeMonths={true}
           />
         </LinearGradient>
         <Button
@@ -186,7 +188,6 @@ const styles = StyleSheet.create({
     // backgroundColor: palette.background,
     // padding: 7,
     borderWidth: 2,
-    // borderColor: palette.rose,
     // position: "absolute",
     // top: "20%",
     width: "85%",
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   calendarContainer: {
-    height: "70%",
+    // height: "70%",
     width: 290,
     marginHorizontal: "auto",
   },

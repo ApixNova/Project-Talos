@@ -1,16 +1,17 @@
 import { useMemo } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
-import { CalendarList, DateData } from "react-native-calendars";
-import { MarkedDates } from "react-native-calendars/src/types";
+import { Calendar, DateData } from "react-native-calendars";
+import { Direction, MarkedDates } from "react-native-calendars/src/types";
 import Setting from "../model/Setting";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { calendarProps } from "../types";
 import { getCurrentDate, returnColor } from "../utils/functions";
 import { onMonthChange } from "../utils/month-functions";
 import { dynamicTheme } from "../utils/palette";
+import Arrow from "./Arrow";
 
 export default function CalendarView({ props }: calendarProps) {
-  const { selectedDay, setSelectedDay } = props;
+  const { selectedDay, setSelectedDay, open } = props;
   const moods = useAppSelector((state) => state.moods.value);
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
@@ -29,22 +30,17 @@ export default function CalendarView({ props }: calendarProps) {
 
   function handleDayPress(day: DateData) {
     setSelectedDay(day.dateString);
+    open.value = true;
   }
   const markedDates = useMemo(() => {
     const markedRef: MarkedDates = {
       [selectedDay]: {
         selected: true,
         disableTouchEvent: true,
-        // selectedColor: "black",
         customStyles: {
           container: {
             backgroundColor: "inherit",
             borderColor: dynamicTheme(settings, "background"),
-            borderWidth: 3,
-            borderRadius: 0,
-            width: "100%",
-            height: "100%",
-            // padding: 0,
           },
           text: {
             color: "pink",
@@ -60,17 +56,12 @@ export default function CalendarView({ props }: calendarProps) {
         customStyles: {
           container: {
             borderColor: day == selectedDay ? "#adcadb" : "transparent",
-            borderWidth: 3,
             borderRadius: 0,
             width: "100%",
-            height: "100%",
+            // height: "100%",
           },
           text: {
-            color:
-              day == getCurrentDate()
-                ? "#f57a7a"
-                : // : dynamicTheme(settings, "text"),
-                  "white",
+            color: day == getCurrentDate() ? "#f57a7a" : "white",
           },
         },
       };
@@ -88,20 +79,23 @@ export default function CalendarView({ props }: calendarProps) {
         },
       ]}
     >
-      <CalendarList
-        onDayPress={(day) => handleDayPress(day)}
-        onMonthChange={(date) => onMonthChange({ date, moods, dispatch })}
+      <Calendar
+        onDayPress={(day: DateData) => handleDayPress(day)}
+        onMonthChange={(date: DateData) =>
+          onMonthChange({ date, moods, dispatch })
+        }
         markingType={"custom"}
         markedDates={markedDates}
         theme={{
           backgroundColor: "black",
+          todayTextColor: "black",
           calendarBackground: "transparent",
           textSectionTitleColor: "black",
           textMonthFontFamily: "Inter-Regular",
           monthTextColor: dynamicTheme(settings, "text"),
           textMonthFontSize: 20,
           textDayHeaderFontFamily: "Inter-Regular",
-          textDayHeaderFontSize: 15,
+          textDayHeaderFontSize: 14,
           textDayFontFamily: "Inter-Light",
           textDayFontSize: 20,
           textDayStyle: {
@@ -112,30 +106,19 @@ export default function CalendarView({ props }: calendarProps) {
           "stylesheet.day.basic": {
             base: {
               width: "100%",
-              height: "100%",
-              // justifyContent: "center",
+              justifyContent: "center",
               alignItems: "center",
-              borderWidth: 4,
-              borderColor: "transparent",
-            },
-          },
-          "stylesheet.calendar.main": {
-            container: {
-              // paddingLeft: 5,
-              // paddingRight: 5,
             },
           },
         }}
-        // horizontal={true}
-        pagingEnabled={true}
         firstDay={returnDayNum()}
         style={[styles.calendar, { width: sizeWithLimits() }]}
         calendarWidth={sizeWithLimits()}
         // hideArrows={false}
         hideExtraDays={false}
-        // showSixWeeks={true}
         disableMonthChange={false}
-        // allowSelectionOutOfRange={true}
+        enableSwipeMonths={true}
+        renderArrow={(direction: Direction) => <Arrow direction={direction} />}
       />
     </View>
   );
@@ -143,11 +126,11 @@ export default function CalendarView({ props }: calendarProps) {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 2,
-    // borderRadius: 20,
+    // borderWidth: 2,
+    borderRadius: 7,
     // padding: 10,
     // justifyContent: "center",
-    height: 370,
+    marginTop: 100,
   },
   calendar: {
     // borderRadius: 20,

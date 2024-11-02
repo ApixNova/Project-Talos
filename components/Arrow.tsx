@@ -1,22 +1,15 @@
-import { AntDesign } from "@expo/vector-icons";
 import { Direction } from "react-native-calendars/src/types";
-import Setting from "../model/Setting";
-import { useAppSelector } from "../state/hooks";
-import { dynamicTheme } from "../utils/palette";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Arrow({ direction }: { direction: Direction }) {
-  const settings = useAppSelector((state) => state.settings as Setting[]);
   return direction == "right" ? (
-    <AntDesign
-      name="arrowdown"
-      size={24}
-      color={dynamicTheme(settings, "text")}
+    <Ionicons
+      name="chevron-back-outline"
+      size={27}
+      color="white"
+      style={{ transform: [{ rotateZ: "180deg" }] }}
     />
   ) : (
-    <AntDesign
-      name="arrowup"
-      size={24}
-      color={dynamicTheme(settings, "text")}
-    />
+    <Ionicons name="chevron-back-outline" size={27} color="white" />
   );
 }
