@@ -90,7 +90,6 @@ export function NoteComponent({ props }: NoteProps) {
           noteCopy = [...noteInDB];
           setUpdatedDay(noteCopy[0].day);
         } else if (existingNote.length > 0) {
-          console.log("we gotta reset things");
           setExistingNote([]);
         }
       }
@@ -162,10 +161,7 @@ export function NoteComponent({ props }: NoteProps) {
     }
   }
   async function saveNote() {
-    if (text == "") {
-      //if text field is empty alert
-      console.log("Cannot save, text field is empty");
-    } else {
+    if (text != "") {
       if (existingNote.length > 0) {
         //if editing
         //edit db
@@ -189,10 +185,9 @@ export function NoteComponent({ props }: NoteProps) {
               });
             })
             .catch((error) => {
-              console.log(error);
+              setAlert(error);
             })
             .then(() => {
-              console.log("Note updated");
               setSave(false);
             });
         }
@@ -212,9 +207,7 @@ export function NoteComponent({ props }: NoteProps) {
           .get<Note>("notes")
           .query(Q.where("day", updatedDay));
         if (existingNote.length > 0) {
-          console.log(
-            "Cannot create note, there is aleady a note for this day"
-          );
+          setAlert("Cannot create note, there is aleady a note for this day");
         } else {
           //else create note
           await database
@@ -226,10 +219,9 @@ export function NoteComponent({ props }: NoteProps) {
               });
             })
             .catch((error) => {
-              console.log(error);
+              setAlert(error);
             })
             .then(() => {
-              console.log("Note created");
               setSave(false);
             });
           // update redux
