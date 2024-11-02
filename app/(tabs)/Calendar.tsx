@@ -9,13 +9,13 @@ import { editMood } from "../../state/moodSlice";
 import { Moods } from "../../types";
 import { getCurrentDate } from "../../utils/functions";
 import { dynamicTheme } from "../../utils/palette";
+import { useSharedValue } from "react-native-reanimated";
 
 export default function Tab() {
   const [selectedDay, setSelectedDay] = useState(getCurrentDate());
-  const [moodPicker, setMoodPicker] = useState(false);
-  const moods = useAppSelector((state) => state.moods.value);
   const settings = useAppSelector((state) => state.settings as Setting[]);
   const dispatch = useAppDispatch();
+  const open = useSharedValue(false);
 
   function setMoods(list: Moods) {
     dispatch(editMood(list));
@@ -28,13 +28,12 @@ export default function Tab() {
         { backgroundColor: dynamicTheme(settings, "background") },
       ]}
     >
-      <CalendarView props={{ selectedDay, setSelectedDay }} />
+      <CalendarView props={{ selectedDay, setSelectedDay, open }} />
       <SaveMood
         props={{
-          moodPicker,
-          setMoodPicker,
           setMoods,
           selectedDay,
+          open,
         }}
       />
       <StatusBar style="auto" />
@@ -44,9 +43,8 @@ export default function Tab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: palette.background,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "flex-start",
   },
   text: {
     color: "white",

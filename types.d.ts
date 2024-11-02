@@ -5,11 +5,13 @@
 // }
 
 import { DateData } from "react-native-calendars";
+import { SharedValue } from "react-native-reanimated";
 
 export type calendarProps = {
   props: {
     selectedDay: string;
     setSelectedDay: React.Dispatch<React.SetStateAction<string>>;
+    open: SharedValue<boolean>;
   };
 };
 
@@ -29,16 +31,17 @@ export type MoodOptionProps = {
     style: {
       backgroundColor: string;
     };
+    disable: boolean;
+    setMoodUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   };
 };
 
 export type SaveMoodProps = {
   props: {
-    moodPicker: boolean;
-    setMoodPicker: React.Dispatch<React.SetStateAction<boolean>>;
     // moods: Moods;
     setMoods: (list: Moods) => void;
     selectedDay: string;
+    open: SharedValue<boolean>;
   };
 };
 

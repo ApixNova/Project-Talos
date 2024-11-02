@@ -128,6 +128,7 @@ export default function Screen() {
   }
 
   async function resetSupabase() {
+    console.log("resetting supabase");
     try {
       const { error: errorFeelings } = await supabase
         .from("feelings")
@@ -146,6 +147,7 @@ export default function Screen() {
   }
 
   async function resetDatabase() {
+    console.log("resetting db");
     await database.write(async () => {
       await database.unsafeResetDatabase();
     });

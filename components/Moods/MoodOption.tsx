@@ -1,12 +1,4 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import Setting from "../../model/Setting";
-import { useAppSelector } from "../../state/hooks";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { MoodOptionProps } from "../../types";
 import Animated, {
   useDerivedValue,
@@ -16,87 +8,71 @@ import Animated, {
 } from "react-native-reanimated";
 
 export function MoodOption({ props }: MoodOptionProps) {
-  const { text, handlePress, style, type } = props;
-  const { width } = useWindowDimensions();
-  const settings = useAppSelector((state) => state.settings as Setting[]);
+  const { text, handlePress, style, type, disable, setMoodUpdating } = props;
   const size = useSharedValue(1);
   const opacity = useSharedValue(1);
 
   function triggerAnimation() {
-    opacity.value = withSequence(
-      withTiming(1, { duration: 0 }),
-      withTiming(0, { duration: 600 })
-    );
     size.value = withSequence(
       withTiming(1, { duration: 0 }),
       withTiming(1.5, { duration: 500 }),
       withTiming(1, { duration: 280 })
     );
-  }
-
-  const squareSize = (width * 0.5) / 4;
-
-  function squareSizeLimited() {
-    return squareSize < 70 ? squareSize : 70;
+    opacity.value = withSequence(
+      withTiming(0, { duration: 1 }),
+      withTiming(1, { duration: 0 }),
+      withTiming(0, { duration: 600 })
+    );
   }
 
   const sizeAnimated = useDerivedValue(() => {
-    return squareSizeLimited() * size.value;
+    return 70 * size.value;
   });
 
   const borderRadiusAnimated = useDerivedValue(() => {
     return sizeAnimated.value / 2;
   });
   const positionAnimated = useDerivedValue(() => {
-    return -(sizeAnimated.value - squareSizeLimited()) / 2;
+    return -(sizeAnimated.value - 70) / 2;
   });
   return (
     <View style={styles.mood}>
-      <View>
-        <Pressable
-          onPress={() => {
-            handlePress(type);
-            triggerAnimation();
-          }}
-          style={[
-            style,
-            styles.color,
-            {
-              width: squareSizeLimited(),
-              height: squareSizeLimited(),
-              borderRadius: squareSizeLimited() / 2,
-              borderColor: "#0c0414",
-              // zIndex: 0,
-            },
-          ]}
-        ></Pressable>
-        <Animated.View
-          style={[
-            styles.animation,
-            style,
-            {
-              width: sizeAnimated,
-              height: sizeAnimated,
-              borderRadius: borderRadiusAnimated,
-              // zIndex: -1,
-              left: positionAnimated,
-              top: positionAnimated,
-              opacity: opacity,
-            },
-          ]}
-        ></Animated.View>
-      </View>
-      <Text
+      <Pressable
+        disabled={disable}
+        onPress={() => {
+          setMoodUpdating(true);
+          triggerAnimation();
+          (async () => {
+            await handlePress(type);
+            setMoodUpdating(false);
+          })();
+        }}
         style={[
-          styles.moodTitle,
+          style,
+          styles.color,
           {
-            // color: dynamicTheme(settings, "background")
-            color: "#0c0414",
+            width: 70,
+            aspectRatio: 1,
+            borderRadius: 9999,
+            borderColor: "#0c0414",
           },
         ]}
-      >
-        {text}
-      </Text>
+      ></Pressable>
+      <Animated.View
+        style={[
+          style,
+          styles.animation,
+          {
+            width: sizeAnimated,
+            height: sizeAnimated,
+            borderRadius: borderRadiusAnimated,
+            left: positionAnimated,
+            top: positionAnimated,
+            opacity: opacity,
+          },
+        ]}
+      ></Animated.View>
+      <Text style={styles.moodTitle}>{text}</Text>
     </View>
   );
 }
@@ -105,9 +81,10 @@ const styles = StyleSheet.create({
   mood: {
     marginVertical: 1,
     marginHorizontal: "auto",
+    flex: 1,
   },
   color: {
-    borderWidth: 3,
+    borderWidth: 2,
     zIndex: 0,
   },
   moodTitle: {
@@ -115,15 +92,10 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     textAlign: "center",
     fontFamily: "Inter-Regular",
+    color: "#0c0414",
   },
   animation: {
     position: "absolute",
     zIndex: -1,
-  },
-  Top: {
-    zIndex: 0,
-  },
-  Bottom: {
-    zIndex: 1,
   },
 });
