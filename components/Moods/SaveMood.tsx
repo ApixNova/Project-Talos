@@ -9,7 +9,6 @@ import MoodPicker from "./MoodPicker";
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -19,17 +18,14 @@ export default function SaveMood({ props }: SaveMoodProps) {
   const moods = useAppSelector((state) => state.moods.value);
   const settings = useAppSelector((state) => state.settings as Setting[]);
 
-  const opacity = useSharedValue(0);
-
   const toggle = () => {
     open.value = !open.value;
-    opacity.value = 1;
   };
   const derivedHeight = useDerivedValue(() => {
     return withTiming(20 * Number(open.value), { duration: 500 });
   });
   const derivedOpacity = useDerivedValue(() => {
-    return withSpring(opacity.value * Number(open.value));
+    return withSpring(Number(open.value));
   });
   const animatedStyle = useAnimatedStyle(() => ({
     bottom: derivedHeight.value,
