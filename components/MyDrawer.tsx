@@ -31,8 +31,9 @@ export default function MyDrawer(props: DrawerContentComponentProps) {
   const dispatch = useAppDispatch();
   const settings = useAppSelector((state) => state.settings as Setting[]);
   useEffect(() => {
-    //on load query the last 10 notes and setting tables
+    //on load query the last 10 notes, some moods and settings table
     reloadNotes({ dispatch });
+    onMonthChange({ date: toDateData(), moods, dispatch });
 
     async function getSettings() {
       const settingsQuery = (await database

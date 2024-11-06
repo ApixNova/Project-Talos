@@ -475,6 +475,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     top: 35,
+    minWidth: 130,
   },
   newNoteSave: {
     fontFamily: "Inter-Medium",
@@ -492,5 +493,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingHorizontal: 5,
     fontFamily: "Inter-Regular",
+    textAlignVertical: "top",
   },
 });
