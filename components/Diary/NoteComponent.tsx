@@ -501,5 +501,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingHorizontal: 5,
     fontFamily: "Inter-Regular",
+    textAlignVertical: "top",
   },
 });
