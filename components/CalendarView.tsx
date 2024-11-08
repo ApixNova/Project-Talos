@@ -5,7 +5,7 @@ import { Direction, MarkedDates } from "react-native-calendars/src/types";
 import Setting from "../model/Setting";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { calendarProps } from "../types";
-import { getCurrentDate, returnColor } from "../utils/functions";
+import { getCurrentDate, returnColor, returnDayNum } from "../utils/functions";
 import { onMonthChange } from "../utils/month-functions";
 import { dynamicTheme } from "../utils/palette";
 import Arrow from "./Arrow";
@@ -19,13 +19,6 @@ export default function CalendarView({ props }: calendarProps) {
 
   function sizeWithLimits() {
     return width * 0.9 < 1060 ? width * 0.9 : 1060;
-  }
-
-  function returnDayNum() {
-    return settings.find((element) => element.type == "firstDay")?.value ==
-      "Sunday"
-      ? 0
-      : 1;
   }
 
   function handleDayPress(day: DateData) {
@@ -111,7 +104,7 @@ export default function CalendarView({ props }: calendarProps) {
             },
           },
         }}
-        firstDay={returnDayNum()}
+        firstDay={returnDayNum(settings)}
         style={[styles.calendar, { width: sizeWithLimits() }]}
         calendarWidth={sizeWithLimits()}
         // hideArrows={false}

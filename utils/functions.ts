@@ -148,3 +148,10 @@ export async function setupSettings() {
     });
   }
 }
+
+export function returnDayNum(settings: Setting[]) {
+  return settings.find((element) => element.type == "firstDay")?.value ==
+    "Sunday"
+    ? 0
+    : 1;
+}
