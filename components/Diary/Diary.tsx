@@ -18,7 +18,6 @@ import { NotePreview } from "./NotePreview";
 
 export function Diary() {
   const notes = useAppSelector((state) => state.notes as SerializedNote[]);
-  const [editing, setEditing] = useState(false);
   const [newNoteMenu, setNewNoteMenu] = useState(false);
   const dispatch = useAppDispatch();
   const rotateZ = useSharedValue("0deg");
@@ -74,7 +73,16 @@ export function Diary() {
         { backgroundColor: dynamicTheme(settings, "background") },
       ]}
     >
-      <Text style={styles.mainTitle}>{fullDate(getCurrentDate())}</Text>
+      <Text
+        style={[
+          styles.mainTitle,
+          {
+            color: dynamicTheme(settings, "text"),
+          },
+        ]}
+      >
+        {fullDate(getCurrentDate())}
+      </Text>
       <View
         style={[
           styles.noteContainer,
@@ -132,7 +140,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainTitle: {
-    color: "white",
     fontSize: 20,
     marginVertical: 15,
   },

@@ -29,7 +29,7 @@ const paletteLight = {
   accent: "#dc254a",
   rose: "#de5974",
   black: "black",
-  gray: "pink",
+  gray: "#757272",
   // calendarBackground: "pink",
 };
 
