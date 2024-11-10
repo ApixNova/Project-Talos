@@ -25,18 +25,17 @@ export default function CalendarView({ props }: calendarProps) {
     setSelectedDay(day.dateString);
     open.value = true;
   }
+
   const markedDates = useMemo(() => {
     const markedRef: MarkedDates = {
       [selectedDay]: {
         selected: true,
-        disableTouchEvent: true,
+        selectedColor: moods.hasOwnProperty(selectedDay)
+          ? "inherit"
+          : "transparent",
         customStyles: {
-          container: {
-            backgroundColor: "inherit",
-            borderColor: dynamicTheme(settings, "background"),
-          },
           text: {
-            color: "pink",
+            color: "black",
             fontFamily: "Inter-Regular",
           },
         },
@@ -48,10 +47,8 @@ export default function CalendarView({ props }: calendarProps) {
         selectedColor: returnColor(JSON.stringify(moods[day])),
         customStyles: {
           container: {
-            borderColor: day == selectedDay ? "#adcadb" : "transparent",
             borderRadius: 0,
             width: "100%",
-            // height: "100%",
           },
           text: {
             color: day == getCurrentDate() ? "#f57a7a" : "white",
@@ -81,7 +78,7 @@ export default function CalendarView({ props }: calendarProps) {
         markedDates={markedDates}
         theme={{
           backgroundColor: "black",
-          todayTextColor: "black",
+          todayTextColor: "pink",
           calendarBackground: "transparent",
           textSectionTitleColor: "black",
           textMonthFontFamily: "Inter-Regular",
@@ -107,7 +104,6 @@ export default function CalendarView({ props }: calendarProps) {
         firstDay={returnDayNum(settings)}
         style={[styles.calendar, { width: sizeWithLimits() }]}
         calendarWidth={sizeWithLimits()}
-        // hideArrows={false}
         hideExtraDays={false}
         disableMonthChange={false}
         enableSwipeMonths={true}
