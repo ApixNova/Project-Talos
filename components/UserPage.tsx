@@ -100,7 +100,6 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
     width: "80%",
     maxWidth: 600,
     // justifyContent: "space-around",
