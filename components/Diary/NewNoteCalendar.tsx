@@ -11,7 +11,11 @@ import Setting from "../../model/Setting";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { editNote } from "../../state/noteSlice";
 import { NewNoteCalendarProp, SerializedNote } from "../../types";
-import { getCurrentDate, serializeNote } from "../../utils/functions";
+import {
+  getCurrentDate,
+  returnDayNum,
+  serializeNote,
+} from "../../utils/functions";
 import getDaysOfMonth from "../../utils/month-functions";
 import { dynamicTheme } from "../../utils/palette";
 import { database } from "../../utils/watermelon";
@@ -150,7 +154,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
               textDisabledColor: dynamicTheme(settings, "gray"),
               todayTextColor: dynamicTheme(settings, "background"),
             }}
-            firstDay={1}
+            firstDay={returnDayNum(settings)}
             hideArrows={false}
             calendarWidth={290}
             calendarHeight={290}
