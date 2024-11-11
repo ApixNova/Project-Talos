@@ -457,6 +457,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginRight: "auto",
     fontFamily: "Inter-Regular",
+    flex: 1,
   },
   newNoteTitleMood: {
     width: 30,
@@ -483,7 +484,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     top: 35,
-    minWidth: 130,
+    minWidth: 150,
   },
   newNoteSave: {
     fontFamily: "Inter-Medium",
