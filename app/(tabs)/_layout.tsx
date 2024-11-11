@@ -6,13 +6,16 @@ import { Tabs } from "expo-router";
 import { dynamicTheme, moodColor } from "../../utils/palette";
 import { useAppSelector } from "../../state/hooks";
 import Setting from "../../model/Setting";
+import { Platform, useWindowDimensions } from "react-native";
 
 export default function Tablayout() {
   const settings = useAppSelector((state) => state.settings as Setting[]);
+  const { width } = useWindowDimensions();
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "white",
+        tabBarShowLabel: Platform.OS == "web" && width >= 500,
         tabBarStyle: {
           backgroundColor: moodColor.black,
           borderTopWidth: 2,

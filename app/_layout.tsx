@@ -3,7 +3,7 @@ import { store } from "../state/store";
 import MainLayout from "../components/MainLayout";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
-import * as SplashScreen from "expo-splash-screen";
+import { SplashScreen } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
