@@ -31,7 +31,9 @@ export async function syncDatabase(
         changes: SyncDatabaseChangeSet;
         timestamp: number;
       };
-      syncedChanges = structuredClone(changesOriginal) as ChangesData;
+      syncedChanges = JSON.parse(
+        JSON.stringify(changesOriginal)
+      ) as ChangesData;
 
       if (session && !initialSync) {
         await mergeData();
