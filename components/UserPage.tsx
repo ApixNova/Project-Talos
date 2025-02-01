@@ -12,7 +12,7 @@ import { onMonthChange } from "../utils/month-functions";
 import { toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
 import Button from "./Button";
-import { UserPageProps } from "../types";
+import { Moods, UserPageProps } from "../types";
 
 export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
   const [session, setSession] = useState<Session | null>(null);
@@ -37,7 +37,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
     setLoading(true);
     await syncDatabase(setAlert, false, session);
     dispatch(editMood({}));
-    onMonthChange({ date: toDateData(), moods, dispatch });
+    onMonthChange({ date: toDateData(), moods: {}, dispatch });
     reloadNotes({ dispatch });
     setLoading(false);
     setAlert("Sync done");
@@ -51,7 +51,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
     if (notes == 0 && moods == 0) {
       signOut();
     } else {
-      //ask user before loging off
+      //ask user before loging out
       await syncDatabase(setAlert);
       alertOnSignout(signOut);
       setLoading(false);
