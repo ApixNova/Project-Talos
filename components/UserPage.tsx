@@ -12,7 +12,7 @@ import { onMonthChange } from "../utils/month-functions";
 import { toDateData } from "../utils/functions";
 import reloadNotes from "../utils/reload-notes";
 import Button from "./Button";
-import { Moods, UserPageProps } from "../types";
+import { UserPageProps } from "../types";
 
 export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
   const [session, setSession] = useState<Session | null>(null);
