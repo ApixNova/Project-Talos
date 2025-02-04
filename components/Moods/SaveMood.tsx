@@ -36,7 +36,13 @@ export default function SaveMood({ props }: SaveMoodProps) {
     opacity: 1 - derivedOpacity.value,
   }));
   async function handlePress(moodType: number) {
+    function closePicker() {
+      setTimeout(() => {
+        toggle();
+      }, 450);
+    }
     if (moods[selectedDay] == moodType) {
+      closePicker();
       return;
     }
     await updateMood(moodType, selectedDay);
@@ -44,6 +50,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
     let moodsList = JSON.parse(JSON.stringify(moods));
     moodsList[selectedDay] = moodType;
     setMoods(moodsList);
+    closePicker();
   }
   return (
     <>
