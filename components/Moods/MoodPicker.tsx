@@ -14,7 +14,7 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
           styles.selection,
           {
             width: width / 1.4,
-            maxWidth: 280,
+            maxWidth: 310,
           },
         ]}
       >
@@ -34,6 +34,16 @@ export default function MoodPicker({ handlePress }: MoodPickerProps) {
             handlePress,
             type: 1,
             style: styles.red,
+            disable: moodUpdating,
+            setMoodUpdating: setMoodUpdating,
+          }}
+        />
+        <MoodOption
+          props={{
+            text: "mid",
+            handlePress,
+            type: 4,
+            style: styles.gray,
             disable: moodUpdating,
             setMoodUpdating: setMoodUpdating,
           }}
@@ -74,6 +84,9 @@ const styles = StyleSheet.create({
   },
   red: {
     backgroundColor: moodColor.red,
+  },
+  gray: {
+    backgroundColor: moodColor.gray,
   },
   blue: {
     backgroundColor: moodColor.blue,
