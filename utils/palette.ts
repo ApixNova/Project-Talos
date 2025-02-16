@@ -5,6 +5,7 @@ import { ThemeType } from "../types";
 export const moodColor = {
   black: "#0f0f0f",
   red: "#ab2b40",
+  gray: "#595959",
   blue: "#2f1f94",
   green: "#3e9e5e",
 };

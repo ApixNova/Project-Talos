@@ -26,14 +26,14 @@ export function MoodOption({ props }: MoodOptionProps) {
   }
 
   const sizeAnimated = useDerivedValue(() => {
-    return 70 * size.value;
+    return 60 * size.value;
   });
 
   const borderRadiusAnimated = useDerivedValue(() => {
     return sizeAnimated.value / 2;
   });
   const positionAnimated = useDerivedValue(() => {
-    return -(sizeAnimated.value - 70) / 2;
+    return -(sizeAnimated.value - 60) / 2;
   });
   return (
     <View style={styles.mood}>
@@ -51,7 +51,7 @@ export function MoodOption({ props }: MoodOptionProps) {
           style,
           styles.color,
           {
-            width: 70,
+            width: 60,
             aspectRatio: 1,
             borderRadius: 9999,
             borderColor: "#0c0414",
