@@ -100,6 +100,8 @@ export function returnColor(type: string) {
       return moodColor.blue;
     case "3":
       return moodColor.green;
+    case "4":
+      return moodColor.gray;
     default:
       return "gray";
   }
