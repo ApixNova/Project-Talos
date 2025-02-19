@@ -39,6 +39,7 @@ export function MoodOption({ props }: MoodOptionProps) {
     <View style={styles.mood}>
       <Pressable
         disabled={disable}
+        accessibilityLabel={text}
         onPress={() => {
           setMoodUpdating(true);
           triggerAnimation();

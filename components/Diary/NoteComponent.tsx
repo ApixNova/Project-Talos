@@ -333,6 +333,7 @@ export function NoteComponent({ props }: NoteProps) {
           ]}
           placeholder="Title (optional)"
           placeholderTextColor={dynamicTheme(settings, "gray")}
+          accessibilityLabel="title"
           value={title}
           onChangeText={(value) => {
             setTitle(value);
@@ -347,6 +348,7 @@ export function NoteComponent({ props }: NoteProps) {
         <View>
           <Pressable
             onPress={() => setMoodPicker((prev) => !prev)}
+            accessibilityLabel="set mood"
             style={[
               styles.newNoteTitleMood,
               {
@@ -411,6 +413,7 @@ export function NoteComponent({ props }: NoteProps) {
           }}
           placeholder="take a note about your day..."
           placeholderTextColor={dynamicTheme(settings, "gray")}
+          accessibilityLabel="text"
           style={[
             styles.newNoteInput,
             {
