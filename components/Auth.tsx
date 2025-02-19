@@ -94,6 +94,7 @@ export default function Auth({
             onChangeText={setEmail}
             value={email}
             placeholderTextColor={"gray"}
+            accessibilityLabel="email"
           />
         </View>
         <View>
@@ -117,6 +118,7 @@ export default function Auth({
             onChangeText={setPassword}
             value={password}
             placeholderTextColor={"gray"}
+            accessibilityLabel="password"
             onKeyPress={(key) => {
               if (key.nativeEvent.key == "Enter") signInWithEmail();
             }}
