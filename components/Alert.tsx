@@ -46,6 +46,7 @@ export default function AlertComponent({
                   close();
                 }}
                 style={styles.closeContainer}
+                accessibilityLabel="close"
               >
                 <FontAwesome
                   style={styles.close}

@@ -28,6 +28,7 @@ export default function Button({
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      accessibilityLabel={text}
       style={[
         styles.button,
         { backgroundColor: color || dynamicTheme(settings, "primary") },

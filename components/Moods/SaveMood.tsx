@@ -85,11 +85,12 @@ export default function SaveMood({ props }: SaveMoodProps) {
       >
         <View>
           <Pressable
+            style={styles.close}
             onPress={() => {
               toggle();
             }}
           >
-            <FontAwesome name="close" size={24} color="#0c0414" />
+            <FontAwesome name="close" size={30} color="#0c0414" />
           </Pressable>
           <Text style={styles.title}>How was your day ?</Text>
           <MoodPicker handlePress={handlePress} />
@@ -107,6 +108,9 @@ const styles = StyleSheet.create({
   },
   plus: {
     marginVertical: "auto",
+  },
+  close: {
+    marginRight: "auto",
   },
   title: {
     textAlign: "center",
