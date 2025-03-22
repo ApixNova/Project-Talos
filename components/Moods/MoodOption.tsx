@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { MoodOptionProps } from "../../types";
 import Animated, {
   useDerivedValue,
@@ -11,6 +17,7 @@ export function MoodOption({ props }: MoodOptionProps) {
   const { text, handlePress, style, type, disable, setMoodUpdating } = props;
   const size = useSharedValue(1);
   const opacity = useSharedValue(1);
+  const { width } = useWindowDimensions();
 
   function triggerAnimation() {
     size.value = withSequence(
@@ -26,15 +33,20 @@ export function MoodOption({ props }: MoodOptionProps) {
   }
 
   const sizeAnimated = useDerivedValue(() => {
-    return 60 * size.value;
+    return moodSize() * size.value;
   });
 
   const borderRadiusAnimated = useDerivedValue(() => {
     return sizeAnimated.value / 2;
   });
   const positionAnimated = useDerivedValue(() => {
-    return -(sizeAnimated.value - 60) / 2;
+    return -(sizeAnimated.value - moodSize()) / 2;
   });
+
+  function moodSize() {
+    return width > 700 ? 60 : width > 400 ? 55 : 50;
+  }
+
   return (
     <View style={styles.mood}>
       <Pressable
@@ -52,7 +64,7 @@ export function MoodOption({ props }: MoodOptionProps) {
           style,
           styles.color,
           {
-            width: 60,
+            width: moodSize(),
             aspectRatio: 1,
             borderRadius: 9999,
             borderColor: "#0c0414",
@@ -90,6 +102,7 @@ const styles = StyleSheet.create({
   },
   moodTitle: {
     marginVertical: 10,
+    fontSize: 17,
     marginHorizontal: "auto",
     textAlign: "center",
     fontFamily: "Inter-Regular",
