@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { calendarProps } from "../types";
 import { getCurrentDate, returnColor, returnDayNum } from "../utils/functions";
 import { onMonthChange } from "../utils/month-functions";
-import { dynamicTheme } from "../utils/palette";
+import { dynamicTheme, paletteDark } from "../utils/palette";
 import Arrow from "./Arrow";
 
 export default function CalendarView({ props }: calendarProps) {
@@ -65,7 +65,7 @@ export default function CalendarView({ props }: calendarProps) {
         {
           borderColor: dynamicTheme(settings, "text"),
           // calendar background color
-          backgroundColor: "#8f97ea",
+          backgroundColor: paletteDark.primary,
         },
       ]}
     >

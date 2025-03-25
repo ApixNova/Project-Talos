@@ -32,7 +32,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
   const markedRef: MarkedDates = {
     [selectedDay]: {
       selected: true,
-      selectedColor: dynamicTheme(settings, "primary"),
+      selectedColor: dynamicTheme(settings, "secondary"),
     },
   };
 
@@ -118,12 +118,12 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
         <LinearGradient
           colors={[
             "rgba(124, 126, 192, 1)",
-            dynamicTheme(settings, "secondary"),
-            dynamicTheme(settings, "secondary"),
-            dynamicTheme(settings, "secondary"),
-            // dynamicTheme(settings, "secondary"),
-            // dynamicTheme(settings, "secondary"),
-            // dynamicTheme(settings, "secondary"),
+            dynamicTheme(settings, "primary"),
+            dynamicTheme(settings, "primary"),
+            dynamicTheme(settings, "primary"),
+            // dynamicTheme(settings, "primary"),
+            // dynamicTheme(settings, "primary"),
+            // dynamicTheme(settings, "primary"),
             "rgba(124, 126, 192, 1)",
           ]}
           style={styles.calendarContainer}
