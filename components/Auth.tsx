@@ -64,7 +64,7 @@ export default function Auth({
     <View
       style={[
         styles.container,
-        { backgroundColor: dynamicTheme(settings, "secondary") },
+        { backgroundColor: dynamicTheme(settings, "primary") },
       ]}
     >
       <Text

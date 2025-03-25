@@ -189,7 +189,7 @@ export default function Screen() {
       <View
         style={[
           styles.container,
-          // { backgroundColor: dynamicTheme(settings, "secondary") },
+          // { backgroundColor: dynamicTheme(settings, "primary") },
         ]}
       >
         <View style={styles.settingRow}>

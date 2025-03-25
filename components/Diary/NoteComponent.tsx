@@ -311,7 +311,7 @@ export function NoteComponent({ props }: NoteProps) {
         {
           width: width < 1200 ? "100%" : "80%",
           maxWidth: 1500,
-          backgroundColor: dynamicTheme(settings, "secondary"),
+          backgroundColor: dynamicTheme(settings, "primary"),
           borderColor: dynamicTheme(settings, "text"),
         },
       ]}
@@ -328,7 +328,7 @@ export function NoteComponent({ props }: NoteProps) {
         style={[
           styles.newNoteTitle,
           {
-            backgroundColor: dynamicTheme(settings, "secondary"),
+            backgroundColor: dynamicTheme(settings, "primary"),
           },
         ]}
       >
@@ -370,7 +370,7 @@ export function NoteComponent({ props }: NoteProps) {
               style={[
                 styles.newNoteMoodPicker,
                 {
-                  backgroundColor: dynamicTheme(settings, "secondary"),
+                  backgroundColor: dynamicTheme(settings, "primary"),
                   borderColor: dynamicTheme(settings, "text"),
                 },
               ]}
@@ -392,7 +392,7 @@ export function NoteComponent({ props }: NoteProps) {
             <View
               style={[
                 styles.newNoteOptions,
-                { backgroundColor: dynamicTheme(settings, "secondary") },
+                { backgroundColor: dynamicTheme(settings, "primary") },
               ]}
             >
               <Button

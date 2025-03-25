@@ -1,25 +1,23 @@
-import { Calendar } from "react-native-calendars";
 import Setting from "../model/Setting";
 import { ThemeType } from "../types";
 
 export const moodColor = {
-  black: "#0f0f0f",
-  red: "#ab2b40",
+  black: "#100F0F",
+  red: "#BD394E",
   gray: "#595959",
-  blue: "#2f1f94",
-  green: "#3e9e5e",
+  blue: "#312198",
+  green: "#33A95A",
 };
 
 export const paletteDark = {
-  background: "#0c0414",
-  text: "#eae9fc",
-  primary: "#4650d8",
-  secondary: "#8f97ea",
-  accent: "#dc254a",
-  rose: "#de5974",
+  background: "#120B28",
+  text: "#EAE9FC",
+  primary: "#8F97EA",
+  secondary: "#4650d8",
+  accent: "#DC254A",
+  rose: "#F4BFCC",
   black: "black",
   gray: "#757272",
-  // calendarBackground: "#7d7bb3",
 };
 
 const paletteLight = {
@@ -31,7 +29,6 @@ const paletteLight = {
   rose: "#de5974",
   black: "black",
   gray: "#757272",
-  // calendarBackground: "pink",
 };
 
 export function dynamicTheme(settings: Setting[], type: ThemeType) {

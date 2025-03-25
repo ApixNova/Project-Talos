@@ -67,7 +67,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
     <View
       style={[
         styles.container,
-        { backgroundColor: dynamicTheme(settings, "secondary") },
+        { backgroundColor: dynamicTheme(settings, "primary") },
       ]}
     >
       {session && session.user && (
@@ -83,7 +83,7 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
           <Button
             text="Sync"
             onPress={handleSync}
-            color={dynamicTheme(settings, "primary")}
+            color={dynamicTheme(settings, "secondary")}
             disabled={loading}
           />
           <Button

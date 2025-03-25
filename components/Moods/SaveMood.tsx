@@ -77,7 +77,7 @@ export default function SaveMood({ props }: SaveMoodProps) {
           animatedStyle,
           {
             borderColor: dynamicTheme(settings, "text"),
-            backgroundColor: dynamicTheme(settings, "secondary"),
+            backgroundColor: dynamicTheme(settings, "primary"),
             position: "absolute",
             overflow: "hidden",
           },
