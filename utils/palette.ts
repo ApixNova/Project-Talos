@@ -31,12 +31,21 @@ const paletteLight = {
   gray: "#757272",
 };
 
-export function dynamicTheme(settings: Setting[], type: ThemeType) {
-  if (getTheme(settings) == "Light") {
-    return paletteLight[type];
-  } else {
-    return paletteDark[type];
+export function dynamicTheme(
+  settings: Setting[],
+  type: ThemeType,
+  opacity?: number
+) {
+  const theme = getTheme(settings);
+  let alpha = "";
+  if (opacity !== undefined) {
+    const clampedOpacity = Math.min(Math.max(opacity, 0), 100);
+    // converting from percentage to a value in range 0-255
+    alpha = Math.round((clampedOpacity * 255) / 100)
+      .toString(16)
+      .padStart(2, "0");
   }
+  return (theme === "Light" ? paletteLight[type] : paletteDark[type]) + alpha;
 }
 
 export function getTheme(settings: Setting[]) {
