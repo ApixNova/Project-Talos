@@ -1,6 +1,6 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Drawer } from "expo-router/drawer";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MyDrawer from "../components/MyDrawer";
 import Setting from "../model/Setting";
@@ -14,11 +14,24 @@ export default function MainLayout() {
       <Drawer
         drawerContent={MyDrawer}
         screenOptions={{
-          drawerActiveBackgroundColor: dynamicTheme(settings, "rose"),
-          headerStyle: {
-            backgroundColor: dynamicTheme(settings, "rose"),
-          },
+          drawerActiveBackgroundColor: dynamicTheme(settings, "primary", 70),
+          headerBackground: () => (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: dynamicTheme(settings, "background"),
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: dynamicTheme(settings, "primary", 15),
+                }}
+              ></View>
+            </View>
+          ),
           headerShadowVisible: false,
+          headerTintColor: dynamicTheme(settings, "rose"),
           headerTitleStyle: {
             fontFamily: "Inter-Regular",
           },
@@ -51,11 +64,8 @@ export default function MainLayout() {
             headerTitleStyle: {
               fontFamily: "Inter-Black",
               fontSize: 30,
-              color: dynamicTheme(settings, "background"),
+              color: dynamicTheme(settings, "rose"),
             },
-            // headerTitle: (props) => (
-            //   <FontAwesome5 size={30} name="book" color={"white"} />
-            // ),
           }}
         />
         <Drawer.Screen
@@ -64,7 +74,7 @@ export default function MainLayout() {
             headerTitleStyle: {
               fontFamily: "Inter-Black",
               fontSize: 30,
-              color: dynamicTheme(settings, "background"),
+              color: dynamicTheme(settings, "rose"),
             },
             drawerIcon: (color) => (
               <Ionicons
@@ -91,7 +101,7 @@ export default function MainLayout() {
             headerTitleStyle: {
               fontFamily: "Inter-Black",
               fontSize: 30,
-              color: dynamicTheme(settings, "background"),
+              color: dynamicTheme(settings, "rose"),
             },
             drawerIcon: (color) => (
               <FontAwesome5
@@ -118,7 +128,7 @@ export default function MainLayout() {
             headerTitleStyle: {
               fontFamily: "Inter-Black",
               fontSize: 30,
-              color: dynamicTheme(settings, "background"),
+              color: dynamicTheme(settings, "rose"),
             },
             drawerIcon: (color) => (
               <FontAwesome5
@@ -156,7 +166,7 @@ export default function MainLayout() {
             headerTitleStyle: {
               fontFamily: "Inter-Black",
               fontSize: 26,
-              color: dynamicTheme(settings, "background"),
+              color: dynamicTheme(settings, "rose"),
             },
             headerTitle: "Welcome",
             drawerItemStyle: { display: "none" },
