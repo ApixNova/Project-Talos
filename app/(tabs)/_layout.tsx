@@ -1,4 +1,3 @@
-import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,13 +24,6 @@ export default function Tablayout() {
         tabBarLabelStyle: {
           fontFamily: "Inter-Regular",
         },
-        headerStyle: {
-          backgroundColor: moodColor.black,
-        },
-        headerShadowVisible: false,
-        // headerShown: false,
-        headerTintColor: "#fff",
-        headerTitleAlign: "center",
       }}
     >
       <Tabs.Screen
