@@ -40,14 +40,24 @@ export default function DiaryLayout() {
                 navigation.popToTop();
               }}
             >
-              <Ionicons name="chevron-back-outline" size={27} color="white" />
+              <Ionicons
+                name="chevron-back-outline"
+                size={27}
+                color={dynamicTheme(settings, "text")}
+              />
               {Platform.OS == "web" && width > 465 && (
-                <Text style={styles.text}>Back</Text>
+                <Text
+                  style={[
+                    styles.text,
+                    { color: dynamicTheme(settings, "text") },
+                  ]}
+                >
+                  Back
+                </Text>
               )}
             </Pressable>
           ),
-          // headerBackImageSource: image,
-          headerTintColor: "#fff",
+          headerTintColor: dynamicTheme(settings, "text"),
           headerTitleAlign: "center",
           headerTitleStyle: {
             fontFamily: "Inter-Regular",
