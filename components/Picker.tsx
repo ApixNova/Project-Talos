@@ -37,7 +37,7 @@ export default function Picker({
             style={[
               styles.text,
               {
-                color: dynamicTheme(settings, "accent"),
+                color: dynamicTheme(settings, "rose"),
               },
             ]}
           >
@@ -78,7 +78,7 @@ export default function Picker({
                       {
                         borderColor:
                           option == state
-                            ? dynamicTheme(settings, "rose")
+                            ? dynamicTheme(settings, "primary", 35)
                             : "transparent",
                       },
                     ]}
@@ -94,8 +94,11 @@ export default function Picker({
                               styles.selected,
                               {
                                 color: dynamicTheme(settings, "text"),
-                                backgroundColor: dynamicTheme(settings, "rose"),
-                                borderColor: dynamicTheme(settings, "rose"),
+                                backgroundColor: dynamicTheme(
+                                  settings,
+                                  "primary",
+                                  35
+                                ),
                               },
                             ]
                           : undefined,
@@ -122,8 +125,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(24, 36, 74, 0.6)",
   },
   container: {
-    // backgroundColor: palette.background,
     borderWidth: 2,
+    borderRadius: 7,
     minWidth: 200,
     paddingHorizontal: 13,
     paddingBottom: 10,
