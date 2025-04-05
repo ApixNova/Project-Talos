@@ -265,13 +265,13 @@ export default function Screen() {
                 <Button
                   text="Delete local and online Data"
                   onPress={resetSupabasePressed}
-                  color={dynamicTheme(settings, "accent")}
+                  color={dynamicTheme(settings, "accent", 75)}
                 />
               ) : (
                 <Button
                   text="Delete Data"
                   onPress={resetPressed}
-                  color={dynamicTheme(settings, "accent")}
+                  color={dynamicTheme(settings, "accent", 75)}
                 />
               )}
             </Animated.View>

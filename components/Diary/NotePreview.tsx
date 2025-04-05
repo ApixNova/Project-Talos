@@ -28,7 +28,7 @@ export function NotePreview({ data }: { data: SerializedNote }) {
         styles.container,
         {
           width: width < 1200 ? "94%" : "75%",
-          borderColor: dynamicTheme(settings, "text"),
+          borderColor: dynamicTheme(settings, "primary", 40),
         },
       ]}
       onPress={handlePress}

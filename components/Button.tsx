@@ -31,7 +31,7 @@ export default function Button({
       accessibilityLabel={text}
       style={[
         styles.button,
-        { backgroundColor: color || dynamicTheme(settings, "secondary") },
+        { backgroundColor: color || dynamicTheme(settings, "secondary", 90) },
         style,
       ]}
     >

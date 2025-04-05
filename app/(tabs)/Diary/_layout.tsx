@@ -30,7 +30,7 @@ export default function DiaryLayout() {
           // headerShown: false,
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: dynamicTheme(settings, "black"),
+            backgroundColor: dynamicTheme(settings, "background"),
           },
           // headerBackVisible: false,
           headerLeft: () => (

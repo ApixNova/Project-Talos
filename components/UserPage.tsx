@@ -17,7 +17,6 @@ import { UserPageProps } from "../types";
 export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
   const [session, setSession] = useState<Session | null>(null);
   const settings = useAppSelector((state) => state.settings as Setting[]);
-  const moods = useAppSelector((state) => state.moods.value);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -67,29 +66,21 @@ export default function UserPage({ setAlert, alertOnSignout }: UserPageProps) {
     <View
       style={[
         styles.container,
-        { backgroundColor: dynamicTheme(settings, "primary") },
+        { backgroundColor: dynamicTheme(settings, "primary", 35) },
       ]}
     >
       {session && session.user && (
         <>
           <Text
-            style={[
-              styles.title,
-              { color: dynamicTheme(settings, "background") },
-            ]}
+            style={[styles.title, { color: dynamicTheme(settings, "text") }]}
           >
             {session.user.email}
           </Text>
-          <Button
-            text="Sync"
-            onPress={handleSync}
-            color={dynamicTheme(settings, "secondary")}
-            disabled={loading}
-          />
+          <Button text="Sync" onPress={handleSync} disabled={loading} />
           <Button
             text="Log out"
             onPress={handleSignOutPress}
-            color={dynamicTheme(settings, "rose")}
+            color={dynamicTheme(settings, "accent", 75)}
             disabled={loading}
           />
         </>
