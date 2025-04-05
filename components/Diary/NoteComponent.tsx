@@ -311,8 +311,8 @@ export function NoteComponent({ props }: NoteProps) {
         {
           width: width < 1200 ? "100%" : "80%",
           maxWidth: 1500,
-          backgroundColor: dynamicTheme(settings, "primary"),
-          borderColor: dynamicTheme(settings, "text"),
+          backgroundColor: dynamicTheme(settings, "primary", 40),
+          borderColor: dynamicTheme(settings, "primary", 40),
         },
       ]}
     >
@@ -324,14 +324,7 @@ export function NoteComponent({ props }: NoteProps) {
         handleConfirm={deleteNote}
         handleExit={alertExit}
       />
-      <View
-        style={[
-          styles.newNoteTitle,
-          {
-            backgroundColor: dynamicTheme(settings, "primary"),
-          },
-        ]}
-      >
+      <View style={[styles.newNoteTitle]}>
         <TextInput
           style={[
             styles.newNoteTitleInput,
@@ -349,8 +342,25 @@ export function NoteComponent({ props }: NoteProps) {
           }}
         />
         {save && (
-          <Pressable onPress={saveNote} style={styles.save}>
-            <Text style={styles.newNoteSave}>Save</Text>
+          <Pressable
+            onPress={saveNote}
+            style={[
+              styles.save,
+              {
+                backgroundColor: dynamicTheme(settings, "background"),
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.newNoteSave,
+                {
+                  color: dynamicTheme(settings, "rose"),
+                },
+              ]}
+            >
+              Save
+            </Text>
           </Pressable>
         )}
         <View>
@@ -368,14 +378,20 @@ export function NoteComponent({ props }: NoteProps) {
           {moodPicker && (
             <View
               style={[
-                styles.newNoteMoodPicker,
+                styles.moodPicker,
                 {
-                  backgroundColor: dynamicTheme(settings, "primary"),
+                  backgroundColor: dynamicTheme(settings, "background"),
                   borderColor: dynamicTheme(settings, "text"),
                 },
               ]}
             >
-              <MoodPicker handlePress={handleMoodPress} />
+              <View
+                style={{
+                  backgroundColor: dynamicTheme(settings, "secondary", 15),
+                }}
+              >
+                <MoodPicker handlePress={handleMoodPress} />
+              </View>
             </View>
           )}
         </View>
@@ -386,7 +402,11 @@ export function NoteComponent({ props }: NoteProps) {
             }}
             style={styles.optionsIcon}
           >
-            <SimpleLineIcons name="options" size={24} color="black" />
+            <SimpleLineIcons
+              name="options"
+              size={24}
+              color={dynamicTheme(settings, "text")}
+            />
           </Pressable>
           {showOptions && (
             <View
@@ -469,15 +489,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 5,
   },
-  newNoteMoodPicker: {
-    borderWidth: 2,
+  moodPicker: {
+    borderWidth: 1,
+    borderRadius: 5,
     padding: 2,
     position: "absolute",
     right: 0,
     top: 30,
   },
   save: {
-    paddingRight: 5,
+    marginRight: 3,
+    borderRadius: 5,
+    padding: 5,
   },
   optionsIcon: {
     paddingLeft: 8,
@@ -494,7 +517,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   newNoteMain: {
-    borderWidth: 2,
     borderRadius: 10,
     padding: 2,
     flex: 9,
