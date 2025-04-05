@@ -155,7 +155,7 @@ export default function MainLayout() {
             headerTitleStyle: {
               fontFamily: "Inter-Black",
               fontSize: 26,
-              color: dynamicTheme(settings, "background"),
+              color: dynamicTheme(settings, "rose"),
             },
             headerTitle: "Mail Confirmation",
             drawerItemStyle: { display: "none" },
