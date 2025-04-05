@@ -64,21 +64,16 @@ export default function Auth({
     <View
       style={[
         styles.container,
-        { backgroundColor: dynamicTheme(settings, "primary") },
+        { backgroundColor: dynamicTheme(settings, "primary", 35) },
       ]}
     >
-      <Text
-        style={[styles.title, { color: dynamicTheme(settings, "background") }]}
-      >
+      <Text style={[styles.title, { color: dynamicTheme(settings, "text") }]}>
         Sign in
       </Text>
       <View style={styles.inputContainer}>
         <View>
           <Text
-            style={[
-              styles.text,
-              { color: dynamicTheme(settings, "background") },
-            ]}
+            style={[styles.text, { color: dynamicTheme(settings, "text") }]}
           >
             Email
           </Text>
@@ -86,7 +81,9 @@ export default function Auth({
             style={[
               styles.input,
               {
-                borderColor: dynamicTheme(settings, "text"),
+                borderColor: dynamicTheme(settings, "primary"),
+                backgroundColor: dynamicTheme(settings, "background", 40),
+                color: dynamicTheme(settings, "text"),
               },
             ]}
             autoComplete="email"
@@ -99,10 +96,7 @@ export default function Auth({
         </View>
         <View>
           <Text
-            style={[
-              styles.text,
-              { color: dynamicTheme(settings, "background") },
-            ]}
+            style={[styles.text, { color: dynamicTheme(settings, "text") }]}
           >
             Password
           </Text>
@@ -110,7 +104,9 @@ export default function Auth({
             style={[
               styles.input,
               {
-                borderColor: dynamicTheme(settings, "text"),
+                borderColor: dynamicTheme(settings, "primary"),
+                backgroundColor: dynamicTheme(settings, "background", 40),
+                color: dynamicTheme(settings, "text"),
               },
             ]}
             autoComplete="password"
@@ -134,11 +130,18 @@ export default function Auth({
           )}
           {!loading && (
             <View style={styles.signUpContainer}>
-              <Text style={styles.signUpText}>New account?</Text>
+              <Text
+                style={[
+                  styles.signUpText,
+                  { color: dynamicTheme(settings, "text", 80) },
+                ]}
+              >
+                New account?
+              </Text>
               <Button
                 text="Sign Up"
                 onPress={signUpWithEmail}
-                color={dynamicTheme(settings, "rose")}
+                color={dynamicTheme(settings, "accent", 75)}
               />
             </View>
           )}

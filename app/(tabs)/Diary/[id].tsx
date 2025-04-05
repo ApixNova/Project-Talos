@@ -13,7 +13,7 @@ export default function Page() {
     <View
       style={[
         styles.container,
-        { backgroundColor: dynamicTheme(settings, "black") },
+        { backgroundColor: dynamicTheme(settings, "background") },
       ]}
     >
       <View style={styles.noteContainer}>

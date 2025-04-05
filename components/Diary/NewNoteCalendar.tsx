@@ -170,8 +170,6 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
           text={buttonText()}
           onPress={createOrEditNote}
           style={{
-            borderColor: dynamicTheme(settings, "text"),
-            borderWidth: 2,
             margin: "auto",
           }}
         />
