@@ -36,7 +36,7 @@ export default function AlertComponent({
                 styles.container,
                 {
                   backgroundColor: dynamicTheme(settings, "background"),
-                  borderColor: dynamicTheme(settings, "rose"),
+                  borderColor: dynamicTheme(settings, "rose", 70),
                 },
               ]}
             >
@@ -70,7 +70,7 @@ export default function AlertComponent({
                   <>
                     <Button
                       text={confirmLabel || "Yes"}
-                      color={dynamicTheme(settings, "rose")}
+                      color={dynamicTheme(settings, "accent", 75)}
                       onPress={() => {
                         handleConfirm();
                         close();
@@ -91,7 +91,7 @@ export default function AlertComponent({
                       if (handleExit) handleExit();
                       close();
                     }}
-                    color={dynamicTheme(settings, "rose")}
+                    color={dynamicTheme(settings, "accent", 75)}
                   />
                 )}
               </View>

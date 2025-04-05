@@ -16,9 +16,9 @@ export default function Tablayout() {
         tabBarActiveTintColor: "white",
         tabBarShowLabel: Platform.OS == "web" && width >= 500,
         tabBarStyle: {
-          backgroundColor: moodColor.black,
+          backgroundColor: dynamicTheme(settings, "background"),
           borderTopWidth: 2,
-          borderTopColor: dynamicTheme(settings, "rose"),
+          borderTopColor: dynamicTheme(settings, "secondary", 20),
           height: 50,
         },
         tabBarLabelStyle: {

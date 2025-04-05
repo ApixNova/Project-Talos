@@ -109,7 +109,10 @@ export function Diary() {
       <Pressable
         style={[
           styles.newEntry,
-          { backgroundColor: dynamicTheme(settings, "rose") },
+          {
+            backgroundColor: dynamicTheme(settings, "secondary", 50),
+            borderColor: dynamicTheme(settings, "accent", 20),
+          },
         ]}
         onPress={onPressNewNote}
       >
@@ -123,7 +126,7 @@ export function Diary() {
             style={styles.plus}
             name="plus"
             size={30}
-            color="black"
+            color={dynamicTheme(settings, "text")}
           />
         </Animated.View>
       </Pressable>
@@ -155,7 +158,6 @@ const styles = StyleSheet.create({
     height: 60,
   },
   newEntry: {
-    borderColor: "white",
     borderWidth: 2,
     borderRadius: 30,
     width: 60,

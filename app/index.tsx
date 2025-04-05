@@ -16,7 +16,7 @@ export default function Page() {
     >
       <Image style={styles.image} source={require("../assets/icon.png")} />
       <Text style={[styles.text, { color: dynamicTheme(settings, "text") }]}>
-        Welcome to Talos, the mood tracker
+        Welcome to Talos, the mood tracker!
       </Text>
       <Button
         text="Get Started"
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    width: 90,
-    height: 90,
+    width: 150,
+    height: 150,
   },
   text: {
     fontSize: 20,
