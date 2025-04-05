@@ -12,9 +12,13 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { dynamicTheme } from "../../utils/palette";
+import { useAppSelector } from "../../state/hooks";
+import Setting from "../../model/Setting";
 
 export function MoodOption({ props }: MoodOptionProps) {
   const { text, handlePress, style, type, disable, setMoodUpdating } = props;
+  const settings = useAppSelector((state) => state.settings as Setting[]);
   const size = useSharedValue(1);
   const opacity = useSharedValue(1);
   const { width } = useWindowDimensions();
@@ -67,7 +71,7 @@ export function MoodOption({ props }: MoodOptionProps) {
             width: moodSize(),
             aspectRatio: 1,
             borderRadius: 9999,
-            borderColor: "#0c0414",
+            borderColor: "black",
           },
         ]}
       ></Pressable>
@@ -85,7 +89,16 @@ export function MoodOption({ props }: MoodOptionProps) {
           },
         ]}
       ></Animated.View>
-      <Text style={styles.moodTitle}>{text}</Text>
+      <Text
+        style={[
+          styles.moodTitle,
+          {
+            color: dynamicTheme(settings, "text"),
+          },
+        ]}
+      >
+        {text}
+      </Text>
     </View>
   );
 }

@@ -73,26 +73,43 @@ export default function SaveMood({ props }: SaveMoodProps) {
       </Animated.View>
       <Animated.View
         style={[
-          styles.container,
+          styles.containerBackground,
           animatedStyle,
           {
-            borderColor: dynamicTheme(settings, "text"),
-            backgroundColor: dynamicTheme(settings, "primary"),
-            position: "absolute",
-            overflow: "hidden",
+            backgroundColor: dynamicTheme(settings, "background"),
           },
         ]}
       >
-        <View>
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: dynamicTheme(settings, "primary", 25),
+            },
+          ]}
+        >
           <Pressable
             style={styles.close}
             onPress={() => {
               toggle();
             }}
           >
-            <FontAwesome name="close" size={30} color="#0c0414" />
+            <FontAwesome
+              name="close"
+              size={30}
+              color={dynamicTheme(settings, "text")}
+            />
           </Pressable>
-          <Text style={styles.title}>How was your day ?</Text>
+          <Text
+            style={[
+              styles.title,
+              {
+                color: dynamicTheme(settings, "text"),
+              },
+            ]}
+          >
+            How was your day ?
+          </Text>
           <MoodPicker handlePress={handlePress} />
         </View>
       </Animated.View>
@@ -101,9 +118,12 @@ export default function SaveMood({ props }: SaveMoodProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  containerBackground: {
     borderRadius: 10,
-    borderWidth: 2,
+    position: "absolute",
+    overflow: "hidden",
+  },
+  container: {
     padding: 15,
   },
   plus: {
