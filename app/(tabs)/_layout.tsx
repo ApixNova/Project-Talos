@@ -2,7 +2,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { dynamicTheme, moodColor } from "../../utils/palette";
+import { dynamicTheme, moodColor, paletteDark } from "../../utils/palette";
 import { useAppSelector } from "../../state/hooks";
 import Setting from "../../model/Setting";
 import { Platform, useWindowDimensions } from "react-native";
@@ -13,7 +13,8 @@ export default function Tablayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "white",
+        tabBarActiveTintColor: dynamicTheme(settings, "text"),
+        tabBarInactiveTintColor: dynamicTheme(settings, "text", 50),
         tabBarShowLabel: Platform.OS == "web" && width >= 500,
         tabBarStyle: {
           backgroundColor: dynamicTheme(settings, "background"),
