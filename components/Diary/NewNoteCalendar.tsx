@@ -1,6 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Q } from "@nozbe/watermelondb";
-import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -17,7 +16,7 @@ import {
   serializeNote,
 } from "../../utils/functions";
 import getDaysOfMonth from "../../utils/month-functions";
-import { dynamicTheme } from "../../utils/palette";
+import { dynamicTheme, paletteDark } from "../../utils/palette";
 import { database } from "../../utils/watermelon";
 import Arrow from "../Arrow";
 import Button from "../Button";
@@ -96,7 +95,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
           styles.container,
           {
             backgroundColor: dynamicTheme(settings, "background"),
-            borderColor: dynamicTheme(settings, "rose"),
+            borderColor: dynamicTheme(settings, "text", 80),
           },
         ]}
       >
@@ -109,24 +108,19 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
             style={styles.close}
             name="close"
             size={24}
-            color="white"
+            color={dynamicTheme(settings, "text")}
           />
         </Pressable>
-        <Text style={[styles.text, { color: dynamicTheme(settings, "rose") }]}>
+        <Text style={[styles.text, { color: dynamicTheme(settings, "text") }]}>
           Create or edit diary entries
         </Text>
-        <LinearGradient
-          colors={[
-            "rgba(124, 126, 192, 1)",
-            dynamicTheme(settings, "primary"),
-            dynamicTheme(settings, "primary"),
-            dynamicTheme(settings, "primary"),
-            // dynamicTheme(settings, "primary"),
-            // dynamicTheme(settings, "primary"),
-            // dynamicTheme(settings, "primary"),
-            "rgba(124, 126, 192, 1)",
+        <View
+          style={[
+            styles.calendarContainer,
+            {
+              backgroundColor: dynamicTheme(settings, "primary"),
+            },
           ]}
-          style={styles.calendarContainer}
         >
           <Calendar
             markedDates={markedRef}
@@ -135,14 +129,14 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
             style={[
               styles.calendar,
               {
-                borderColor: dynamicTheme(settings, "rose"),
+                borderColor: paletteDark.background,
               },
             ]}
             theme={{
               calendarBackground: "transparent",
               textSectionTitleColor: dynamicTheme(settings, "background"),
               textMonthFontFamily: "Inter-Regular",
-              monthTextColor: dynamicTheme(settings, "text"),
+              monthTextColor: paletteDark.text,
               textMonthFontSize: 20,
               textDayHeaderFontFamily: "Inter-Regular",
               textDayHeaderFontSize: 15,
@@ -165,7 +159,7 @@ export default function NewNoteCalendar({ props }: NewNoteCalendarProp) {
             )}
             enableSwipeMonths={true}
           />
-        </LinearGradient>
+        </View>
         <Button
           text={buttonText()}
           onPress={createOrEditNote}
@@ -189,6 +183,7 @@ const styles = StyleSheet.create({
     // backgroundColor: palette.background,
     // padding: 7,
     borderWidth: 2,
+    borderRadius: 5,
     // position: "absolute",
     // top: "20%",
     width: "85%",
