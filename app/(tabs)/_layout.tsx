@@ -2,7 +2,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { dynamicTheme, moodColor, paletteDark } from "../../utils/palette";
+import { dynamicTheme } from "../../utils/palette";
 import { useAppSelector } from "../../state/hooks";
 import Setting from "../../model/Setting";
 import { Platform, useWindowDimensions } from "react-native";
