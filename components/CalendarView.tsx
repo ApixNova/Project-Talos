@@ -82,7 +82,7 @@ export default function CalendarView({ props }: calendarProps) {
           calendarBackground: "transparent",
           textSectionTitleColor: "black",
           textMonthFontFamily: "Inter-Regular",
-          monthTextColor: dynamicTheme(settings, "text"),
+          monthTextColor: paletteDark.text,
           textMonthFontSize: 20,
           textDayHeaderFontFamily: "Inter-Regular",
           textDayHeaderFontSize: 14,
