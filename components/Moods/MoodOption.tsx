@@ -1,4 +1,5 @@
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -22,6 +23,8 @@ export function MoodOption({ props }: MoodOptionProps) {
   const size = useSharedValue(1);
   const opacity = useSharedValue(1);
   const { width } = useWindowDimensions();
+  const moodSize =
+    Platform.OS == "web" ? (width > 700 ? 60 : width > 400 ? 55 : 50) : 50;
 
   function triggerAnimation() {
     size.value = withSequence(
@@ -37,19 +40,15 @@ export function MoodOption({ props }: MoodOptionProps) {
   }
 
   const sizeAnimated = useDerivedValue(() => {
-    return moodSize() * size.value;
+    return moodSize * size.value;
   });
 
   const borderRadiusAnimated = useDerivedValue(() => {
     return sizeAnimated.value / 2;
   });
   const positionAnimated = useDerivedValue(() => {
-    return -(sizeAnimated.value - moodSize()) / 2;
+    return -(sizeAnimated.value - moodSize) / 2;
   });
-
-  function moodSize() {
-    return width > 700 ? 60 : width > 400 ? 55 : 50;
-  }
 
   return (
     <View style={styles.mood}>
@@ -68,7 +67,7 @@ export function MoodOption({ props }: MoodOptionProps) {
           style,
           styles.color,
           {
-            width: moodSize(),
+            width: moodSize,
             aspectRatio: 1,
             borderRadius: 9999,
             borderColor: "black",
