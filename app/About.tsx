@@ -39,7 +39,7 @@ export default function Screen() {
             { color: dynamicTheme(settings, "text") },
           ]}
         >
-          Made by ApixNova
+          Made by ApixNova.
         </Text>
       </View>
     </View>
